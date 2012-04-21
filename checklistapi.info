@@ -1,0 +1,4 @@
+name = Checklist API
+description = Provides an API for creating fillable, persistent checklists.
+core = 7.x
+package = Other
