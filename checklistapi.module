@@ -57,8 +57,8 @@ function checklistapi_get_checklist_info() {
 function checklistapi_help($path, $arg) {
   $checklists = checklistapi_get_checklist_info();
   foreach ($checklists as $checklist) {
-    if ($checklist['path'] == $path && !empty($checklist['help'])) {
-      return $checklist['help'];
+    if ($checklist['#path'] == $path && !empty($checklist['#help'])) {
+      return $checklist['#help'];
     }
   }
 }
@@ -69,21 +69,21 @@ function checklistapi_help($path, $arg) {
 function checklistapi_menu() {
   $items = array();
   foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
-    if (!empty($checklist['path']) && !empty($checklist['title'])) {
-      $path = $checklist['path'];
+    if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
+      $path = $checklist['#path'];
       $items[$path] = array(
-        'title' => $checklist['title'],
+        'title' => $checklist['#title'],
         'page callback' => 'drupal_get_form',
         'page arguments' => array('checklistapi_form', $checklist_id),
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($checklist_id),
         'file' => 'checklistapi.pages.inc',
       );
-      if (!empty($checklist['description'])) {
-        $items[$path]['description'] = $checklist['description'];
+      if (!empty($checklist['#description'])) {
+        $items[$path]['#description'] = $checklist['#description'];
       }
-      if (!empty($checklist['menu_name'])) {
-        $items[$path]['menu_name'] = $checklist['menu_name'];
+      if (!empty($checklist['#menu_name'])) {
+        $items[$path]['#menu_name'] = $checklist['#menu_name'];
       }
     }
   }
@@ -102,7 +102,7 @@ function checklistapi_permission() {
     if (!empty($key)) {
       $permission = 'edit ' . $key . ' checklistapi checklist';
       // Only link to the checklist if the active user has access to it.
-      $checklist_name_replacement = user_access($permission) ? l($checklist['title'], $checklist['path']) : drupal_placeholder($checklist['title']);
+      $checklist_name_replacement = user_access($permission) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']);
       $perms[$permission] = array(
         'title' => t('Edit the !checklist checklist', array('!checklist' => $checklist_name_replacement)),
       );
@@ -123,22 +123,22 @@ function checklistapi_permission() {
 function checklistapi_prepare_checklists(&$checklists) {
   if (!empty($checklists)) {
     // Sort checklists by weight.
-    uasort($checklists, 'drupal_sort_weight');
+    uasort($checklists, 'element_sort');
     // Loop through checklists.
     foreach ($checklists as $checklist_id => $checklist) {
       if (!empty($checklist['groups']) && is_array($checklist['groups'])) {
         // Sort groups by weight.
-        uasort($checklists[$checklist_id]['groups'], 'drupal_sort_weight');
+        uasort($checklists[$checklist_id]['groups'], 'element_sort');
         // Loop through groups.
         foreach ($checklist['groups'] as $group_id => $group) {
           if (!empty($group['items']) && is_array($group['items'])) {
             // Sort checklist items by weight.
-            uasort($checklists[$checklist_id]['groups'][$group_id]['items'], 'drupal_sort_weight');
+            uasort($checklists[$checklist_id]['groups'][$group_id]['items'], 'element_sort');
             // Loop through checklist items.
             foreach ($group['items'] as $item_id => $item) {
               if (!empty($item['links']) && is_array($item['links'])) {
                 // Sort links by weight.
-                uasort($checklists[$checklist_id]['groups'][$group_id]['items'][$item_id]['links'], 'drupal_sort_weight');
+                uasort($checklists[$checklist_id]['groups'][$group_id]['items'][$item_id]['links'], 'element_sort');
               }
             }
           }

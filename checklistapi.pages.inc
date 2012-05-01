@@ -35,16 +35,20 @@ function checklistapi_form($form, &$form_state, $checklist_id) {
     ),
   );
   // Loop through groups.
-  foreach ($checklist['groups'] as $group_key => $group) {
+  $group_keys = element_children($checklist);
+  foreach ($group_keys as $group_key) {
+    $group = &$checklist[$group_key];
     $form['checklistapi'][$group_key] = array(
       '#type' => 'fieldset',
-      '#title' => filter_xss($group['title']),
+      '#title' => filter_xss($group['#title']),
     );
-    if (isset($group['description'])) {
-      $form['checklistapi'][$group_key]['#description'] = filter_xss_admin($group['description']);
+    if (!empty($group['#description'])) {
+      $form['checklistapi'][$group_key]['#description'] = filter_xss_admin($group['#description']);
     }
     // Loop through items.
-    foreach ($group['items'] as $item_key => $item) {
+    $item_keys = element_children($group);
+    foreach ($item_keys as $item_key) {
+      $item = &$group[$item_key];
       // Get saved state.
       $saved_item = !empty($saved_values[$group_key][$item_key]) ? $saved_values[$group_key][$item_key] : 0;
       // Set default value.
@@ -59,41 +63,41 @@ function checklistapi_form($form, &$form_state, $checklist_id) {
       $description = (isset($item['description'])) ? '<p>' . $item['description'] . '</p>' : '';
       // Build links.
       $links = array();
+      $link_keys = element_children($item);
+      foreach ($link_keys as $link_key) {
+        $link = &$item[$link_key];
+        $context = (!empty($link['#context'])) ? $link['#context'] : CHECKLISTAPI_LINK_CONTEXT_ANY;
+        $show_link = FALSE;
+        if ($context == CHECKLISTAPI_LINK_CONTEXT_ANY) {
+          $show_link = TRUE;
+        }
+        elseif ($saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED) {
+          $show_link = TRUE;
+        }
+        elseif (!$saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED) {
+          $show_link = TRUE;
+        }
+        if ($show_link) {
+          $options = (!empty($link['#options']) && is_array($link['#options'])) ? $link['#options'] : array();
+          $links[] = l($link['#text'], $link['#path'], $options);
+        }
+      }
       if ($saved_item) {
         // Prepend completion details.
         $user = user_load($saved_item['uid']);
-        $links[] = t(
+        array_unshift($links, t(
           'Completed @time by !user',
           array(
             '@time' => format_date($saved_item['completed'], 'short'),
             '!user' => theme('username', array('account' => $user)),
           )
-        );
-      }
-      if (!empty($item['links']) && is_array($item['links'])) {
-        foreach ($item['links'] as $link_key => $link) {
-          $context = (!empty($link['context'])) ? $link['context'] : CHECKLISTAPI_LINK_CONTEXT_ANY;
-          $show_link = FALSE;
-          if ($context == CHECKLISTAPI_LINK_CONTEXT_ANY) {
-            $show_link = TRUE;
-          }
-          elseif ($saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED) {
-            $show_link = TRUE;
-          }
-          elseif (!$saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED) {
-            $show_link = TRUE;
-          }
-          if ($show_link) {
-            $options = (!empty($link['options']) && is_array($link['options'])) ? $link['options'] : array();
-            $links[] = l($link['text'], $link['path'], $options);
-          }
-        }
+        ));
       }
       $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
       // Build the list item.
       $form['checklistapi'][$group_key][$item_key] = array(
         '#type' => 'checkbox',
-        '#title' => filter_xss($item['title']),
+        '#title' => filter_xss($item['#title']),
         '#description' => filter_xss_admin($description),
         '#default_value' => $default_value,
       );
@@ -106,7 +110,7 @@ function checklistapi_form($form, &$form_state, $checklist_id) {
   );
 
   // Stash the checklist title for use in the submission handler.
-  $form['#checklist_title'] = check_plain($checklist['title']);
+  $form['#checklist_title'] = check_plain($checklist['#title']);
 
   return $form;
 }
