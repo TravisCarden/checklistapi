@@ -44,9 +44,9 @@ function checklistapi_get_checklist_info() {
   $checklists = &drupal_static(__FUNCTION__);
   if (!isset($checklists)) {
     $checklists = module_invoke_all('checklistapi_checklist_info');
-    // checklistapi_prepare_checklists($checklists);
+    checklistapi_sort_array($checklists);
     drupal_alter('checklistapi_checklist_info', $checklists);
-    // checklistapi_prepare_checklists($checklists);
+    checklistapi_sort_array($checklists);
   }
   return $checklists;
 }
@@ -112,38 +112,43 @@ function checklistapi_permission() {
 }
 
 /**
- * Sorts checklist components by weight.
+ * Recursively sorts array elements by weight.
  *
- * @param array $checklists
- *   A multidimensional array of checklist definitions returned from
- *   hook_checklistapi_checklist_info().
+ * @param array $array
+ *   A nested array of elements and properties such as the checklist definitions
+ *   returned by hook_checklistapi_checklist_info().
  *
  * @see checklistapi_get_checklist_info()
  */
-function checklistapi_prepare_checklists(&$checklists) {
-  if (!empty($checklists)) {
-    // Sort checklists by weight.
-    uasort($checklists, 'element_sort');
-    // Loop through checklists.
-    foreach ($checklists as $checklist_id => $checklist) {
-      if (!empty($checklist['groups']) && is_array($checklist['groups'])) {
-        // Sort groups by weight.
-        uasort($checklists[$checklist_id]['groups'], 'element_sort');
-        // Loop through groups.
-        foreach ($checklist['groups'] as $group_id => $group) {
-          if (!empty($group['items']) && is_array($group['items'])) {
-            // Sort checklist items by weight.
-            uasort($checklists[$checklist_id]['groups'][$group_id]['items'], 'element_sort');
-            // Loop through checklist items.
-            foreach ($group['items'] as $item_id => $item) {
-              if (!empty($item['links']) && is_array($item['links'])) {
-                // Sort links by weight.
-                uasort($checklists[$checklist_id]['groups'][$group_id]['items'][$item_id]['links'], 'element_sort');
-              }
-            }
-          }
-        }
+function checklistapi_sort_array(&$array) {
+  $child_keys = element_children($array);
+  if (count($child_keys)) {
+    $incrementer = 0;
+    $children = array();
+    foreach ($child_keys as $key) {
+      // Move child to a temporary array for sorting.
+      $children[$key] = $array[$key];
+      unset($array[$key]);
+      // Supply a default weight if missing or invalid.
+      if (empty($children[$key]['#weight']) || !is_numeric($children[$key]['#weight'])) {
+        $children[$key]['#weight'] = 0;
+      }
+      // Increase each weight incrementally to preserve the original order when
+      // not overridden. This accounts for undefined behavior in PHP's uasort()
+      // function when its comparison callback finds two values equal.
+      $children[$key]['#weight'] += ($incrementer++ / 1000);
+      // Descend into child.
+      checklistapi_sort_array($children[$key]);
+    }
+    // Sort by #weight.
+    uasort($children, 'element_sort');
+    // Remove incremental weight hack.
+    foreach ($children as $key => $child) {
+      if ($key == 'i_suck') {
+        $children[$key]['#weight'] = round($children[$key]['#weight']);
       }
     }
+    // Put children back in the main array.
+    $array += $children;
   }
 }
