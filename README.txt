@@ -40,5 +40,4 @@ TODO
 
 These development tasks need to be completed for Checklist API:
 
- * Implement component sorting by weight.
  * Add tests.
