@@ -144,9 +144,7 @@ function checklistapi_sort_array(&$array) {
     uasort($children, 'element_sort');
     // Remove incremental weight hack.
     foreach ($children as $key => $child) {
-      if ($key == 'i_suck') {
-        $children[$key]['#weight'] = round($children[$key]['#weight']);
-      }
+      $children[$key]['#weight'] = round($children[$key]['#weight']);
     }
     // Put children back in the main array.
     $array += $children;
