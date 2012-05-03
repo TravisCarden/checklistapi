@@ -120,7 +120,7 @@ function checklistapi_permission() {
  *
  * @see checklistapi_get_checklist_info()
  */
-function checklistapi_sort_array(&$array) {
+function checklistapi_sort_array(array &$array) {
   $child_keys = element_children($array);
   if (count($child_keys)) {
     $incrementer = 0;
