@@ -24,12 +24,12 @@
  *   A multidimensional array of checklists definitions returned from
  *   hook_checklistapi_checklist_info().
  *
- * For a detailed usage example, see checklistapi_example.module.
+ * For a working example, see checklistapi_example.module.
  *
  * @see checklistapi_get_checklist_info()
  * @see hook_checklistapi_checklist_info()
  */
-function hook_checklistapi_checklist_info_alter(&$checklists) {
+function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
   // Add an item.
   $checklists['example']['example_group']['sample_item'] = array(
     'title' => t('Sample item'),
@@ -92,9 +92,9 @@ function hook_checklistapi_checklist_info_alter(&$checklists) {
  *         - #options: An associative array of additional options used by the
  *           l() function.
  *
- * For a detailed usage example, see checklistapi_example.module.
+ * For a working example, see checklistapi_example.module.
  *
- * @see checklistapi_example.module
+ * @see checklistapi_example_checklistapi_checklist_info()
  * @see hook_checklistapi_checklist_info_alter()
  */
 function hook_checklistapi_checklist_info() {
