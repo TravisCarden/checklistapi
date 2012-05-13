@@ -11,34 +11,6 @@
  */
 
 /**
- * Alter checklist definitions after hook_checklistapi_checklist_info() is
- * invoked.
- *
- * This hook is invoked by checklistapi_get_checklist_info(). The checklist
- * definitions are passed in by reference. Each element of the $checklists array
- * is one returned by a module from checklistapi_get_checklist_info().
- * Additional checklists may be added, or existing checklists may be altered or
- * removed.
- *
- * @param array $checklists
- *   A multidimensional array of checklists definitions returned from
- *   hook_checklistapi_checklist_info().
- *
- * For a working example, see checklistapi_example.module.
- *
- * @see checklistapi_get_checklist_info()
- * @see hook_checklistapi_checklist_info()
- */
-function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
-  // Add an item.
-  $checklists['example']['example_group']['sample_item'] = array(
-    'title' => t('Sample item'),
-  );
-  // Remove an item.
-  unset($checklists['example']['example_group']['example_item']);
-}
-
-/**
  * Define all checklists provided by the module.
  *
  * Any number of checklists can be defined in an implementation of this hook.
@@ -119,6 +91,34 @@ function hook_checklistapi_checklist_info() {
   );
 
   return $checklists;
+}
+
+/**
+ * Alter checklist definitions after hook_checklistapi_checklist_info() is
+ * invoked.
+ *
+ * This hook is invoked by checklistapi_get_checklist_info(). The checklist
+ * definitions are passed in by reference. Each element of the $checklists array
+ * is one returned by a module from checklistapi_get_checklist_info().
+ * Additional checklists may be added, or existing checklists may be altered or
+ * removed.
+ *
+ * @param array $checklists
+ *   A multidimensional array of checklists definitions returned from
+ *   hook_checklistapi_checklist_info().
+ *
+ * For a working example, see checklistapi_example.module.
+ *
+ * @see checklistapi_get_checklist_info()
+ * @see hook_checklistapi_checklist_info()
+ */
+function hook_checklistapi_checklist_info_alter(&$checklists) {
+  // Add an item.
+  $checklists['example']['example_group']['sample_item'] = array(
+    'title' => t('Sample item'),
+  );
+  // Remove an item.
+  unset($checklists['example']['example_group']['example_item']);
 }
 
 /**
