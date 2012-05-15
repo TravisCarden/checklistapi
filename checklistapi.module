@@ -44,9 +44,9 @@ function checklistapi_get_checklist_info() {
   $checklists = &drupal_static(__FUNCTION__);
   if (!isset($checklists)) {
     $checklists = module_invoke_all('checklistapi_checklist_info');
-    checklistapi_sort_array($checklists);
+    $checklists = checklistapi_sort_array($checklists);
     drupal_alter('checklistapi_checklist_info', $checklists);
-    checklistapi_sort_array($checklists);
+    $checklists = checklistapi_sort_array($checklists);
   }
   return $checklists;
 }
@@ -118,9 +118,12 @@ function checklistapi_permission() {
  *   A nested array of elements and properties such as the checklist definitions
  *   returned by hook_checklistapi_checklist_info().
  *
+ * @return array
+ *   The input array sorted recursively by weight.
+ *
  * @see checklistapi_get_checklist_info()
  */
-function checklistapi_sort_array(array &$array) {
+function checklistapi_sort_array(array $array) {
   $child_keys = element_children($array);
   if (count($child_keys)) {
     $incrementer = 0;
@@ -138,7 +141,7 @@ function checklistapi_sort_array(array &$array) {
       // function when its comparison callback finds two values equal.
       $children[$key]['#weight'] += ($incrementer++ / 1000);
       // Descend into child.
-      checklistapi_sort_array($children[$key]);
+      $children[$key] = checklistapi_sort_array($children[$key]);
     }
     // Sort by #weight.
     uasort($children, 'element_sort');
@@ -149,4 +152,5 @@ function checklistapi_sort_array(array &$array) {
     // Put children back in the main array.
     $array += $children;
   }
+  return $array;
 }
