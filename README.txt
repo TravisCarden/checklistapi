@@ -5,7 +5,6 @@ CONTENTS OF THIS FILE
  * Introduction
  * Installation
  * Implementation
- * TODO
 
 
 INTRODUCTION
@@ -36,11 +35,3 @@ checklist. (Note: it is the responsibility of implementing modules to remove
 their own variables on hook_uninstall().)
 
 See checklistapi.api.php for more details.
-
-
-TODO
-----
-
-These development tasks need to be completed for Checklist API:
-
- * Add tests.

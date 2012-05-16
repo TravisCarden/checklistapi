@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Tests for Checklist API module.
+ */
+
+/**
+ * Unit tests for Checklist API.
+ */
+class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Unit tests',
+      'description' => 'Test Checklist API classes and functions.',
+      'group' => 'Checklist API',
+    );
+  }
+
+  public function setUp() {
+    drupal_load('module', 'checklistapi');
+    parent::setUp();
+  }
+
+  /**
+   * Test checklistapi_sort_array().
+   */
+  public function testChecklistapiSortArray() {
+    $input = array(
+      '#title' => '',
+      'two' => array(),
+      'one' => array(
+        '#weight' => -1,
+        'gamma' => array('#weight' => 1),
+        'alpha' => array('#weight' => -1),
+        'beta' => array(),
+      ),
+      'three' => array('#weight' => 'invalid'),
+      'four' => array('#weight' => 1),
+    );
+    $output = checklistapi_sort_array($input);
+    $expected = array(
+      '#title' => '',
+      'one' => array(
+        '#weight' => -1,
+        'alpha' => array('#weight' => -1),
+        'beta' => array('#weight' => 0),
+        'gamma' => array('#weight' => 1),
+      ),
+      'two' => array('#weight' => 0),
+      'three' => array('#weight' => 0),
+      'four' => array('#weight' => 1),
+    );
+    $this->assertEqual($output['two']['#weight'], $expected['two']['#weight'], 'Supplied a default for missing element weight.');
+    $this->assertEqual($output['four']['#weight'], $expected['four']['#weight'], 'Supplied a default for invalid element weight.');
+    $this->assertEqual($output['one']['#weight'], $expected['one']['#weight'], 'Retained a valid element weight.');
+    $this->assertEqual(array_keys($output), array_keys($expected), 'Sorted elements by weight.');
+    $this->assertNotEqual($input['one'], $output['one'], 'Recursed on child elements.');
+  }
+
+}
+
+/**
+ * Functional tests for Checklist API.
+ *
+ * @todo Add tests for vertical tabs progress indicators.
+ * @todo Add tests for saving and retrieving checklist progress.
+ * @todo Add tests for resetting saved progress.
+ */
+class ChecklistapiWebTestCase extends DrupalWebTestCase {
+  protected $privileged_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Functional tests',
+      'description' => 'Test the functionality of Checklist API.',
+      'group' => 'Checklist API',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('checklistapi_example');
+    $permissions = array('edit any checklistapi checklist');
+    $this->privileged_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->privileged_user);
+  }
+
+  /**
+   * Test checklist access.
+   */
+  public function testAccessChecklist() {
+    $this->drupalGet('admin/config/development/checklistapi-example');
+    $this->assertResponse(200, 'Granted access to user with "edit any checklistapi checklist" permission.');
+
+    $permissions = array('edit example_checklist checklistapi checklist');
+    $this->privileged_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->privileged_user);
+    $this->drupalGet('admin/config/development/checklistapi-example');
+    $this->assertResponse(200, 'Granted access to user with checklist-specific permission.');
+
+    $this->drupalLogout();
+    $this->drupalGet('admin/config/development/checklistapi-example');
+    $this->assertResponse(403, 'Denied access to nonprivileged user.');
+  }
+
+  /**
+   * Test checklist composition.
+   */
+  public function testChecklistComposition() {
+    $menu_item = menu_get_item('admin/config/development/checklistapi-example');
+    $this->assertEqual($menu_item['path'], 'admin/config/development/checklistapi-example', 'Created per-checklist menu item.');
+
+    $permissions = array('edit example_checklist checklistapi checklist');
+    $this->assertTrue($this->checkPermissions($permissions), 'Created per-checklist permission.');
+
+    $this->drupalGet('admin/config/development/checklistapi-example');
+    $this->assertRaw('id="block-system-help"', 'Created per-checklist help block.');
+  }
+
+}
