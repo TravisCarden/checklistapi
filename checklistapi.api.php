@@ -94,8 +94,7 @@ function hook_checklistapi_checklist_info() {
 }
 
 /**
- * Alter checklist definitions after hook_checklistapi_checklist_info() is
- * invoked.
+ * Alter checklist definitions.
  *
  * This hook is invoked by checklistapi_get_checklist_info(). The checklist
  * definitions are passed in by reference. Each element of the $checklists array

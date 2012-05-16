@@ -104,7 +104,10 @@ function checklistapi_permission() {
       // Only link to the checklist if the active user has access to it.
       $checklist_name_replacement = user_access($permission) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']);
       $perms[$permission] = array(
-        'title' => t('Edit the !checklist checklist', array('!checklist' => $checklist_name_replacement)),
+        'title' => t(
+          'Edit the !checklist checklist',
+          array('!checklist' => $checklist_name_replacement)
+        ),
       );
     }
   }
@@ -143,7 +146,7 @@ function checklistapi_sort_array(array $array) {
       // Descend into child.
       $children[$key] = checklistapi_sort_array($children[$key]);
     }
-    // Sort by #weight.
+    // Sort by weight.
     uasort($children, 'element_sort');
     // Remove incremental weight hack.
     foreach ($children as $key => $child) {

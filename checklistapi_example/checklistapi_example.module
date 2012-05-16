@@ -94,7 +94,6 @@ function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
  */
 function checklistapi_example_checklistapi_checklist_info() {
   $checklists = array();
-
   $checklists['example_checklist'] = array(
     '#title' => t('Checklist API example'),
     '#description' => t('An example implementation of the Checklist API.'),
@@ -276,6 +275,5 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
     ),
   );
-
   return $checklists;
 }
