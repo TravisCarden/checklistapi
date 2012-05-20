@@ -86,6 +86,15 @@ function checklistapi_menu() {
       if (!empty($checklist['#menu_name'])) {
         $items[$path]['#menu_name'] = $checklist['#menu_name'];
       }
+
+      $items[$path . '/clear'] = array(
+        'title' => 'Clear',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('checklistapi_checklist_clear_confirm', $checklist),
+        'access callback' => 'checklistapi_checklist_access',
+        'access arguments' => array($checklist_id),
+        'file' => 'checklistapi.pages.inc',
+      );
     }
   }
   return $items;

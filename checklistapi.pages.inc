@@ -6,23 +6,76 @@
  */
 
 /**
+ * Page callback: Form constructor for "Clear saved progress" confirmation form.
+ *
+ * @param array $checklist
+ *   A multidimensional array representing the checklist.
+ *
+ * @see checklistapi_menu()
+ *
+ * @ingroup forms
+ */
+function checklistapi_checklist_clear_confirm($form, &$form_state, $checklist) {
+  $form['#checklist'] = $checklist;
+  return confirm_form(
+    $form,
+    t('Are you sure you want to clear %title progress?', array(
+      '%title' => $checklist['#title'],
+    )),
+    $checklist['#path'],
+    t('All progress details will be erased. This action cannot be undone.', array(
+      '%title' => $checklist['#title'],
+    )),
+    t('Clear'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Form submission handler for checklistapi_checklist_clear_confirm().
+ */
+function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    variable_del('checklistapi_checklist_' . $form['#checklist']['#id']);
+    drupal_set_message(t('%title saved progress has been cleared.', array(
+      '%title' => $form['#checklist']['#title'],
+    )));
+  }
+
+  $form_state['redirect'] = $form['#checklist']['#path'];
+}
+
+/**
  * Form constructor for the checklist form.
  *
  * @param array $checklist
  *   A multidimensional array representing the checklist.
  *
  * @see checklistapi_form_submit()
+ *
  * @ingroup forms
  */
 function checklistapi_form($form, &$form_state, $checklist) {
   $saved_values = variable_get('checklistapi_checklist_' . $checklist['#id'], array());
-
-  $form['#checklist'] = $checklist;
-  $form['save_above'] = array(
+  $save_button = array(
     '#type' => 'submit',
     '#value' => t('Save'),
+    '#submit' => array('checklistapi_form_submit'),
+  );
+  $clear_button = array(
+    '#type' => 'link',
+    '#title' => t('Clear saved progress'),
+    '#href' => $checklist['#path'] . '/clear',
+    '#access' => variable_get('checklistapi_checklist_' . $checklist['#id'], FALSE),
+  );
+
+  $form['#checklist'] = $checklist;
+  $form['submit_top'] = array(
+    '#type' => 'container',
+    '#weight' => -100,
     '#attributes' => array('class' => array('js-hide')),
-    '#weight' => '-100',
+    'save' => $save_button,
+    'clear' => $clear_button,
   );
   $form['checklistapi'] = array(
     '#tree' => TRUE,
@@ -101,10 +154,11 @@ function checklistapi_form($form, &$form_state, $checklist) {
       );
     }
   }
-  $form['save'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
+  $form['submit_bottom'] = array(
+    '#type' => 'container',
     '#weight' => 100,
+    'save' => $save_button,
+    'clear' => $clear_button,
   );
 
   return $form;
