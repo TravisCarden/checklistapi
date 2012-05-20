@@ -8,18 +8,16 @@
 /**
  * Form constructor for the checklist form.
  *
- * @param string $checklist_id
- *   The unique ID of the checklist to be displayed, which is its array key from
- *   hook_checklistapi_checklist_info().
+ * @param array $checklist
+ *   A multidimensional array representing the checklist.
  *
  * @see checklistapi_form_submit()
  * @ingroup forms
  */
-function checklistapi_form($form, &$form_state, $checklist_id) {
-  $checklists = checklistapi_get_checklist_info();
-  $checklist = $checklists[$checklist_id];
-  $saved_values = variable_get('checklistapi_checklist_' . $checklist_id, array());
+function checklistapi_form($form, &$form_state, $checklist) {
+  $saved_values = variable_get('checklistapi_checklist_' . $checklist['#id'], array());
 
+  $form['#checklist'] = $checklist;
   $form['save_above'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -109,9 +107,6 @@ function checklistapi_form($form, &$form_state, $checklist_id) {
     '#weight' => 100,
   );
 
-  // Stash the checklist title for use in the submission handler.
-  $form['#checklist_title'] = check_plain($checklist['#title']);
-
   return $form;
 }
 
@@ -120,8 +115,7 @@ function checklistapi_form($form, &$form_state, $checklist_id) {
  */
 function checklistapi_form_submit($form, &$form_state) {
   global $user;
-  $checklist_id = $form_state['build_info']['args'][0];
-  $saved_values = variable_get('checklistapi_checklist_' . $checklist_id, array());
+  $saved_values = variable_get('checklistapi_checklist_' . $form['#checklist']['#id'], array());
   $new_values = array_slice($form_state['values']['checklistapi'], 0, -1);
   $time = time();
   $changed_items = 0;
@@ -156,11 +150,11 @@ function checklistapi_form_submit($form, &$form_state) {
       }
     }
   }
-  variable_set('checklistapi_checklist_' . $checklist_id, $new_values);
+  variable_set('checklistapi_checklist_' . $form['#checklist']['#id'], $new_values);
   drupal_set_message(format_plural(
     $changed_items,
-    'Checklist %checklist has been updated. 1 item changed.',
-    'Checklist %checklist has been updated. @count items changed.',
-    array('%checklist' => $form['#checklist_title'])
+    'Checklist %title has been updated. 1 item changed.',
+    'Checklist %title has been updated. @count items changed.',
+    array('%title' => $form['#checklist']['#title'])
   ));
 }

@@ -69,12 +69,13 @@ function checklistapi_help($path, $arg) {
 function checklistapi_menu() {
   $items = array();
   foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
+    $checklist = array('#id' => $checklist_id) + $checklist;
     if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
       $path = $checklist['#path'];
       $items[$path] = array(
         'title' => $checklist['#title'],
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('checklistapi_form', $checklist_id),
+        'page arguments' => array('checklistapi_form', $checklist),
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($checklist_id),
         'file' => 'checklistapi.pages.inc',
@@ -118,8 +119,8 @@ function checklistapi_permission() {
  * Recursively sorts array elements by weight.
  *
  * @param array $array
- *   A nested array of elements and properties such as the checklist definitions
- *   returned by hook_checklistapi_checklist_info().
+ *   A nested array of elements and properties, such as the checklist
+ *   definitions returned by hook_checklistapi_checklist_info().
  *
  * @return array
  *   The input array sorted recursively by weight.
