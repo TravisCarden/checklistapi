@@ -46,21 +46,22 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Form constructor for the checklist form.
+ * Page callback: Form constructor for the checklist form.
  *
  * @param array $checklist
  *   A multidimensional array representing the checklist.
  *
- * @see checklistapi_form_submit()
+ * @see checklistapi_checklist_form_submit()
+ * @see checklistapi_menu()
  *
  * @ingroup forms
  */
-function checklistapi_form($form, &$form_state, $checklist) {
+function checklistapi_checklist_form($form, &$form_state, $checklist) {
   $saved_values = variable_get('checklistapi_checklist_' . $checklist['#id'], array());
   $save_button = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#submit' => array('checklistapi_form_submit'),
+    '#submit' => array('checklistapi_checklist_form_submit'),
   );
   $clear_button = array(
     '#type' => 'link',
@@ -165,9 +166,9 @@ function checklistapi_form($form, &$form_state, $checklist) {
 }
 
 /**
- * Form submission handler for checklistapi_form().
+ * Form submission handler for checklistapi_checklist_form().
  */
-function checklistapi_form_submit($form, &$form_state) {
+function checklistapi_checklist_form_submit($form, &$form_state) {
   global $user;
   $saved_values = variable_get('checklistapi_checklist_' . $form['#checklist']['#id'], array());
   $new_values = array_slice($form_state['values']['checklistapi'], 0, -1);

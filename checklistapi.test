@@ -69,7 +69,7 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
  * @todo Add tests for resetting saved progress.
  */
 class ChecklistapiWebTestCase extends DrupalWebTestCase {
-  protected $privileged_user;
+  protected $privilegedUser;
 
   public static function getInfo() {
     return array(
@@ -82,8 +82,8 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
   public function setUp() {
     parent::setUp('checklistapi_example');
     $permissions = array('edit any checklistapi checklist');
-    $this->privileged_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->privileged_user);
+    $this->privilegedUser = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->privilegedUser);
   }
 
   /**
@@ -94,8 +94,8 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
     $this->assertResponse(200, 'Granted access to user with "edit any checklistapi checklist" permission.');
 
     $permissions = array('edit example_checklist checklistapi checklist');
-    $this->privileged_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->privileged_user);
+    $semi_privileged_user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($semi_privileged_user);
     $this->drupalGet('admin/config/development/checklistapi-example');
     $this->assertResponse(200, 'Granted access to user with checklist-specific permission.');
 
