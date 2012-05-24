@@ -53,7 +53,6 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $checklist = checklistapi_checklist_load($id);
-  $saved_values = $checklist->getSavedProgress();
   $save_button = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -83,8 +82,9 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     ),
   );
   // Loop through groups.
-  $groups = $checklist->getItems();
-  foreach ($groups as $group_key => $group) {
+  $groups = $checklist->items;
+
+  foreach (element_children($groups) as $group_key) {
     $group = &$groups[$group_key];
     $form['checklistapi'][$group_key] = array(
       '#type' => 'fieldset',
@@ -98,7 +98,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     foreach ($item_keys as $item_key) {
       $item = &$group[$item_key];
       // Get saved state.
-      $saved_item = !empty($saved_values[$group_key][$item_key]) ? $saved_values[$group_key][$item_key] : 0;
+      $saved_item = !empty($checklist->savedProgress[$group_key][$item_key]) ? $checklist->savedProgress[$group_key][$item_key] : 0;
       // Set default value.
       $default_value = FALSE;
       if ($saved_item) {
@@ -132,11 +132,11 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       }
       if ($saved_item) {
         // Prepend completion details.
-        $user = user_load($saved_item['uid']);
+        $user = user_load($saved_item['#uid']);
         array_unshift($links, t(
           'Completed @time by !user',
           array(
-            '@time' => format_date($saved_item['completed'], 'short'),
+            '@time' => format_date($saved_item['#completed'], 'short'),
             '!user' => theme('username', array('account' => $user)),
           )
         ));

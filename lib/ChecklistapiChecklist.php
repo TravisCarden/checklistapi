@@ -60,15 +60,43 @@ class ChecklistapiChecklist {
   public $weight;
 
   /**
+   * The number of list items in the checklist.
+   *
+   * @var int
+   */
+  public $totalItems = 0;
+
+  /**
+   * The checklist groups and items.
+   *
+   * @var array
+   */
+  public $items = array();
+
+  /**
+   * The saved progress data.
+   *
+   * @var array
+   */
+  public $savedProgress;
+
+  /**
    * Constructs a ChecklistapiChecklist object.
    *
    * @param array $definition
    *   A checklist definition, as returned by checklistapi_get_checklist_info().
    */
-  public function __construct($definition) {
-    foreach ($this->getPropertiesFromDefinition($definition) as $key => $value) {
-      $this->$key = $value;
+  public function __construct(array $definition) {
+    foreach (element_children($definition) as $group_key) {
+      $this->totalItems += count(element_children($definition[$group_key]));
+      $this->items[$group_key] = $definition[$group_key];
+      unset($definition[$group_key]);
     }
+    foreach ($definition as $key => $value) {
+      $property_name = $this->strtolowercamel(substr($key, 1));
+      $this->$property_name = $value;
+    }
+    $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
   }
 
   /**
@@ -81,53 +109,6 @@ class ChecklistapiChecklist {
     drupal_set_message(t('%title saved progress has been cleared.', array(
       '%title' => $this->title,
     )));
-  }
-
-  /**
-   * Gets the items for the checklist.
-   *
-   * @return array
-   *   A multidimensional array of groups and items as defined by
-   *   hook_checklistapi_checklist_info().
-   */
-  public function getItems() {
-    $definition = checklistapi_get_checklist_info($this->id);
-    $items = array();
-    foreach (element_children($definition) as $key) {
-      $items[$key] = $definition[$key];
-    }
-    return $items;
-  }
-
-  /**
-   * Gets the top-level properties from a checklist definition.
-   *
-   * @param array $definition
-   *   A checklist definition, as from hook_checklistapi_checklist_info().
-   *
-   * @return array
-   *   An array of property values, keyed by camelCased versions of their names.
-   */
-  protected function getPropertiesFromDefinition($definition) {
-    $element_children = element_children($definition);
-    $properties = array();
-    foreach ($definition as $key => $value) {
-      if (!in_array($key, $element_children)) {
-        $property_name = $this->strtocamel(substr($key, 1));
-        $properties[$property_name] = $value;
-      }
-    }
-    return $properties;
-  }
-
-  /**
-   * Gets the saved progress for the checklist.
-   *
-   * @return array
-   *   A multidimensional array of saved progress data.
-   */
-  public function getSavedProgress() {
-    return variable_get($this->getSavedProgressVariableName(), array());
   }
 
   /**
@@ -156,20 +137,21 @@ class ChecklistapiChecklist {
    * @param array $values
    *   A multidimensional array representing.
    */
-  public function saveProgress($values) {
+  public function saveProgress(array $values) {
     global $user;
-    $saved_values = $this->getSavedProgress();
     $time = time();
+    $completed_items_counter = 0;
     $changed_items_counter = 0;
     // Loop through groups.
     foreach ($values as $group_key => $group) {
       // Loop through items.
       if (is_array($group)) {
         foreach ($group as $item_key => $item) {
-          $old_item = &$saved_values[$group_key][$item_key];
+          $old_item = $this->savedProgress[$group_key][$item_key];
           $new_item = &$values[$group_key][$item_key];
           // Item is checked.
           if ($item == 1) {
+            $completed_items_counter++;
             // Item was previously checked. Use saved value.
             if ($old_item) {
               $new_item = $old_item;
@@ -177,8 +159,8 @@ class ChecklistapiChecklist {
             // Item is newly checked. Set new value.
             else {
               $new_item = array(
-                'completed' => $time,
-                'uid' => $user->uid,
+                '#completed' => $time,
+                '#uid' => $user->uid,
               );
               // Increment changed items counter.
               $changed_items_counter++;
@@ -194,7 +176,12 @@ class ChecklistapiChecklist {
         }
       }
     }
-    variable_set($this->getSavedProgressVariableName(), $values);
+    $progress = array(
+      '#changed' => $time,
+      '#changed_by' => $user->uid,
+      '#completed_items' => $completed_items_counter,
+    ) + $values;
+    variable_set($this->getSavedProgressVariableName(), $progress);
     drupal_set_message(format_plural(
       $changed_items_counter,
       'Checklist %title has been updated. 1 item changed.',
@@ -204,7 +191,7 @@ class ChecklistapiChecklist {
   }
 
   /**
-   * Converts a string to camelCase, as suitable for a class property name.
+   * Converts a string to lowerCamel case, suitably for a class property name.
    *
    * @param string $string
    *   The input string.
@@ -212,11 +199,21 @@ class ChecklistapiChecklist {
    * @return string
    *   The input string converted to camelCase.
    */
-  protected function strtocamel($string) {
+  protected function strtolowercamel($string) {
     $string = str_replace('_', ' ', $string);
     $string = ucwords($string);
     $string = str_replace(' ', '', $string);
     return lcfirst($string);
+  }
+
+  /**
+   * Determines whether the current user has access to the checklist.
+   *
+   * @return bool
+   *   Returns TRUE if the user has access, or FALSE if not.
+   */
+  public function userHasAccess() {
+    return checklistapi_checklist_access($this->id);
   }
 
 }

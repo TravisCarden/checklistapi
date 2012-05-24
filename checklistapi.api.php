@@ -113,7 +113,7 @@ function hook_checklistapi_checklist_info() {
  * @see checklistapi_get_checklist_info()
  * @see hook_checklistapi_checklist_info()
  */
-function hook_checklistapi_checklist_info_alter(&$checklists) {
+function hook_checklistapi_checklist_info_alter(array &$checklists) {
   // Add an item.
   $checklists['example']['example_group']['sample_item'] = array(
     'title' => t('Sample item'),

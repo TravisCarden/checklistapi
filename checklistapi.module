@@ -66,7 +66,6 @@ function checklistapi_get_checklist_info($id = NULL) {
     $checklists = checklistapi_sort_array($checklists);
     drupal_alter('checklistapi_checklist_info', $checklists);
     $checklists = checklistapi_sort_array($checklists);
-    // Create #id properties from array keys.
     foreach ($checklists as $key => $value) {
       $checklists[$key] = array('#id' => $key) + $checklists[$key];
     }
@@ -94,6 +93,13 @@ function checklistapi_help($path, $arg) {
  */
 function checklistapi_menu() {
   $items = array();
+  $items['admin/reports/checklistapi'] = array(
+    'title' => 'Checklists',
+    'page callback' => 'checklistapi_report_form',
+    'access arguments' => array('access checklistapi checklists report'),
+    'file' => 'checklistapi.admin.inc',
+  );
+
   foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
     if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
       $path = $checklist['#path'];
@@ -130,9 +136,19 @@ function checklistapi_menu() {
  */
 function checklistapi_permission() {
   $perms = array();
+  // Only link to the report if the active user has access to it.
+  $report_name_replacement = user_access('access checklistapi checklists report') ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder(t('Checklists'));
+  $perms['access checklistapi checklists report'] = array(
+    'title' => t(
+      'Access !name report',
+      array('!name' => $report_name_replacement)
+    ),
+  );
+
   $perms['edit any checklistapi checklist'] = array(
     'title' => t('Edit any checklist'),
   );
+
   foreach (checklistapi_get_checklist_info() as $id => $checklist) {
     if (!empty($id)) {
       $permission = 'edit ' . $id . ' checklistapi checklist';
