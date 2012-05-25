@@ -8,14 +8,17 @@
 /**
  * Page callback: Form constructor for "Clear saved progress" confirmation form.
  *
- * @param array $checklist
- *   A multidimensional array representing the checklist.
+ * @param string $checklist_id
+ *   The unique ID of the checklist to be displayed, which is its array key from
+ *   hook_checklistapi_checklist_info().
  *
  * @see checklistapi_menu()
  *
  * @ingroup forms
  */
-function checklistapi_checklist_clear_confirm($form, &$form_state, $checklist) {
+function checklistapi_checklist_clear_confirm($form, &$form_state, $checklist_id) {
+  $checklists = checklistapi_get_checklist_info();
+  $checklist = $checklists[$checklist_id];
   $form['#checklist'] = $checklist;
   return confirm_form(
     $form,
@@ -48,16 +51,19 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
 /**
  * Page callback: Form constructor for the checklist form.
  *
- * @param array $checklist
- *   A multidimensional array representing the checklist.
+ * @param string $checklist_id
+ *   The unique ID of the checklist to be displayed, which is its array key from
+ *   hook_checklistapi_checklist_info().
  *
  * @see checklistapi_checklist_form_submit()
  * @see checklistapi_menu()
  *
  * @ingroup forms
  */
-function checklistapi_checklist_form($form, &$form_state, $checklist) {
-  $saved_values = variable_get('checklistapi_checklist_' . $checklist['#id'], array());
+function checklistapi_checklist_form($form, &$form_state, $checklist_id) {
+  $checklists = checklistapi_get_checklist_info();
+  $checklist = $checklists[$checklist_id];
+  $saved_values = variable_get('checklistapi_checklist_' . $checklist_id, array());
   $save_button = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -67,7 +73,7 @@ function checklistapi_checklist_form($form, &$form_state, $checklist) {
     '#type' => 'link',
     '#title' => t('Clear saved progress'),
     '#href' => $checklist['#path'] . '/clear',
-    '#access' => variable_get('checklistapi_checklist_' . $checklist['#id'], FALSE),
+    '#access' => variable_get('checklistapi_checklist_' . $checklist_id, FALSE),
   );
 
   $form['#checklist'] = $checklist;

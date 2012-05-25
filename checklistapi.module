@@ -47,6 +47,10 @@ function checklistapi_get_checklist_info() {
     $checklists = checklistapi_sort_array($checklists);
     drupal_alter('checklistapi_checklist_info', $checklists);
     $checklists = checklistapi_sort_array($checklists);
+    // Create #id properties from array keys.
+    foreach ($checklists as $checklist_id => $checklist) {
+      $checklists[$checklist_id] = array('#id' => $checklist_id) + $checklists[$checklist_id];
+    }
   }
   return $checklists;
 }
@@ -69,13 +73,12 @@ function checklistapi_help($path, $arg) {
 function checklistapi_menu() {
   $items = array();
   foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
-    $checklist = array('#id' => $checklist_id) + $checklist;
     if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
       $path = $checklist['#path'];
       $items[$path] = array(
         'title' => $checklist['#title'],
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('checklistapi_checklist_form', $checklist),
+        'page arguments' => array('checklistapi_checklist_form', $checklist_id),
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($checklist_id),
         'file' => 'checklistapi.pages.inc',
@@ -90,7 +93,7 @@ function checklistapi_menu() {
       $items[$path . '/clear'] = array(
         'title' => 'Clear',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('checklistapi_checklist_clear_confirm', $checklist),
+        'page arguments' => array('checklistapi_checklist_clear_confirm', $checklist_id),
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($checklist_id),
         'file' => 'checklistapi.pages.inc',
