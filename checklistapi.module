@@ -8,6 +8,8 @@
  * completion times and users.
  */
 
+require_once 'lib/ChecklistapiChecklist.php';
+
 /**
  * Link should always be shown.
  */
@@ -26,21 +28,38 @@ define('CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED', 3);
 /**
  * Access callback: Checks access for a checklist.
  *
- * @param string $checklist_id
- *   The unique ID of the checklist to be displayed, which is its array key from
- *   hook_checklistapi_checklist_info().
+ * @param string $id
+ *   The checklist ID.
  */
-function checklistapi_checklist_access($checklist_id) {
-  return user_access('edit any checklistapi checklist') || user_access('edit ' . $checklist_id . ' checklistapi checklist');
+function checklistapi_checklist_access($id) {
+  return user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
 }
 
 /**
- * Get all defined checklists.
+ * Loads a checklist object.
  *
- * @return array
- *   An associative array representing the defined checklists.
+ * @param string $id
+ *   The checklist ID.
+ *
+ * @return ChecklistapiChecklist|false
+ *   A fully-loaded checklist object, or FALSE if the checklist is not found.
  */
-function checklistapi_get_checklist_info() {
+function checklistapi_checklist_load($id) {
+  $definition = checklistapi_get_checklist_info($id);
+  return ($definition) ? new ChecklistapiChecklist($definition) : FALSE;
+}
+
+/**
+ * Gets checklist definitions.
+ *
+ * @param string $id
+ *   (optional) A checklist ID.
+ *
+ * @return array|false
+ *   The definition of the specified checklist, or FALSE if no such checklist
+ *   exists, or an array of all checklist definitions if none is specified.
+ */
+function checklistapi_get_checklist_info($id = NULL) {
   $checklists = &drupal_static(__FUNCTION__);
   if (!isset($checklists)) {
     $checklists = module_invoke_all('checklistapi_checklist_info');
@@ -48,9 +67,12 @@ function checklistapi_get_checklist_info() {
     drupal_alter('checklistapi_checklist_info', $checklists);
     $checklists = checklistapi_sort_array($checklists);
     // Create #id properties from array keys.
-    foreach ($checklists as $checklist_id => $checklist) {
-      $checklists[$checklist_id] = array('#id' => $checklist_id) + $checklists[$checklist_id];
+    foreach ($checklists as $key => $value) {
+      $checklists[$key] = array('#id' => $key) + $checklists[$key];
     }
+  }
+  if (!empty($id)) {
+    return (!empty($checklists[$id])) ? $checklists[$id] : FALSE;
   }
   return $checklists;
 }
@@ -111,15 +133,15 @@ function checklistapi_permission() {
   $perms['edit any checklistapi checklist'] = array(
     'title' => t('Edit any checklist'),
   );
-  foreach (checklistapi_get_checklist_info() as $key => $checklist) {
-    if (!empty($key)) {
-      $permission = 'edit ' . $key . ' checklistapi checklist';
+  foreach (checklistapi_get_checklist_info() as $id => $checklist) {
+    if (!empty($id)) {
+      $permission = 'edit ' . $id . ' checklistapi checklist';
       // Only link to the checklist if the active user has access to it.
       $checklist_name_replacement = user_access($permission) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']);
       $perms[$permission] = array(
         'title' => t(
-          'Edit the !checklist checklist',
-          array('!checklist' => $checklist_name_replacement)
+          'Edit the !name checklist',
+          array('!name' => $checklist_name_replacement)
         ),
       );
     }
