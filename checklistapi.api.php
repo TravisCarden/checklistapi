@@ -24,6 +24,8 @@
  *   - #description: A brief description of the checklist for its corresponding
  *     menu item.
  *   - #path: Required. The Drupal path where the checklist will be accessed.
+ *   - #help: User help to be displayed in the "System help" block via
+ *     hook_help().
  *   - #menu_name: Set this to a custom menu if you don't want your item to be
  *     placed in Navigation.
  *   - #weight: An integer used to sort the list of checklists before being
