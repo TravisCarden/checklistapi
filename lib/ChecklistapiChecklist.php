@@ -147,7 +147,7 @@ class ChecklistapiChecklist {
       // Loop through items.
       if (is_array($group)) {
         foreach ($group as $item_key => $item) {
-          $old_item = $this->savedProgress[$group_key][$item_key];
+          $old_item = (!empty($this->savedProgress[$group_key][$item_key])) ? $this->savedProgress[$group_key][$item_key] : 0;
           $new_item = &$values[$group_key][$item_key];
           // Item is checked.
           if ($item == 1) {
