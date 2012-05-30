@@ -53,25 +53,25 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $checklist = checklistapi_checklist_load($id);
-  $save_button = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-    '#submit' => array('checklistapi_checklist_form_submit'),
-  );
-  $clear_link = array(
-    '#type' => 'link',
-    '#title' => t('Clear saved progress'),
-    '#href' => $checklist->path . '/clear',
-    '#access' => $checklist->hasSavedProgress(),
+  $actions = array(
+    '#type' => 'actions',
+    'save' => array(
+      '#type' => 'submit',
+      '#value' => t('Save'),
+      '#submit' => array('checklistapi_checklist_form_submit'),
+    ),
+    'clear' => array(
+      '#type' => 'link',
+      '#title' => t('Clear saved progress'),
+      '#href' => $checklist->path . '/clear',
+      '#access' => $checklist->hasSavedProgress(),
+    ),
   );
 
   $form['#checklist'] = $checklist;
-  $form['submit_top'] = array(
-    '#type' => 'container',
+  $form['actions_top'] = $actions + array(
     '#weight' => -100,
     '#attributes' => array('class' => array('js-hide')),
-    'save' => $save_button,
-    'clear' => $clear_link,
   );
   $form['checklistapi'] = array(
     '#tree' => TRUE,
@@ -151,12 +151,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       );
     }
   }
-  $form['submit_bottom'] = array(
-    '#type' => 'container',
-    '#weight' => 100,
-    'save' => $save_button,
-    'clear' => $clear_link,
-  );
+  $form['actions_bottom'] = $actions + array('#weight' => 100);
 
   return $form;
 }
