@@ -104,11 +104,11 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       if ($saved_item) {
         $default_value = TRUE;
       }
-      elseif (!empty($item['default_value'])) {
-        $default_value = $item['default_value'];
+      elseif (!empty($item['#default_value'])) {
+        $default_value = $item['#default_value'];
       }
       // Get description.
-      $description = (isset($item['description'])) ? '<p>' . $item['description'] . '</p>' : '';
+      $description = (isset($item['#description'])) ? '<p>' . $item['#description'] . '</p>' : '';
       // Build links.
       $links = array();
       $link_keys = element_children($item);

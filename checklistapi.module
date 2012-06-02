@@ -112,10 +112,10 @@ function checklistapi_menu() {
         'file' => 'checklistapi.pages.inc',
       );
       if (!empty($checklist['#description'])) {
-        $items[$path]['#description'] = $checklist['#description'];
+        $items[$path]['description'] = $checklist['#description'];
       }
       if (!empty($checklist['#menu_name'])) {
-        $items[$path]['#menu_name'] = $checklist['#menu_name'];
+        $items[$path]['menu_name'] = $checklist['#menu_name'];
       }
 
       $items[$path . '/clear'] = array(

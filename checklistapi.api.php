@@ -73,7 +73,6 @@
  */
 function hook_checklistapi_checklist_info() {
   $checklists = array();
-
   $checklists['example'] = array(
     '#title' => t('Example checklist'),
     '#description' => t('An example checklist.'),
@@ -85,13 +84,12 @@ function hook_checklistapi_checklist_info() {
       'example_item' => array(
         '#title' => t('Example item'),
         'example_link' => array(
-          'text' => t('Example.com'),
-          'path' => 'http://www.example.com/',
+          '#text' => t('Example.com'),
+          '#path' => 'http://www.example.com/',
         ),
       ),
     ),
   );
-
   return $checklists;
 }
 
