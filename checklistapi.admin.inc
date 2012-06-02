@@ -24,12 +24,13 @@ function checklistapi_report_form() {
   $rows = array();
   foreach (checklistapi_get_checklist_info() as $key => $value) {
     $checklist = checklistapi_checklist_load($key);
+    $row = array();
 
     $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : $checklist->title;
     $row[] = t('@completed of @total (@percent%) complete', array(
       '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
       '@total' => $checklist->totalItems,
-      '@percent' => $completed / $checklist->totalItems * 100,
+      '@percent' => round($completed / $checklist->totalItems * 100),
     ));
     $row[] = (!empty($checklist->savedProgress['#changed'])) ? format_date($checklist->savedProgress['#changed']) : t('n/a');
     $row[] = (!empty($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
