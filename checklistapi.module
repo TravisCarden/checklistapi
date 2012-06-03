@@ -26,10 +26,14 @@ define('CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED', 2);
 define('CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED', 3);
 
 /**
- * Access callback: Checks access for a checklist.
+ * Access callback: Checks the current user's access to a checklist.
  *
  * @param string $id
  *   The checklist ID.
+ *
+ * @return bool
+ *   Returns TRUE if the current has access to the specified checklist, or FALSE
+ *   if not.
  */
 function checklistapi_checklist_access($id) {
   return user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
@@ -136,12 +140,10 @@ function checklistapi_menu() {
  */
 function checklistapi_permission() {
   $perms = array();
-  // Only link to the report if the active user has access to it.
-  $report_name_replacement = user_access('access checklistapi checklists report') ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder(t('Checklists'));
   $perms['access checklistapi checklists report'] = array(
     'title' => t(
       'Access !name report',
-      array('!name' => $report_name_replacement)
+      array('!name' => (user_access('access checklistapi checklists report')) ? l('Checklists', 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
     ),
   );
 
@@ -152,12 +154,10 @@ function checklistapi_permission() {
   foreach (checklistapi_get_checklist_info() as $id => $checklist) {
     if (!empty($id)) {
       $permission = 'edit ' . $id . ' checklistapi checklist';
-      // Only link to the checklist if the active user has access to it.
-      $checklist_name_replacement = user_access($permission) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']);
       $perms[$permission] = array(
         'title' => t(
           'Edit the !name checklist',
-          array('!name' => $checklist_name_replacement)
+          array('!name' => (user_access($permission)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
         ),
       );
     }
@@ -166,14 +166,14 @@ function checklistapi_permission() {
 }
 
 /**
- * Recursively sorts array elements by weight.
+ * Recursively sorts array elements by #weight.
  *
  * @param array $array
  *   A nested array of elements and properties, such as the checklist
  *   definitions returned by hook_checklistapi_checklist_info().
  *
  * @return array
- *   The input array sorted recursively by weight.
+ *   The input array sorted recursively by #weight.
  *
  * @see checklistapi_get_checklist_info()
  */
@@ -201,7 +201,7 @@ function checklistapi_sort_array(array $array) {
     uasort($children, 'element_sort');
     // Remove incremental weight hack.
     foreach ($children as $key => $child) {
-      $children[$key]['#weight'] = round($children[$key]['#weight']);
+      $children[$key]['#weight'] = floor($children[$key]['#weight']);
     }
     // Put children back in the main array.
     $array += $children;

@@ -20,13 +20,11 @@ function checklistapi_report_form() {
     t('Last updated by'),
     t('Operations'),
   );
-
   $rows = array();
   foreach (checklistapi_get_checklist_info() as $key => $value) {
     $checklist = checklistapi_checklist_load($key);
     $row = array();
-
-    $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : $checklist->title;
+    $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title);
     $row[] = t('@completed of @total (@percent%) complete', array(
       '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
       '@total' => $checklist->totalItems,
@@ -37,9 +35,7 @@ function checklistapi_report_form() {
     $row[] = ($checklist->userHasAccess() && $checklist->hasSavedProgress()) ? l(t('clear saved progress'), $checklist->path . '/clear', array(
       'query' => array('destination' => 'admin/reports/checklistapi'),
     )) : '';
-
     $rows[] = $row;
   }
-
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
