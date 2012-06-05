@@ -8,8 +8,6 @@
  * completion times and users.
  */
 
-require_once 'lib/ChecklistapiChecklist.php';
-
 /**
  * Link should always be shown.
  */
