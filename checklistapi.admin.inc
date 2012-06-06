@@ -20,22 +20,28 @@ function checklistapi_report_form() {
     t('Last updated by'),
     t('Operations'),
   );
-  $rows = array();
-  foreach (checklistapi_get_checklist_info() as $key => $value) {
-    $checklist = checklistapi_checklist_load($key);
-    $row = array();
-    $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title);
-    $row[] = t('@completed of @total (@percent%) complete', array(
-      '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
-      '@total' => $checklist->totalItems,
-      '@percent' => round($completed / $checklist->totalItems * 100),
-    ));
-    $row[] = (!empty($checklist->savedProgress['#changed'])) ? format_date($checklist->savedProgress['#changed']) : t('n/a');
-    $row[] = (!empty($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
-    $row[] = ($checklist->userHasAccess() && $checklist->hasSavedProgress()) ? l(t('clear saved progress'), $checklist->path . '/clear', array(
-      'query' => array('destination' => 'admin/reports/checklistapi'),
-    )) : '';
-    $rows[] = $row;
+  $checklists = checklistapi_get_checklist_info();
+  if (count($checklists)) {
+    $rows = array();
+    foreach ($checklists as $key => $value) {
+      $checklist = checklistapi_checklist_load($key);
+      $row = array();
+      $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title);
+      $row[] = t('@completed of @total (@percent%) complete', array(
+        '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
+        '@total' => $checklist->totalItems,
+        '@percent' => round($completed / $checklist->totalItems * 100),
+      ));
+      $row[] = (!empty($checklist->savedProgress['#changed'])) ? format_date($checklist->savedProgress['#changed']) : t('n/a');
+      $row[] = (!empty($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
+      $row[] = ($checklist->userHasAccess() && $checklist->hasSavedProgress()) ? l(t('clear saved progress'), $checklist->path . '/clear', array(
+        'query' => array('destination' => 'admin/reports/checklistapi'),
+      )) : '';
+      $rows[] = $row;
+    }
+  }
+  else {
+    $rows[][] = array('data' => t('No checklists available.'), 'colspan' => 5);
   }
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
