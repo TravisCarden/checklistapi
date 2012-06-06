@@ -141,7 +141,7 @@ function checklistapi_permission() {
   $perms['access checklistapi checklists report'] = array(
     'title' => t(
       'Access !name report',
-      array('!name' => (user_access('access checklistapi checklists report')) ? l('Checklists', 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
+      array('!name' => (user_access('access checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
     ),
   );
 

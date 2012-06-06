@@ -1,9 +1,10 @@
 <?php
 
 /**
-* @file
-* Install, update, and uninstall functions for the Checklist API Example module.
-*/
+ * @file
+ * Install, update, and uninstall functions for the Checklist API Example
+ * module.
+ */
 
 /**
  * Implements hook_uninstall().
