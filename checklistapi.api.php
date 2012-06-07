@@ -65,6 +65,8 @@
  *             the item it belongs to has not checked off.
  *         - #options: An associative array of additional options used by the
  *           l() function.
+ *         - #weight: An integer used to sort the list of items before being
+ *           output; lower numbers appear before higher numbers.
  *
  * For a working example, see checklistapi_example.module.
  *
