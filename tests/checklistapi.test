@@ -20,6 +20,7 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
 
   public function setUp() {
     drupal_load('module', 'checklistapi');
+    drupal_load('module', 'checklistapi_test');
     parent::setUp();
   }
 
@@ -27,36 +28,21 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
    * Test checklistapi_sort_array().
    */
   public function testChecklistapiSortArray() {
-    $input = array(
-      '#title' => '',
-      'two' => array(),
-      'one' => array(
-        '#weight' => -1,
-        'gamma' => array('#weight' => 1),
-        'alpha' => array('#weight' => -1),
-        'beta' => array(),
-      ),
-      'three' => array('#weight' => 'invalid'),
-      'four' => array('#weight' => 1),
-    );
+    $input = array_pop(checklistapi_test_checklistapi_checklist_info());
     $output = checklistapi_sort_array($input);
-    $expected = array(
-      '#title' => '',
-      'one' => array(
-        '#weight' => -1,
-        'alpha' => array('#weight' => -1),
-        'beta' => array('#weight' => 0),
-        'gamma' => array('#weight' => 1),
-      ),
-      'two' => array('#weight' => 0),
-      'three' => array('#weight' => 0),
-      'four' => array('#weight' => 1),
+    $this->assertEqual($output['group_two']['#weight'], 0, 'Supplied a default for omitted element weight.');
+    $this->assertEqual($output['group_three']['#weight'], 0, 'Supplied a default in place of invalid element weight.');
+    $this->assertEqual($output['group_one']['#weight'], -1, 'Retained a valid element weight.');
+    $this->assertEqual(
+      element_children($output),
+      array('group_one', 'group_two', 'group_three', 'group_four'),
+      'Sorted elements by weight.'
     );
-    $this->assertEqual($output['two']['#weight'], $expected['two']['#weight'], 'Supplied a default for missing element weight.');
-    $this->assertEqual($output['four']['#weight'], $expected['four']['#weight'], 'Supplied a default for invalid element weight.');
-    $this->assertEqual($output['one']['#weight'], $expected['one']['#weight'], 'Retained a valid element weight.');
-    $this->assertEqual(array_keys($output), array_keys($expected), 'Sorted elements by weight.');
-    $this->assertNotEqual($input['one'], $output['one'], 'Recursed on child elements.');
+    $this->assertEqual(
+      element_children($output['group_one']['item_one']),
+      array('link_one', 'link_two', 'link_three'),
+      'Recursed through element descendants.'
+    );
   }
 
 }

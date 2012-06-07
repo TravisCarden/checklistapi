@@ -1,0 +1,7 @@
+name = Checklist API test module
+description = Provides an implementation of the Checklist API for testing.
+package = Testing
+version = VERSION
+core = 7.x
+dependencies[] = checklistapi
+hidden = TRUE
