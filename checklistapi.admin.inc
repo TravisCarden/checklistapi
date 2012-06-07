@@ -26,7 +26,10 @@ function checklistapi_report_form() {
     foreach ($checklists as $key => $value) {
       $checklist = checklistapi_checklist_load($key);
       $row = array();
-      $row[] = ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title);
+      $row[] = array(
+        'data' => ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title),
+        'title' => (!empty($checklist->description)) ? $checklist->description : '',
+      );
       $row[] = t('@completed of @total (@percent%) complete', array(
         '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
         '@total' => $checklist->totalItems,
