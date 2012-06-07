@@ -6,91 +6,6 @@
  */
 
 /**
- * Implements hook_checklistapi_checklist_info_alter().
- *
- * Alters the checklist from checklistapi_example_checklistapi_checklist_info()
- * according to
- * @link http://www.unleashedmind.com/files/drupal-learning-curve.png sun's modifications @endlink
- * of
- * @link http://buytaert.net/drupal-learning-curve Dries Buytaert's Drupal learning curve @endlink
- * .
- */
-function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
-  $checklists['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
-  $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
-  $checklists['example_checklist']['i_kick_butt']['advanced_tasks'] += $checklists['example_checklist']['i_kick_butt']['development'];
-  unset($checklists['example_checklist']['i_kick_butt']['development']);
-  $checklists['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
-  unset($checklists['example_checklist']['i_kick_butt']['chx_or_unconed']);
-  $checklists['example_checklist']['core_contributor'] = array(
-    '#title' => t("I'm a core contributor"),
-    'contribute_core_code' => array(
-      '#title' => t('Contribute code and patches to Drupal core'),
-      'handbook_page' => array(
-        '#text' => t('Core contribution mentoring (core office hours)'),
-        '#path' => 'http://drupal.org/core-office-hours',
-      ),
-      'issue_queue' => array(
-        '#text' => t('Core issue queue'),
-        '#path' => 'http://drupal.org/project/issues/drupal',
-      ),
-    ),
-    'unit_tests' => array(
-      '#title' => t('Write unit tests to get own patch committed.'),
-      'handbook_page' => array(
-        '#text' => t('Unit Testing with Simpletest'),
-        '#path' => 'http://drupal.org/node/811254',
-      ),
-    ),
-    'review_core_patches' => array(
-      '#title' => t("Review other people's core patches, understanding coding standards."),
-      'pending_patches' => array(
-        '#text' => t('Pending patches'),
-        '#path' => 'http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14',
-      ),
-      'handbook_page' => array(
-        '#text' => t('Coding standards'),
-        '#path' => 'http://drupal.org/coding-standards',
-      ),
-    ),
-    'security_performance' => array(
-      '#title' => t('Security audits, performance tuning.'),
-      'handbook_page_security' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
-      'handbook_page_performance' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
-    ),
-  );
-  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
-  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
-  $checklists['example_checklist']['core_maintainer'] = array(
-    '#title' => t("I'm trustworthy for core maintainership"),
-    'add_sub_system' => array(
-      '#title' => t('Rewrite or add a Drupal core sub-system.'),
-    ),
-    'sub_system_maintainer' => array(
-      '#title' => t('Sub-system maintainer.'),
-    ),
-    'core_branch_maintainer' => array(
-      '#title' => t('Core branch maintainer'),
-    ),
-  );
-  $checklists['example_checklist']['know_every_bit_of_core'] = array(
-    '#title' => t('I know every bit of core'),
-    'im_chx' => array(
-      '#title' => t(
-        "I'm !chx.",
-        array('!chx' => l(t('chx'), 'http://drupal.org/user/9446'))
-      ),
-    ),
-  );
-  $checklists['example_checklist']['understand_all_core_patch_implications'] = array(
-    '#title' => t('I understand all implications of a core patch'),
-    'im_chuck_norris' => array(
-      '#title' => t("I'm Chuck Norris."),
-    ),
-  );
-}
-
-/**
  * Implements hook_checklistapi_checklist_info().
  *
  * Defines a checklist based on
@@ -281,4 +196,89 @@ function checklistapi_example_checklistapi_checklist_info() {
     ),
   );
   return $checklists;
+}
+
+/**
+ * Implements hook_checklistapi_checklist_info_alter().
+ *
+ * Alters the checklist from checklistapi_example_checklistapi_checklist_info()
+ * according to
+ * @link http://www.unleashedmind.com/files/drupal-learning-curve.png sun's modifications @endlink
+ * of
+ * @link http://buytaert.net/drupal-learning-curve Dries Buytaert's Drupal learning curve @endlink
+ * .
+ */
+function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
+  $checklists['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
+  $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
+  $checklists['example_checklist']['i_kick_butt']['advanced_tasks'] += $checklists['example_checklist']['i_kick_butt']['development'];
+  unset($checklists['example_checklist']['i_kick_butt']['development']);
+  $checklists['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
+  unset($checklists['example_checklist']['i_kick_butt']['chx_or_unconed']);
+  $checklists['example_checklist']['core_contributor'] = array(
+    '#title' => t("I'm a core contributor"),
+    'contribute_core_code' => array(
+      '#title' => t('Contribute code and patches to Drupal core'),
+      'handbook_page' => array(
+        '#text' => t('Core contribution mentoring (core office hours)'),
+        '#path' => 'http://drupal.org/core-office-hours',
+      ),
+      'issue_queue' => array(
+        '#text' => t('Core issue queue'),
+        '#path' => 'http://drupal.org/project/issues/drupal',
+      ),
+    ),
+    'unit_tests' => array(
+      '#title' => t('Write unit tests to get own patch committed.'),
+      'handbook_page' => array(
+        '#text' => t('Unit Testing with Simpletest'),
+        '#path' => 'http://drupal.org/node/811254',
+      ),
+    ),
+    'review_core_patches' => array(
+      '#title' => t("Review other people's core patches, understanding coding standards."),
+      'pending_patches' => array(
+        '#text' => t('Pending patches'),
+        '#path' => 'http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14',
+      ),
+      'handbook_page' => array(
+        '#text' => t('Coding standards'),
+        '#path' => 'http://drupal.org/coding-standards',
+      ),
+    ),
+    'security_performance' => array(
+      '#title' => t('Security audits, performance tuning.'),
+      'handbook_page_security' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
+      'handbook_page_performance' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
+    ),
+  );
+  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
+  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
+  $checklists['example_checklist']['core_maintainer'] = array(
+    '#title' => t("I'm trustworthy for core maintainership"),
+    'add_sub_system' => array(
+      '#title' => t('Rewrite or add a Drupal core sub-system.'),
+    ),
+    'sub_system_maintainer' => array(
+      '#title' => t('Sub-system maintainer.'),
+    ),
+    'core_branch_maintainer' => array(
+      '#title' => t('Core branch maintainer'),
+    ),
+  );
+  $checklists['example_checklist']['know_every_bit_of_core'] = array(
+    '#title' => t('I know every bit of core'),
+    'im_chx' => array(
+      '#title' => t(
+        "I'm !chx.",
+        array('!chx' => l(t('chx'), 'http://drupal.org/user/9446'))
+      ),
+    ),
+  );
+  $checklists['example_checklist']['understand_all_core_patch_implications'] = array(
+    '#title' => t('I understand all implications of a core patch'),
+    'im_chuck_norris' => array(
+      '#title' => t("I'm Chuck Norris."),
+    ),
+  );
 }
