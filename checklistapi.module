@@ -99,6 +99,7 @@ function checklistapi_menu() {
     'title' => 'Checklists',
     'page callback' => 'checklistapi_report_form',
     'access arguments' => array('access checklistapi checklists report'),
+    'description' => 'Get an overview of your installed checklists with progress details.',
     'file' => 'checklistapi.admin.inc',
   );
 
