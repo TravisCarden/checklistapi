@@ -10,6 +10,9 @@
  */
 class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
 
+  /**
+   * Overrides DrupalUnitTestCase::getInfo().
+   */
   public static function getInfo() {
     return array(
       'name' => 'Unit tests',
@@ -18,6 +21,9 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
     );
   }
 
+  /**
+   * Overrides DrupalUnitTestCase::setUp().
+   */
   public function setUp() {
     drupal_load('module', 'checklistapi');
     drupal_load('module', 'checklistapi_test');
@@ -57,6 +63,9 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
 class ChecklistapiWebTestCase extends DrupalWebTestCase {
   protected $privilegedUser;
 
+  /**
+   * Overrides DrupalWebTestCase::getInfo().
+   */
   public static function getInfo() {
     return array(
       'name' => 'Functional tests',
@@ -65,6 +74,9 @@ class ChecklistapiWebTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Overrides DrupalWebTestCase::setUp().
+   */
   public function setUp() {
     parent::setUp('checklistapi_example');
     $permissions = array('edit any checklistapi checklist');
