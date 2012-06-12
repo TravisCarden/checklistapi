@@ -93,7 +93,7 @@ class ChecklistapiChecklist {
       unset($definition[$group_key]);
     }
     foreach ($definition as $key => $value) {
-      $property_name = checklistapi_convert_string_to_lower_camel(substr($key, 1));
+      $property_name = checklistapi_strtolowercamel(drupal_substr($key, 1));
       $this->$property_name = $value;
     }
     $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
@@ -149,27 +149,26 @@ class ChecklistapiChecklist {
         foreach ($group as $item_key => $item) {
           $old_item = (!empty($this->savedProgress[$group_key][$item_key])) ? $this->savedProgress[$group_key][$item_key] : 0;
           $new_item = &$values[$group_key][$item_key];
-          // Item is checked.
           if ($item == 1) {
+            // Item is checked.
             $completed_items_counter++;
-            // Item was previously checked. Use saved value.
             if ($old_item) {
+              // Item was previously checked. Use saved value.
               $new_item = $old_item;
             }
-            // Item is newly checked. Set new value.
             else {
+              // Item is newly checked. Set new value.
               $new_item = array(
                 '#completed' => $time,
                 '#uid' => $user->uid,
               );
-              // Increment changed items counter.
               $changed_items_counter++;
             }
           }
-          // Item is unchecked.
           else {
-            // Item was previously checked off. Increment changed items counter.
+            // Item is unchecked.
             if ($old_item) {
+              // Item was previously checked.
               $changed_items_counter++;
             }
           }

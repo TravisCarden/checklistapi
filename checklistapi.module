@@ -65,56 +65,39 @@ function checklistapi_checklist_load($id) {
 }
 
 /**
- * Converts a string to lowerCamel case, suitably for a class property name.
- *
- * @param string $string
- *   The input string.
- *
- * @return string
- *   The input string converted to camelCase.
- */
-function checklistapi_convert_string_to_lower_camel($string) {
-  $string = str_replace('_', ' ', $string);
-  $string = ucwords($string);
-  $string = str_replace(' ', '', $string);
-  return lcfirst($string);
-}
-
-/**
  * Gets checklist definitions.
  *
  * @param string $id
- *   (optional) A checklist ID.
+ *   (optional) A checklist ID. Defaults to NULL.
  *
  * @return array|false
  *   The definition of the specified checklist, or FALSE if no such checklist
  *   exists, or an array of all checklist definitions if none is specified.
  */
 function checklistapi_get_checklist_info($id = NULL) {
-  $checklists = &drupal_static(__FUNCTION__);
-  if (!isset($checklists)) {
-    $checklists = module_invoke_all('checklistapi_checklist_info');
-    $checklists = checklistapi_sort_array($checklists);
-    drupal_alter('checklistapi_checklist_info', $checklists);
-    $checklists = checklistapi_sort_array($checklists);
-    foreach ($checklists as $key => $value) {
-      $checklists[$key] = array('#id' => $key) + $checklists[$key];
+  $definitions = &drupal_static(__FUNCTION__);
+  if (!isset($definitions)) {
+    $definitions = module_invoke_all('checklistapi_checklist_info');
+    $definitions = checklistapi_sort_array($definitions);
+    drupal_alter('checklistapi_checklist_info', $definitions);
+    $definitions = checklistapi_sort_array($definitions);
+    foreach ($definitions as $key => $value) {
+      $definitions[$key] = array('#id' => $key) + $definitions[$key];
     }
   }
   if (!empty($id)) {
-    return (!empty($checklists[$id])) ? $checklists[$id] : FALSE;
+    return (!empty($definitions[$id])) ? $definitions[$id] : FALSE;
   }
-  return $checklists;
+  return $definitions;
 }
 
 /**
  * Implements hook_help().
  */
 function checklistapi_help($path, $arg) {
-  $checklists = checklistapi_get_checklist_info();
-  foreach ($checklists as $checklist) {
-    if ($checklist['#path'] == $path && !empty($checklist['#help'])) {
-      return $checklist['#help'];
+  foreach (checklistapi_get_checklist_info() as $definition) {
+    if ($definition['#path'] == $path && !empty($definition['#help'])) {
+      return $definition['#help'];
     }
   }
 }
@@ -133,27 +116,26 @@ function checklistapi_menu() {
     'file' => 'checklistapi.admin.inc',
   );
   // Individual checklists.
-  foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
-    if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
-      $checklist_path = $checklist['#path'];
+  foreach (checklistapi_get_checklist_info() as $id => $definition) {
+    if (!empty($definition['#path']) && !empty($definition['#title'])) {
       // View/edit checklist.
-      $items[$checklist_path] = array(
-        'title' => $checklist['#title'],
-        'description' => (!empty($checklist['#description'])) ? $checklist['#description'] : '',
+      $items[$definition['#path']] = array(
+        'title' => $definition['#title'],
+        'description' => (!empty($definition['#description'])) ? $definition['#description'] : '',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('checklistapi_checklist_form', $checklist_id),
+        'page arguments' => array('checklistapi_checklist_form', $id),
         'access callback' => 'checklistapi_checklist_access',
-        'access arguments' => array($checklist_id),
+        'access arguments' => array($id),
         'file' => 'checklistapi.pages.inc',
-        'menu_name' => (!empty($checklist['#menu_name'])) ? $checklist['#menu_name'] : '',
+        'menu_name' => (!empty($definition['#menu_name'])) ? $definition['#menu_name'] : '',
       );
       // Clear saved progress.
-      $items[$checklist_path . '/clear'] = array(
+      $items[$definition['#path'] . '/clear'] = array(
         'title' => 'Clear',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('checklistapi_checklist_clear_confirm', $checklist_id),
+        'page arguments' => array('checklistapi_checklist_clear_confirm', $id),
         'access callback' => 'checklistapi_checklist_access',
-        'access arguments' => array($checklist_id, 'edit'),
+        'access arguments' => array($id, 'edit'),
         'file' => 'checklistapi.pages.inc',
       );
     }
@@ -182,19 +164,19 @@ function checklistapi_permission() {
     'description' => $edit_checklist_perm_description = t('Check and uncheck list items and save changes, or clear saved progress.'),
   );
   // Per checklist permissions.
-  foreach (checklistapi_get_checklist_info() as $id => $checklist) {
+  foreach (checklistapi_get_checklist_info() as $id => $definition) {
     if (!empty($id)) {
       $perms['view ' . $id . ' checklistapi checklist'] = array(
         'title' => t(
           'View the !name checklist',
-          array('!name' => (checklistapi_checklist_access($id)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
+          array('!name' => (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']))
         ),
         'description' => $view_checklist_perm_description,
       );
       $perms['edit ' . $id . ' checklistapi checklist'] = array(
         'title' => t(
           'Edit the !name checklist',
-          array('!name' => (checklistapi_checklist_access($id)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
+          array('!name' => (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']))
         ),
         'description' => $edit_checklist_perm_description,
       );
@@ -245,4 +227,20 @@ function checklistapi_sort_array(array $array) {
     $array += $children;
   }
   return $array;
+}
+
+/**
+ * Converts a string to lowerCamel case, suitably for a class property name.
+ *
+ * @param string $string
+ *   The input string.
+ *
+ * @return string
+ *   The input string converted to camelCase.
+ */
+function checklistapi_strtolowercamel($string) {
+  $string = str_replace('_', ' ', $string);
+  $string = ucwords($string);
+  $string = str_replace(' ', '', $string);
+  return lcfirst($string);
 }

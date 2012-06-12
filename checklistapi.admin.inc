@@ -20,11 +20,11 @@ function checklistapi_report_form() {
     t('Last updated by'),
     t('Operations'),
   );
-  $checklists = checklistapi_get_checklist_info();
-  if (count($checklists)) {
+  $definitions = checklistapi_get_checklist_info();
+  if (count($definitions)) {
     $rows = array();
-    foreach ($checklists as $key => $value) {
-      $checklist = checklistapi_checklist_load($key);
+    foreach ($definitions as $id => $definition) {
+      $checklist = checklistapi_checklist_load($id);
       $row = array();
       $row[] = array(
         'data' => ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title),

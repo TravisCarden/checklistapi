@@ -52,7 +52,7 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  * @ingroup forms
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
-  $checklist = checklistapi_checklist_load($id);
+  $form['#checklist'] = $checklist = checklistapi_checklist_load($id);
   $actions = array(
     '#type' => 'actions',
     '#access' => $user_has_edit_access = $checklist->userHasAccess('edit'),
@@ -68,8 +68,6 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       '#access' => $checklist->hasSavedProgress(),
     ),
   );
-
-  $form['#checklist'] = $checklist;
   $form['actions_top'] = $actions + array(
     '#weight' => -100,
     '#attributes' => array('class' => array('js-hide')),
@@ -84,7 +82,6 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
   );
   // Loop through groups.
   $groups = $checklist->items;
-
   foreach (element_children($groups) as $group_key) {
     $group = &$groups[$group_key];
     $form['checklistapi'][$group_key] = array(
@@ -98,9 +95,8 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     $item_keys = element_children($group);
     foreach ($item_keys as $item_key) {
       $item = &$group[$item_key];
-      // Get saved state.
-      $saved_item = !empty($checklist->savedProgress[$group_key][$item_key]) ? $checklist->savedProgress[$group_key][$item_key] : 0;
       // Set default value.
+      $saved_item = !empty($checklist->savedProgress[$group_key][$item_key]) ? $checklist->savedProgress[$group_key][$item_key] : 0;
       $default_value = FALSE;
       if ($saved_item) {
         $default_value = TRUE;
@@ -143,7 +139,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         ));
       }
       $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
-      // Build the list item.
+      // Compile the list item.
       $form['checklistapi'][$group_key][$item_key] = array(
         '#type' => 'checkbox',
         '#title' => filter_xss($item['#title']),
@@ -154,7 +150,6 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     }
   }
   $form['actions_bottom'] = $actions + array('#weight' => 100);
-
   return $form;
 }
 

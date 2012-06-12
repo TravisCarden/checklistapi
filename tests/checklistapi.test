@@ -58,7 +58,7 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
  *
  * @todo Add tests for vertical tabs progress indicators.
  * @todo Add tests for saving and retrieving checklist progress.
- * @todo Add tests for resetting saved progress.
+ * @todo Add tests for clearing saved progress.
  */
 class ChecklistapiWebTestCase extends DrupalWebTestCase {
   protected $privilegedUser;
