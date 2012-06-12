@@ -93,7 +93,7 @@ class ChecklistapiChecklist {
       unset($definition[$group_key]);
     }
     foreach ($definition as $key => $value) {
-      $property_name = $this->strtolowercamel(substr($key, 1));
+      $property_name = checklistapi_convert_string_to_lower_camel(substr($key, 1));
       $this->$property_name = $value;
     }
     $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
@@ -188,22 +188,6 @@ class ChecklistapiChecklist {
       'Checklist %title has been updated. @count items changed.',
       array('%title' => $this->title)
     ));
-  }
-
-  /**
-   * Converts a string to lowerCamel case, suitably for a class property name.
-   *
-   * @param string $string
-   *   The input string.
-   *
-   * @return string
-   *   The input string converted to camelCase.
-   */
-  protected function strtolowercamel($string) {
-    $string = str_replace('_', ' ', $string);
-    $string = ucwords($string);
-    $string = str_replace(' ', '', $string);
-    return lcfirst($string);
   }
 
   /**

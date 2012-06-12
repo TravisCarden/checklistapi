@@ -52,6 +52,22 @@ function checklistapi_checklist_load($id) {
 }
 
 /**
+ * Converts a string to lowerCamel case, suitably for a class property name.
+ *
+ * @param string $string
+ *   The input string.
+ *
+ * @return string
+ *   The input string converted to camelCase.
+ */
+function checklistapi_convert_string_to_lower_camel($string) {
+  $string = str_replace('_', ' ', $string);
+  $string = ucwords($string);
+  $string = str_replace(' ', '', $string);
+  return lcfirst($string);
+}
+
+/**
  * Gets checklist definitions.
  *
  * @param string $id
