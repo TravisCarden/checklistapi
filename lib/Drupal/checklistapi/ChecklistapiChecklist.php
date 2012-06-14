@@ -193,11 +193,15 @@ class ChecklistapiChecklist {
   /**
    * Determines whether the current user has access to the checklist.
    *
+   * @param string $operation
+   *   The operation to test access for. Possible values are "view", "edit", and
+   *   "any". Defaults to "any".
+   *
    * @return bool
    *   Returns TRUE if the user has access, or FALSE if not.
    */
-  public function userHasAccess() {
-    return checklistapi_checklist_access($this->id);
+  public function userHasAccess($operation = 'any') {
+    return checklistapi_checklist_access($this->id, $operation);
   }
 
 }

@@ -28,13 +28,26 @@ define('CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED', 3);
  *
  * @param string $id
  *   The checklist ID.
+ * @param string $operation
+ *   The operation to test access for. Possible values are "view", "edit", and
+ *   "any". Defaults to "any".
  *
  * @return bool
- *   Returns TRUE if the current has access to the specified checklist, or FALSE
- *   if not.
+ *   Returns TRUE if the current user has access to perform a given operation on
+ *   the specified checklist, or FALSE if not.
  */
-function checklistapi_checklist_access($id) {
-  return user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
+function checklistapi_checklist_access($id, $operation = 'any') {
+  $view_access = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
+  $edit_access = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
+  switch ($operation) {
+    case 'view':
+      return $view_access;
+    case 'edit':
+      return $edit_access;
+    case 'any':
+    default:
+      return $view_access || $edit_access;
+  }
 }
 
 /**
@@ -111,38 +124,36 @@ function checklistapi_help($path, $arg) {
  */
 function checklistapi_menu() {
   $items = array();
+  // Checklists report.
   $items['admin/reports/checklistapi'] = array(
     'title' => 'Checklists',
     'page callback' => 'checklistapi_report_form',
-    'access arguments' => array('access checklistapi checklists report'),
+    'access arguments' => array('view checklistapi checklists report'),
     'description' => 'Get an overview of your installed checklists with progress details.',
     'file' => 'checklistapi.admin.inc',
   );
-
+  // Individual checklists.
   foreach (checklistapi_get_checklist_info() as $checklist_id => $checklist) {
     if (!empty($checklist['#path']) && !empty($checklist['#title'])) {
-      $path = $checklist['#path'];
-      $items[$path] = array(
+      $checklist_path = $checklist['#path'];
+      // View/edit checklist.
+      $items[$checklist_path] = array(
         'title' => $checklist['#title'],
+        'description' => (!empty($checklist['#description'])) ? $checklist['#description'] : '',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('checklistapi_checklist_form', $checklist_id),
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($checklist_id),
         'file' => 'checklistapi.pages.inc',
+        'menu_name' => (!empty($checklist['#menu_name'])) ? $checklist['#menu_name'] : '',
       );
-      if (!empty($checklist['#description'])) {
-        $items[$path]['description'] = $checklist['#description'];
-      }
-      if (!empty($checklist['#menu_name'])) {
-        $items[$path]['menu_name'] = $checklist['#menu_name'];
-      }
-
-      $items[$path . '/clear'] = array(
+      // Clear saved progress.
+      $items[$checklist_path . '/clear'] = array(
         'title' => 'Clear',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('checklistapi_checklist_clear_confirm', $checklist_id),
         'access callback' => 'checklistapi_checklist_access',
-        'access arguments' => array($checklist_id),
+        'access arguments' => array($checklist_id, 'edit'),
         'file' => 'checklistapi.pages.inc',
       );
     }
@@ -155,25 +166,37 @@ function checklistapi_menu() {
  */
 function checklistapi_permission() {
   $perms = array();
-  $perms['access checklistapi checklists report'] = array(
+  // Universal permissions.
+  $perms['view checklistapi checklists report'] = array(
     'title' => t(
-      'Access !name report',
-      array('!name' => (user_access('access checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
+      'View the !name report',
+      array('!name' => (user_access('view checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
     ),
   );
-
+  $perms['view any checklistapi checklist'] = array(
+    'title' => t('View any checklist'),
+    'description' => $view_checklist_perm_description = t('Read-only access: View list items and saved progress.'),
+  );
   $perms['edit any checklistapi checklist'] = array(
     'title' => t('Edit any checklist'),
+    'description' => $edit_checklist_perm_description = t('Check and uncheck list items and save changes, or clear saved progress.'),
   );
-
+  // Per checklist permissions.
   foreach (checklistapi_get_checklist_info() as $id => $checklist) {
     if (!empty($id)) {
-      $permission = 'edit ' . $id . ' checklistapi checklist';
-      $perms[$permission] = array(
+      $perms['view ' . $id . ' checklistapi checklist'] = array(
+        'title' => t(
+          'View the !name checklist',
+          array('!name' => (checklistapi_checklist_access($id)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
+        ),
+        'description' => $view_checklist_perm_description,
+      );
+      $perms['edit ' . $id . ' checklistapi checklist'] = array(
         'title' => t(
           'Edit the !name checklist',
-          array('!name' => (user_access($permission)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
+          array('!name' => (checklistapi_checklist_access($id)) ? l($checklist['#title'], $checklist['#path']) : drupal_placeholder($checklist['#title']))
         ),
+        'description' => $edit_checklist_perm_description,
       );
     }
   }

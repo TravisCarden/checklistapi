@@ -55,6 +55,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
   $checklist = checklistapi_checklist_load($id);
   $actions = array(
     '#type' => 'actions',
+    '#access' => $user_has_edit_access = $checklist->userHasAccess('edit'),
     'save' => array(
       '#type' => 'submit',
       '#value' => t('Save'),
@@ -148,6 +149,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         '#title' => filter_xss($item['#title']),
         '#description' => filter_xss_admin($description),
         '#default_value' => $default_value,
+        '#disabled' => !$user_has_edit_access,
       );
     }
   }
