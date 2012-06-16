@@ -14,59 +14,64 @@
  * Define all checklists provided by the module.
  *
  * Any number of checklists can be defined in an implementation of this hook.
- * Checklist API will register a menu item and create a permission for each one.
+ * Checklist API will register menu items and create permissions for each one.
  *
  * @return array
  *   An array of checklists. Each checklist is keyed by an arbitrary unique
  *   identifier. The corresponding multidimensional array describing the
  *   checklist may contain the following key-value pairs:
- *   - #title: Required. The title of the checklist.
- *   - #description: A brief description of the checklist for its corresponding
- *     menu item.
- *   - #path: Required. The Drupal path where the checklist will be accessed.
- *   - #help: User help to be displayed in the "System help" block via
- *     hook_help().
- *   - #menu_name: Set this to a custom menu if you don't want your item to be
- *     placed in Navigation.
- *   - #weight: An integer used to sort the list of checklists before being
- *     output; lower numbers appear before higher numbers.
- *   - Any number of arrays representing groups of items, presented as vertical
- *     tabs. Each group is keyed by an arbitrary unique identifier. The
- *     corresponding multimensional array describing the group may contain the
- *     following key-value pairs:
- *     - #title: Required. The title of the group used as the vertical tab
- *       label.
- *     - #description: A description of the group.
- *     - #weight: An integer used to sort the list of groups before being
- *       output; lower numbers appear before higher numbers.
+ *   - #title: The title of the checklist.
+ *   - #path: The Drupal path where the checklist will be accessed.
+ *   - #description: (optional) A brief description of the checklist for its
+ *     corresponding menu item.
+ *   - #help: (optional) User help to be displayed in the "System help" block
+ *     via hook_help().
+ *   - #menu_name: (optional) Set this to a custom menu if you don't want your
+ *     item to be placed in Navigation.
+ *   - #weight: (optional) A floating point number used to sort the list of
+ *     checklists before being output. Lower numbers appear before higher
+ *     numbers.
+ *   - Any number of arrays representing groups of items, to be presented as
+ *     vertical tabs. Each group is keyed by an arbitrary identifier, unique in
+ *     the scope of the checklist. The corresponding multimensional array
+ *     describing the group may contain the following key-value pairs:
+ *     - #title: The title of the group, used as the vertical tab label.
+ *     - #description: (optional) A description of the group.
+ *     - #weight: (optional) A floating point number used to sort the list of
+ *       groups before being output. Lower numbers appear before higher numbers.
  *     - Any number of arrays representing checklist items. Each item is keyed
- *       by an arbitrary unique identifier. The corresponding multimensional
- *       array describing the item may contain the following key-value pairs:
- *       - #title: Required. The title of the item.
- *       - #description: A description of the item.
- *       - #default_value: The default checked state of the item--TRUE for
- *         checked or FALSE for unchecked. Defaults to FALSE. This is useful for
- *         automatically checking off tasks that can be programmatically tested
- *         (e.g. a module is installed or a setting set).
- *       - #weight: An integer used to sort the list of items before being
- *         output; lower numbers appear before higher numbers.
+ *       by an arbitrary identifier, unique in the scope of the checklist. The
+ *       corresponding multimensional array describing the item may contain the
+ *       following key-value pairs:
+ *       - #title: The title of the item.
+ *       - #description: (optional) A description of the item, for display
+ *         beneath the title.
+ *       - #default_value: (optional) The default checked state of the
+ *         item--TRUE for checked or FALSE for unchecked. Defaults to FALSE.
+ *         This is useful for automatically checking items that can be
+ *         programmatically tested (e.g. a module is installed or a variable has
+ *         a certain value).
+ *       - #weight: (optional) A floating point number used to sort the list of
+ *         items before being output. Lower numbers appear before higher
+ *         numbers.
  *       - Any number of arrays representing links. Each link is keyed by an
  *         arbitrary unique identifier. The corresponding multimensional array
  *         describing the link may contain the following key-value pairs:
  *         - #text: The link text.
  *         - #path: The link path.
- *         - #context: The context in which the link may appear. May be one of
- *           the following:
- *           - CHECKLISTAPI_LINK_CONTEXT_ANY: Default. The link will always
+ *         - #options: (optional) An associative array of additional options
+ *           used by the l() function.
+ *         - #context: (optional) The context in which the link may appear. May
+ *           be one of the following:
+ *           - CHECKLISTAPI_LINK_CONTEXT_ANY: (default) The link will always
  *             appear.
  *           - CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED: The link will appear if
- *             the item it belongs to has been checked off.
+ *             the item it belongs to has been previously checked.
  *           - CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED: The link will appear if
- *             the item it belongs to has not checked off.
- *         - #options: An associative array of additional options used by the
- *           l() function.
- *         - #weight: An integer used to sort the list of items before being
- *           output; lower numbers appear before higher numbers.
+ *             the item it belongs to has not been previously checked.
+ *         - #weight: (optional) A floating point number used to sort the list
+ *           of items before being output. Lower numbers appear before higher
+ *           numbers.
  *
  * For a working example, see checklistapi_example.module.
  *
@@ -75,20 +80,23 @@
  */
 function hook_checklistapi_checklist_info() {
   $checklists = array();
-  $checklists['example'] = array(
+  $checklists['example_checklist'] = array(
     '#title' => t('Example checklist'),
-    '#description' => t('An example checklist.'),
     '#path' => 'example-checklist',
+    '#description' => t('An example checklist.'),
     '#help' => t('<p>This is an example checklist.</p>'),
     'example_group' => array(
       '#title' => t('Example group'),
       '#description' => t('<p>Here are some example items.</p>'),
-      'example_item' => array(
-        '#title' => t('Example item'),
+      'example_item_1' => array(
+        '#title' => t('Example item 1'),
         'example_link' => array(
           '#text' => t('Example.com'),
           '#path' => 'http://www.example.com/',
         ),
+      ),
+      'example_item_2' => array(
+        '#title' => t('Example item 2'),
       ),
     ),
   );
@@ -99,13 +107,11 @@ function hook_checklistapi_checklist_info() {
  * Alter checklist definitions.
  *
  * This hook is invoked by checklistapi_get_checklist_info(). The checklist
- * definitions are passed in by reference. Each element of the $checklists array
- * is one returned by a module from checklistapi_get_checklist_info().
- * Additional checklists may be added, or existing checklists may be altered or
- * removed.
+ * definitions are passed in by reference. Additional checklists may be added,
+ * or existing checklists may be altered or removed.
  *
- * @param array $checklists
- *   A multidimensional array of checklists definitions returned from
+ * @param array $definitions
+ *   The multidimensional array of checklist definitions returned by
  *   hook_checklistapi_checklist_info().
  *
  * For a working example, see checklistapi_example.module.
@@ -113,13 +119,20 @@ function hook_checklistapi_checklist_info() {
  * @see checklistapi_get_checklist_info()
  * @see hook_checklistapi_checklist_info()
  */
-function hook_checklistapi_checklist_info_alter(array &$checklists) {
+function hook_checklistapi_checklist_info_alter(array &$definitions) {
   // Add an item.
-  $checklists['example']['example_group']['sample_item'] = array(
-    'title' => t('Sample item'),
+  $definitions['example_checklist']['example_group']['new_item'] = array(
+    'title' => t('New item'),
   );
+  // Add a group.
+  $definitions['example_checklist']['new_group'] = array(
+    '#title' => t('New group'),
+  );
+  // Move an item.
+  $definitions['example_checklist']['new_group']['example_item_1'] = $definitions['example_checklist']['example_group']['example_item_1'];
+  unset($definitions['example_checklist']['example_group']['example_item_1']);
   // Remove an item.
-  unset($checklists['example']['example_group']['example_item']);
+  unset($definitions['example_checklist']['example_group']['example_item_2']);
 }
 
 /**

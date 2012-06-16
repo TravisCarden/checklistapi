@@ -12,8 +12,8 @@ function checklistapi_test_checklistapi_checklist_info() {
   $checklists = array();
   $checklists['test_checklist'] = array(
     '#title' => t('Checklist API test'),
-    '#description' => t('A test checklist.'),
     '#path' => 'admin/config/development/checklistapi-test',
+    '#description' => t('A test checklist.'),
     '#help' => t('<p>This is a test checklist.</p>'),
     'group_two' => array(
       '#title' => t('Group two'),

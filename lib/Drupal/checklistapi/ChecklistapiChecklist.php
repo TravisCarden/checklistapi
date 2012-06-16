@@ -92,8 +92,8 @@ class ChecklistapiChecklist {
       $this->items[$group_key] = $definition[$group_key];
       unset($definition[$group_key]);
     }
-    foreach ($definition as $key => $value) {
-      $property_name = checklistapi_strtolowercamel(drupal_substr($key, 1));
+    foreach ($definition as $property_key => $value) {
+      $property_name = checklistapi_strtolowercamel(drupal_substr($property_key, 1));
       $this->$property_name = $value;
     }
     $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
@@ -135,7 +135,9 @@ class ChecklistapiChecklist {
    * Saves checklist progress to a Drupal variable.
    *
    * @param array $values
-   *   A multidimensional array representing.
+   *   A multidimensional array of form state checklist values.
+   *
+   * @see checklistapi_checklist_form_submit()
    */
   public function saveProgress(array $values) {
     global $user;

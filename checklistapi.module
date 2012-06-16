@@ -14,12 +14,14 @@
 define('CHECKLISTAPI_LINK_CONTEXT_ANY', 1);
 
 /**
- * Link should only be shown if the item it belongs to has been checked off.
+ * Link should only be shown if the item it belongs to has been previously
+ * checked.
  */
 define('CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED', 2);
 
 /**
- * Link should only be shown if the item it belongs to has not been checked off.
+ * Link should only be shown if the item it belongs to has not been previously
+ * checked.
  */
 define('CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED', 3);
 
