@@ -96,7 +96,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     foreach ($item_keys as $item_key) {
       $item = &$group[$item_key];
       // Set default value.
-      $saved_item = !empty($checklist->savedProgress[$group_key][$item_key]) ? $checklist->savedProgress[$group_key][$item_key] : 0;
+      $saved_item = !empty($checklist->savedProgress[$item_key]) ? $checklist->savedProgress[$item_key] : 0;
       $default_value = FALSE;
       if ($saved_item) {
         $default_value = TRUE;

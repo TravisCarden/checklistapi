@@ -140,18 +140,21 @@ class ChecklistapiChecklist {
   public function saveProgress(array $values) {
     global $user;
     $time = time();
-    $completed_items_counter = 0;
     $changed_items_counter = 0;
+    $progress = array(
+      '#changed' => $time,
+      '#changed_by' => $user->uid,
+      '#completed_items' => 0,
+    );
     // Loop through groups.
     foreach ($values as $group_key => $group) {
       // Loop through items.
       if (is_array($group)) {
         foreach ($group as $item_key => $item) {
-          $old_item = (!empty($this->savedProgress[$group_key][$item_key])) ? $this->savedProgress[$group_key][$item_key] : 0;
-          $new_item = &$values[$group_key][$item_key];
+          $old_item = (!empty($this->savedProgress[$item_key])) ? $this->savedProgress[$item_key] : 0;
           if ($item == 1) {
             // Item is checked.
-            $completed_items_counter++;
+            $progress['#completed_items']++;
             if ($old_item) {
               // Item was previously checked. Use saved value.
               $new_item = $old_item;
@@ -167,19 +170,16 @@ class ChecklistapiChecklist {
           }
           else {
             // Item is unchecked.
+            $new_item = 0;
             if ($old_item) {
               // Item was previously checked.
               $changed_items_counter++;
             }
           }
+          $progress[$item_key] = $new_item;
         }
       }
     }
-    $progress = array(
-      '#changed' => $time,
-      '#changed_by' => $user->uid,
-      '#completed_items' => $completed_items_counter,
-    ) + $values;
     variable_set($this->getSavedProgressVariableName(), $progress);
     drupal_set_message(format_plural(
       $changed_items_counter,
