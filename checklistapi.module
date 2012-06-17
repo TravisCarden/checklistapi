@@ -129,8 +129,10 @@ function checklistapi_menu() {
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($id),
         'file' => 'checklistapi.pages.inc',
-        'menu_name' => (!empty($definition['#menu_name'])) ? $definition['#menu_name'] : '',
       );
+      if (!empty($checklist['#menu_name'])) {
+        $items[$definition['#path']]['menu_name'] = $definition['#menu_name'];
+      }
       // Clear saved progress.
       $items[$definition['#path'] . '/clear'] = array(
         'title' => 'Clear',
@@ -139,6 +141,7 @@ function checklistapi_menu() {
         'access callback' => 'checklistapi_checklist_access',
         'access arguments' => array($id, 'edit'),
         'file' => 'checklistapi.pages.inc',
+        'type' => MENU_CALLBACK,
       );
     }
   }
