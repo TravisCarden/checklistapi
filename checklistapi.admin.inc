@@ -36,7 +36,7 @@ function checklistapi_report_form() {
         '@percent' => round($completed / $checklist->totalItems * 100),
       ));
       $row[] = (!empty($checklist->savedProgress['#changed'])) ? format_date($checklist->savedProgress['#changed']) : t('n/a');
-      $row[] = (!empty($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
+      $row[] = (isset($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
       $row[] = ($checklist->userHasAccess('edit') && $checklist->hasSavedProgress()) ? l(t('clear saved progress'), $checklist->path . '/clear', array(
         'query' => array('destination' => 'admin/reports/checklistapi'),
       )) : '';
