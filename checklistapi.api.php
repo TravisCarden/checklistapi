@@ -17,8 +17,8 @@
  * Checklist API will register menu items and create permissions for each one.
  *
  * @return array
- *   An array of checklists. Each checklist is keyed by an arbitrary unique
- *   identifier. The corresponding multidimensional array describing the
+ *   An array of checklist definitions. Each definition is keyed by an arbitrary
+ *   unique identifier. The corresponding multidimensional array describing the
  *   checklist may contain the following key-value pairs:
  *   - #title: The title of the checklist.
  *   - #path: The Drupal path where the checklist will be accessed.
@@ -79,8 +79,8 @@
  * @see hook_checklistapi_checklist_info_alter()
  */
 function hook_checklistapi_checklist_info() {
-  $checklists = array();
-  $checklists['example_checklist'] = array(
+  $definitions = array();
+  $definitions['example_checklist'] = array(
     '#title' => t('Example checklist'),
     '#path' => 'example-checklist',
     '#description' => t('An example checklist.'),
@@ -100,7 +100,7 @@ function hook_checklistapi_checklist_info() {
       ),
     ),
   );
-  return $checklists;
+  return $definitions;
 }
 
 /**

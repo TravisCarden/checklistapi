@@ -151,36 +151,37 @@ class ChecklistapiChecklist {
 
     // Loop through groups.
     foreach ($values as $group_key => $group) {
+      if (!is_array($group)) {
+        continue;
+      }
       // Loop through items.
-      if (is_array($group)) {
-        foreach ($group as $item_key => $item) {
-          $old_item = (!empty($this->savedProgress[$item_key])) ? $this->savedProgress[$item_key] : 0;
-          if ($item == 1) {
-            // Item is checked.
-            $progress['#completed_items']++;
-            if ($old_item) {
-              // Item was previously checked. Use saved value.
-              $new_item = $old_item;
-            }
-            else {
-              // Item is newly checked. Set new value.
-              $new_item = array(
-                '#completed' => $time,
-                '#uid' => $user->uid,
-              );
-              $changed_items_counter++;
-            }
+      foreach ($group as $item_key => $item) {
+        $old_item = (!empty($this->savedProgress[$item_key])) ? $this->savedProgress[$item_key] : 0;
+        if ($item == 1) {
+          // Item is checked.
+          $progress['#completed_items']++;
+          if ($old_item) {
+            // Item was previously checked. Use saved value.
+            $new_item = $old_item;
           }
           else {
-            // Item is unchecked.
-            $new_item = 0;
-            if ($old_item) {
-              // Item was previously checked.
-              $changed_items_counter++;
-            }
+            // Item is newly checked. Set new value.
+            $new_item = array(
+              '#completed' => $time,
+              '#uid' => $user->uid,
+            );
+            $changed_items_counter++;
           }
-          $progress[$item_key] = $new_item;
         }
+        else {
+          // Item is unchecked.
+          $new_item = 0;
+          if ($old_item) {
+            // Item was previously checked.
+            $changed_items_counter++;
+          }
+        }
+        $progress[$item_key] = $new_item;
       }
     }
 

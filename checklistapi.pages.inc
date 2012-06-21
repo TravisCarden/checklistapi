@@ -20,7 +20,7 @@ function checklistapi_checklist_clear_confirm($form, &$form_state, $id) {
   $form['#checklist'] = $checklist;
   return confirm_form(
     $form,
-    t('Are you sure you want to clear %title progress?', array(
+    t('Are you sure you want to clear %title saved progress?', array(
       '%title' => $checklist->title,
     )),
     $checklist->path,
@@ -119,10 +119,9 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       }
       // Get description.
       $description = (isset($item['#description'])) ? '<p>' . $item['#description'] . '</p>' : '';
-      // Build links.
+      // Append links.
       $links = array();
-      $link_keys = element_children($item);
-      foreach ($link_keys as $link_key) {
+      foreach (element_children($item) as $link_key) {
         $link = &$item[$link_key];
         $context = (!empty($link['#context'])) ? $link['#context'] : CHECKLISTAPI_LINK_CONTEXT_ANY;
         $show_link = FALSE;

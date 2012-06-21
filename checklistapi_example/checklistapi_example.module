@@ -13,8 +13,8 @@
  * .
  */
 function checklistapi_example_checklistapi_checklist_info() {
-  $checklists = array();
-  $checklists['example_checklist'] = array(
+  $definitions = array();
+  $definitions['example_checklist'] = array(
     '#title' => t('Checklist API example'),
     '#path' => 'admin/config/development/checklistapi-example',
     '#description' => t('An example implementation of the Checklist API.'),
@@ -195,7 +195,7 @@ function checklistapi_example_checklistapi_checklist_info() {
       ),
     ),
   );
-  return $checklists;
+  return $definitions;
 }
 
 /**
@@ -208,14 +208,14 @@ function checklistapi_example_checklistapi_checklist_info() {
  * @link http://buytaert.net/drupal-learning-curve Dries Buytaert's Drupal learning curve @endlink
  * .
  */
-function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
-  $checklists['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
-  $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
-  $checklists['example_checklist']['i_kick_butt']['advanced_tasks'] += $checklists['example_checklist']['i_kick_butt']['development'];
-  unset($checklists['example_checklist']['i_kick_butt']['development']);
-  $checklists['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
-  unset($checklists['example_checklist']['i_kick_butt']['chx_or_unconed']);
-  $checklists['example_checklist']['core_contributor'] = array(
+function checklistapi_example_checklistapi_checklist_info_alter(&$definitions) {
+  $definitions['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
+  $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
+  $definitions['example_checklist']['i_kick_butt']['advanced_tasks'] += $definitions['example_checklist']['i_kick_butt']['development'];
+  unset($definitions['example_checklist']['i_kick_butt']['development']);
+  $definitions['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
+  unset($definitions['example_checklist']['i_kick_butt']['chx_or_unconed']);
+  $definitions['example_checklist']['core_contributor'] = array(
     '#title' => t("I'm a core contributor"),
     'contribute_core_code' => array(
       '#title' => t('Contribute code and patches to Drupal core'),
@@ -248,13 +248,13 @@ function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
     ),
     'security_performance' => array(
       '#title' => t('Security audits, performance tuning.'),
-      'handbook_page_security' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
-      'handbook_page_performance' => $checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
+      'handbook_page_security' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
+      'handbook_page_performance' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
     ),
   );
-  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
-  unset($checklists['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
-  $checklists['example_checklist']['core_maintainer'] = array(
+  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
+  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
+  $definitions['example_checklist']['core_maintainer'] = array(
     '#title' => t("I'm trustworthy for core maintainership"),
     'add_sub_system' => array(
       '#title' => t('Rewrite or add a Drupal core sub-system.'),
@@ -266,7 +266,7 @@ function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
       '#title' => t('Core branch maintainer'),
     ),
   );
-  $checklists['example_checklist']['know_every_bit_of_core'] = array(
+  $definitions['example_checklist']['know_every_bit_of_core'] = array(
     '#title' => t('I know every bit of core'),
     'im_chx' => array(
       '#title' => t(
@@ -275,7 +275,7 @@ function checklistapi_example_checklistapi_checklist_info_alter(&$checklists) {
       ),
     ),
   );
-  $checklists['example_checklist']['understand_all_core_patch_implications'] = array(
+  $definitions['example_checklist']['understand_all_core_patch_implications'] = array(
     '#title' => t('I understand all implications of a core patch'),
     'im_chuck_norris' => array(
       '#title' => t("I'm Chuck Norris."),
