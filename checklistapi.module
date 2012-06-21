@@ -247,5 +247,8 @@ function checklistapi_strtolowercamel($string) {
   $string = str_replace('_', ' ', $string);
   $string = ucwords($string);
   $string = str_replace(' ', '', $string);
-  return lcfirst($string);
+  // Lowercase first character. lcfirst($string) would be nicer, but let's not
+  // create a dependency on PHP 5.3 just for that.
+  $string[0] = strtolower($string[0]);
+  return $string;
 }
