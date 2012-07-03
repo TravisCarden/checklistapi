@@ -148,6 +148,7 @@ class ChecklistapiChecklist {
       '#changed_by' => $user->uid,
       '#completed_items' => 0,
     );
+
     // Loop through groups.
     foreach ($values as $group_key => $group) {
       // Loop through items.
@@ -182,6 +183,12 @@ class ChecklistapiChecklist {
         }
       }
     }
+
+    // Sort array elements alphabetically so changes to the order of tasks in
+    // checklist definitions over time don't affect the order of elements in the
+    // saved progress variable. This simplifies use with Strongarm.
+    ksort($progress);
+
     variable_set($this->getSavedProgressVariableName(), $progress);
     drupal_set_message(format_plural(
       $changed_items_counter,
