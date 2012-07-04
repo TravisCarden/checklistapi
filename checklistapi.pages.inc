@@ -53,6 +53,9 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $form['#checklist'] = $checklist = checklistapi_checklist_load($id);
+  $form['compact_mode_link'] = array(
+    '#markup' => theme('checklistapi_compact_link'),
+  );
   $actions = array(
     '#type' => 'actions',
     '#access' => $user_has_edit_access = $checklist->userHasAccess('edit'),
@@ -118,7 +121,10 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         $default_value = $item['#default_value'];
       }
       // Get description.
-      $description = (isset($item['#description'])) ? '<p>' . $item['#description'] . '</p>' : '';
+      $description = '';
+      if (!checklistapi_compact_mode() && isset($item['#description'])) {
+        $description = '<p>' . $item['#description'] . '</p>';
+      }
       // Append links.
       $links = array();
       foreach (element_children($item) as $link_key) {
@@ -159,4 +165,70 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
  */
 function checklistapi_checklist_form_submit($form, &$form_state) {
   $form['#checklist']->saveProgress($form_state['values']['checklistapi']);
+}
+
+/**
+ * Determines whether the current user is in compact mode.
+ *
+ * Compact mode shows checklist forms with less description text.
+ *
+ * Whether the user is in compact mode is determined by a cookie, which is set
+ * for the user by checklistapi_compact_page().
+ *
+ * If the user does not have the cookie, the default value is given by the
+ * system variable 'checklistapi_compact_mode', which itself defaults to FALSE.
+ * This does not have a user interface to set it: it is a hidden variable which
+ * can be set in the settings.php file.
+ *
+ * @return bool
+ *   TRUE when in compact mode, FALSE when in expanded mode.
+ */
+function checklistapi_compact_mode() {
+  return isset($_COOKIE['Drupal_visitor_checklistapi_compact_mode']) ? $_COOKIE['Drupal_visitor_checklistapi_compact_mode'] : variable_get('checklistapi_compact_mode', FALSE);
+}
+
+/**
+ * Menu callback: Sets whether the admin menu is in compact mode or not.
+ *
+ * @param string $mode
+ *   Valid values are 'on' and 'off'.
+ */
+function checklistapi_compact_page($mode = 'off') {
+  user_cookie_save(array('checklistapi_compact_mode' => ($mode == 'on')));
+  drupal_goto();
+}
+
+/**
+ * Returns HTML for a link to show or hide inline item descriptions.
+ *
+ * @ingroup themeable
+ */
+function theme_checklistapi_compact_link() {
+  $output = '<div class="compact-link">';
+  if (checklistapi_compact_mode()) {
+    $output .= l(
+      t('Show descriptions'),
+      request_path() . '/compact/off',
+      array(
+        'attributes' => array(
+          'title' => t('Expand layout to include descriptions.'),
+        ),
+        'query' => drupal_get_destination(),
+      )
+    );
+  }
+  else {
+    $output .= l(
+      t('Hide descriptions'),
+      request_path() . '/compact/on',
+      array(
+        'attributes' => array(
+          'title' => t('Compress layout by hiding descriptions.'),
+        ),
+        'query' => drupal_get_destination(),
+      )
+    );
+  }
+  $output .= '</div>';
+  return $output;
 }

@@ -143,6 +143,15 @@ function checklistapi_menu() {
         'file' => 'checklistapi.pages.inc',
         'type' => MENU_CALLBACK,
       );
+      // Toggle compact mode.
+      $items[$definition['#path'] . '/compact'] = array(
+        'title' => 'Compact mode',
+        'page callback' => 'checklistapi_compact_page',
+        'access callback' => 'checklistapi_checklist_access',
+        'access arguments' => array($id),
+        'file' => 'checklistapi.pages.inc',
+        'type' => MENU_CALLBACK,
+      );
     }
   }
   return $items;
@@ -251,4 +260,16 @@ function checklistapi_strtolowercamel($string) {
   // create a dependency on PHP 5.3 just for that.
   $string[0] = strtolower($string[0]);
   return $string;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function checklistapi_theme() {
+  return array(
+    'checklistapi_compact_link' => array(
+      'variables' => array('id' => NULL),
+      'file' => 'checklistapi.pages.inc',
+    ),
+  );
 }
