@@ -56,25 +56,6 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
   $form['compact_mode_link'] = array(
     '#markup' => theme('checklistapi_compact_link'),
   );
-  $actions = array(
-    '#type' => 'actions',
-    '#access' => $user_has_edit_access = $checklist->userHasAccess('edit'),
-    'save' => array(
-      '#type' => 'submit',
-      '#value' => t('Save'),
-      '#submit' => array('checklistapi_checklist_form_submit'),
-    ),
-    'clear' => array(
-      '#type' => 'link',
-      '#title' => t('Clear saved progress'),
-      '#href' => $checklist->path . '/clear',
-      '#access' => $checklist->hasSavedProgress(),
-    ),
-  );
-  $form['actions_top'] = $actions + array(
-    '#weight' => -100,
-    '#attributes' => array('class' => array('js-hide')),
-  );
   $form['checklistapi'] = array(
     '#tree' => TRUE,
     '#type' => 'vertical_tabs',
@@ -152,11 +133,26 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         '#title' => $title,
         '#description' => filter_xss_admin($description),
         '#default_value' => $default_value,
-        '#disabled' => !$user_has_edit_access,
+        '#disabled' => !($user_has_edit_access = $checklist->userHasAccess('edit')),
       );
     }
   }
-  $form['actions_bottom'] = $actions + array('#weight' => 100);
+  $form['actions'] = array(
+    '#type' => 'actions',
+    '#access' => $user_has_edit_access,
+    '#weight' => 100,
+    'save' => array(
+      '#type' => 'submit',
+      '#value' => t('Save'),
+      '#submit' => array('checklistapi_checklist_form_submit'),
+    ),
+    'clear' => array(
+      '#type' => 'link',
+      '#title' => t('Clear saved progress'),
+      '#href' => $checklist->path . '/clear',
+      '#access' => $checklist->hasSavedProgress(),
+    ),
+  );
   return $form;
 }
 
