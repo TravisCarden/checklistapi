@@ -95,8 +95,21 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     $item_keys = element_children($group);
     foreach ($item_keys as $item_key) {
       $item = &$group[$item_key];
-      // Set default value.
       $saved_item = !empty($checklist->savedProgress[$item_key]) ? $checklist->savedProgress[$item_key] : 0;
+      // Build title.
+      $title = filter_xss($item['#title']);
+      if ($saved_item) {
+        // Prepend completion details.
+        $user = user_load($saved_item['#uid']);
+        $title .= t(
+          ' <span class="completion-details">- Completed @time by !user</a>',
+          array(
+            '@time' => format_date($saved_item['#completed'], 'short'),
+            '!user' => theme('username', array('account' => $user)),
+          )
+        );
+      }
+      // Set default value.
       $default_value = FALSE;
       if ($saved_item) {
         $default_value = TRUE;
@@ -127,22 +140,11 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
           $links[] = l($link['#text'], $link['#path'], $options);
         }
       }
-      if ($saved_item) {
-        // Prepend completion details.
-        $user = user_load($saved_item['#uid']);
-        array_unshift($links, t(
-          'Completed @time by !user',
-          array(
-            '@time' => format_date($saved_item['#completed'], 'short'),
-            '!user' => theme('username', array('account' => $user)),
-          )
-        ));
-      }
       $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
       // Compile the list item.
       $form['checklistapi'][$group_key][$item_key] = array(
         '#type' => 'checkbox',
-        '#title' => filter_xss($item['#title']),
+        '#title' => $title,
         '#description' => filter_xss_admin($description),
         '#default_value' => $default_value,
         '#disabled' => !$user_has_edit_access,
