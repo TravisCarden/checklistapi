@@ -76,17 +76,16 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       $form['checklistapi'][$group_key]['#description'] = filter_xss_admin($group['#description']);
     }
     // Loop through items.
-    $item_keys = element_children($group);
-    foreach ($item_keys as $item_key) {
+    foreach (element_children($group) as $item_key) {
       $item = &$group[$item_key];
       $saved_item = !empty($checklist->savedProgress[$item_key]) ? $checklist->savedProgress[$item_key] : 0;
       // Build title.
       $title = filter_xss($item['#title']);
       if ($saved_item) {
-        // Prepend completion details.
+        // Append completion details.
         $user = user_load($saved_item['#uid']);
         $title .= t(
-          ' <span class="completion-details">- Completed @time by !user</a>',
+          '<span class="completion-details"> - Completed @time by !user</a>',
           array(
             '@time' => format_date($saved_item['#completed'], 'short'),
             '!user' => theme('username', array('account' => $user)),
@@ -104,7 +103,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       // Get description.
       $description = '';
       if (!checklistapi_compact_mode() && isset($item['#description'])) {
-        $description = '<p>' . $item['#description'] . '</p>';
+        $description = '<p>' . filter_xss_admin($item['#description']) . '</p>';
       }
       // Append links.
       $links = array();
@@ -126,11 +125,13 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
           $links[] = l($link['#text'], $link['#path'], $options);
         }
       }
-      $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
+      if (count($links)) {
+        $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
+      }
       // Compile the list item.
       $form['checklistapi'][$group_key][$item_key] = array(
         '#type' => 'checkbox',
-        '#title' => $title,
+        '#title' => filter_xss($title),
         '#description' => filter_xss_admin($description),
         '#default_value' => $default_value,
         '#disabled' => !($user_has_edit_access = $checklist->userHasAccess('edit')),
