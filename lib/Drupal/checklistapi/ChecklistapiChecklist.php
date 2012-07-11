@@ -142,7 +142,7 @@ class ChecklistapiChecklist {
   public function saveProgress(array $values) {
     global $user;
     $time = time();
-    $changed_items_counter = 0;
+    $num_changed_items = 0;
     $progress = array(
       '#changed' => $time,
       '#changed_by' => $user->uid,
@@ -170,7 +170,7 @@ class ChecklistapiChecklist {
               '#completed' => $time,
               '#uid' => $user->uid,
             );
-            $changed_items_counter++;
+            $num_changed_items++;
           }
         }
         else {
@@ -178,7 +178,7 @@ class ChecklistapiChecklist {
           $new_item = 0;
           if ($old_item) {
             // Item was previously checked.
-            $changed_items_counter++;
+            $num_changed_items++;
           }
         }
         $progress[$item_key] = $new_item;
@@ -192,7 +192,7 @@ class ChecklistapiChecklist {
 
     variable_set($this->getSavedProgressVariableName(), $progress);
     drupal_set_message(format_plural(
-      $changed_items_counter,
+      $num_changed_items,
       'Checklist %title has been updated. 1 item changed.',
       'Checklist %title has been updated. @count items changed.',
       array('%title' => $this->title)

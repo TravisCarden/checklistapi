@@ -55,8 +55,7 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
    * Test checklistapi_strtolowercamel().
    */
   public function testChecklistapiStrtolowercamel() {
-    $output = checklistapi_strtolowercamel('Abc def_ghi');
-    $this->assertEqual($output, 'abcDefGhi', 'Converted string to lowerCamel case.');
+    $this->assertEqual(checklistapi_strtolowercamel('Abc def_ghi'), 'abcDefGhi', 'Converted string to lowerCamel case.');
   }
 
 }
