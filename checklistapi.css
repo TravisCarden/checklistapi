@@ -6,3 +6,6 @@
   font-style: italic;
   opacity: 0.66;
 }
+#checklistapi-checklist-form.compact-mode div.description p {
+  display: none;
+}

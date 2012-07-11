@@ -53,6 +53,9 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $form['#checklist'] = $checklist = checklistapi_checklist_load($id);
+  if (checklistapi_compact_mode()) {
+    $form['#attributes']['class'] = array('compact-mode');
+  }
   $form['compact_mode_link'] = array(
     '#markup' => theme('checklistapi_compact_link'),
   );
@@ -101,10 +104,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         $default_value = $item['#default_value'];
       }
       // Get description.
-      $description = '';
-      if (!checklistapi_compact_mode() && isset($item['#description'])) {
-        $description = '<p>' . filter_xss_admin($item['#description']) . '</p>';
-      }
+      $description = (isset($item['#description'])) ? '<p>' . filter_xss_admin($item['#description']) . '</p>' : '';
       // Append links.
       $links = array();
       foreach (element_children($item) as $link_key) {
