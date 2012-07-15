@@ -191,7 +191,7 @@ class ChecklistapiChecklist {
       }
     }
 
-    // Sort array elements alphabetically so changes to the order of tasks in
+    // Sort array elements alphabetically so changes to the order of items in
     // checklist definitions over time don't affect the order of elements in the
     // saved progress variable. This simplifies use with Strongarm.
     ksort($progress);

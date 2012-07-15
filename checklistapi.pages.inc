@@ -60,20 +60,20 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     '#markup' => theme('checklistapi_compact_link'),
   );
   $form['checklistapi'] = array(
-    '#tree' => TRUE,
-    '#type' => 'vertical_tabs',
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'checklistapi') . '/checklistapi.css'),
       'js' => array(drupal_get_path('module', 'checklistapi') . '/checklistapi.js'),
     ),
+    '#tree' => TRUE,
+    '#type' => 'vertical_tabs',
   );
   // Loop through groups.
   $groups = $checklist->items;
   foreach (element_children($groups) as $group_key) {
     $group = &$groups[$group_key];
     $form['checklistapi'][$group_key] = array(
-      '#type' => 'fieldset',
       '#title' => filter_xss($group['#title']),
+      '#type' => 'fieldset',
     );
     if (!empty($group['#description'])) {
       $form['checklistapi'][$group_key]['#description'] = filter_xss_admin($group['#description']);
@@ -130,29 +130,29 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       }
       // Compile the list item.
       $form['checklistapi'][$group_key][$item_key] = array(
-        '#type' => 'checkbox',
-        '#title' => filter_xss($title),
-        '#description' => filter_xss_admin($description),
-        '#default_value' => $default_value,
-        '#disabled' => !($user_has_edit_access = $checklist->userHasAccess('edit')),
         '#attributes' => array('class' => array('checklistapi-item')),
+        '#default_value' => $default_value,
+        '#description' => filter_xss_admin($description),
+        '#disabled' => !($user_has_edit_access = $checklist->userHasAccess('edit')),
+        '#title' => filter_xss($title),
+        '#type' => 'checkbox',
       );
     }
   }
   $form['actions'] = array(
-    '#type' => 'actions',
     '#access' => $user_has_edit_access,
+    '#type' => 'actions',
     '#weight' => 100,
     'save' => array(
+      '#submit' => array('checklistapi_checklist_form_submit'),
       '#type' => 'submit',
       '#value' => t('Save'),
-      '#submit' => array('checklistapi_checklist_form_submit'),
     ),
     'clear' => array(
-      '#type' => 'link',
-      '#title' => t('Clear saved progress'),
-      '#href' => $checklist->path . '/clear',
       '#access' => $checklist->hasSavedProgress(),
+      '#href' => $checklist->path . '/clear',
+      '#title' => t('Clear saved progress'),
+      '#type' => 'link',
     ),
   );
   return $form;
