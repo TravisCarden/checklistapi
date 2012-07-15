@@ -5,9 +5,9 @@ Drupal.behaviors.checklistapiFieldsetSummaries = {
 
     // Vertical tabs summaries.
     $('#checklistapi-checklist-form .vertical-tabs-panes > fieldset', context).drupalSetSummary(function (context) {
-      var total = $(':checkbox', context).size(), args = {};
+      var total = $(':checkbox.checklistapi-item', context).size(), args = {};
       if (total) {
-        args['@complete'] = $(':checkbox:checked', context).size();
+        args['@complete'] = $(':checkbox.checklistapi-item:checked', context).size();
         args['@total'] = total;
         args['@percent'] = Math.round(args['@complete'] / args['@total'] * 100);
         return Drupal.t('@complete of @total (@percent%) complete', args);
