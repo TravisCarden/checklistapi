@@ -137,7 +137,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         '#default_value' => $default_value,
         '#description' => filter_xss_admin($description),
         '#disabled' => !($user_has_edit_access = $checklist->userHasAccess('edit')),
-        '#title' => filter_xss($title),
+        '#title' => filter_xss_admin($title),
         '#type' => 'checkbox',
       );
     }
