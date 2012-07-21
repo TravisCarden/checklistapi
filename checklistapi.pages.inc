@@ -68,6 +68,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     '#type' => 'vertical_tabs',
   );
   // Loop through groups.
+  $num_autochecked_items = 0;
   $groups = $checklist->items;
   foreach (element_children($groups) as $group_key) {
     $group = &$groups[$group_key];
@@ -101,7 +102,9 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
         $default_value = TRUE;
       }
       elseif (!empty($item['#default_value'])) {
-        $default_value = $item['#default_value'];
+        if ($default_value = $item['#default_value']) {
+          $num_autochecked_items++;
+        }
       }
       // Get description.
       $description = (isset($item['#description'])) ? '<p>' . filter_xss_admin($item['#description']) . '</p>' : '';
@@ -155,6 +158,24 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       '#type' => 'link',
     ),
   );
+
+  // Alert the user of autochecked items. Only set the message on GET requests
+  // to prevent it from reappearing after saving the form. (Testing the request
+  // method may not be the "correct" way to accomplish this.)
+  if ($num_autochecked_items && $_SERVER['REQUEST_METHOD'] == 'GET') {
+    drupal_set_message(t(
+      format_plural(
+        $num_autochecked_items,
+        '%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.',
+        '%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.'
+      ),
+      array(
+        '%checklist' => $checklist->title,
+        '@num' => $num_autochecked_items,
+      )
+    ), 'status');
+  }
+
   return $form;
 }
 
