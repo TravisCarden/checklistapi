@@ -199,8 +199,8 @@ class ChecklistapiChecklist {
     variable_set($this->getSavedProgressVariableName(), $progress);
     drupal_set_message(format_plural(
       $num_changed_items,
-      'Checklist %title has been updated. 1 item changed.',
-      'Checklist %title has been updated. @count items changed.',
+      '%title progress has been saved. 1 item changed.',
+      '%title progress has been saved. @count items changed.',
       array('%title' => $this->title)
     ));
   }
