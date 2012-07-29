@@ -227,7 +227,7 @@ function theme_checklistapi_compact_link() {
   if (checklistapi_compact_mode()) {
     $output .= l(
       t('Show descriptions'),
-      request_path() . '/compact/off',
+      current_path() . '/compact/off',
       array(
         'attributes' => array(
           'title' => t('Expand layout to include descriptions.'),
@@ -239,7 +239,7 @@ function theme_checklistapi_compact_link() {
   else {
     $output .= l(
       t('Hide descriptions'),
-      request_path() . '/compact/on',
+      current_path() . '/compact/on',
       array(
         'attributes' => array(
           'title' => t('Compress layout by hiding descriptions.'),
