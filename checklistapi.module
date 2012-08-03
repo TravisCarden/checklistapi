@@ -22,16 +22,16 @@
  *   the specified checklist, or FALSE if not.
  */
 function checklistapi_checklist_access($id, $operation = 'any') {
-  $view_access = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
-  $edit_access = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
-  switch ($operation) {
-    case 'view':
-      return $view_access;
-    case 'edit':
-      return $edit_access;
-    case 'any':
-    default:
-      return $view_access || $edit_access;
+  $access['view'] = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
+  $access['edit'] = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
+  $access['any'] = $access['view'] || $access['edit'];
+  if (isset($access[$operation])) {
+    return $access[$operation];
+  }
+  else {
+    throw new Exception(t('No such operation "@operation"', array(
+      '@operation' => $operation
+    )));
   }
 }
 
