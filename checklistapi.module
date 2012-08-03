@@ -9,23 +9,6 @@
  */
 
 /**
- * Link should always be shown.
- */
-define('CHECKLISTAPI_LINK_CONTEXT_ANY', 1);
-
-/**
- * Link should only be shown if the item it belongs to has been previously
- * checked.
- */
-define('CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED', 2);
-
-/**
- * Link should only be shown if the item it belongs to has not been previously
- * checked.
- */
-define('CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED', 3);
-
-/**
  * Access callback: Checks the current user's access to a checklist.
  *
  * @param string $id

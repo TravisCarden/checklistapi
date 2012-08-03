@@ -112,21 +112,8 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       $links = array();
       foreach (element_children($item) as $link_key) {
         $link = &$item[$link_key];
-        $context = (!empty($link['#context'])) ? $link['#context'] : CHECKLISTAPI_LINK_CONTEXT_ANY;
-        $show_link = FALSE;
-        if ($context == CHECKLISTAPI_LINK_CONTEXT_ANY) {
-          $show_link = TRUE;
-        }
-        elseif ($saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED) {
-          $show_link = TRUE;
-        }
-        elseif (!$saved_item && $context == CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED) {
-          $show_link = TRUE;
-        }
-        if ($show_link) {
-          $options = (!empty($link['#options']) && is_array($link['#options'])) ? $link['#options'] : array();
-          $links[] = l($link['#text'], $link['#path'], $options);
-        }
+        $options = (!empty($link['#options']) && is_array($link['#options'])) ? $link['#options'] : array();
+        $links[] = l($link['#text'], $link['#path'], $options);
       }
       if (count($links)) {
         $description .= '<div class="links">' . implode(' | ', $links) . '</div>';

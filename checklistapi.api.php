@@ -61,14 +61,6 @@
  *         - #path: The link path.
  *         - #options: (optional) An associative array of additional options
  *           used by the l() function.
- *         - #context: (optional) The context in which the link may appear. May
- *           be one of the following:
- *           - CHECKLISTAPI_LINK_CONTEXT_ANY: (default) The link will always
- *             appear.
- *           - CHECKLISTAPI_LINK_CONTEXT_ITEM_CHECKED: The link will appear if
- *             the item it belongs to has been previously checked.
- *           - CHECKLISTAPI_LINK_CONTEXT_ITEM_UNCHECKED: The link will appear if
- *             the item it belongs to has not been previously checked.
  *         - #weight: (optional) A floating point number used to sort the list
  *           of items before being output. Lower numbers appear before higher
  *           numbers.
