@@ -17,12 +17,12 @@
 
       // Compact mode link.
       $('#checklistapi-checklist-form .compact-link a', context).click(function () {
+        $(this).closest('#checklistapi-checklist-form').toggleClass('compact-mode');
         var is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');
         $(this)
-          .text((is_compact_mode) ? Drupal.t('Hide descriptions') : Drupal.t('Show descriptions'))
-          .attr('title', (is_compact_mode) ? Drupal.t('Compress layout by hiding descriptions.') : Drupal.t('Expand layout to include descriptions.'))
-          .closest('#checklistapi-checklist-form').toggleClass('compact-mode');
-        document.cookie = 'Drupal.visitor.checklistapi_compact_mode=' + ((is_compact_mode) ? 0 : 1);
+          .text((is_compact_mode) ? Drupal.t('Show descriptions') : Drupal.t('Hide descriptions'))
+          .attr('title', (is_compact_mode) ? Drupal.t('Expand layout to include descriptions.') : Drupal.t('Compress layout by hiding descriptions.'))
+        document.cookie = 'Drupal.visitor.checklistapi_compact_mode=' + ((is_compact_mode) ? 1 : 0);
         return false;
       });
 
