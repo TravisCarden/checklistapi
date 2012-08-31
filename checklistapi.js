@@ -1,10 +1,11 @@
 (function ($) {
-
   "use strict";
+
+  /**
+   * Provides the summary information for the block settings vertical tabs.
+   */
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
-
-      // Vertical tabs summaries.
       $('#checklistapi-checklist-form .vertical-tabs-panes > fieldset', context).drupalSetSummary(function (context) {
         var total = $(':checkbox.checklistapi-item', context).size(), args = {};
         if (total) {
@@ -14,8 +15,14 @@
           return Drupal.t('@complete of @total (@percent%) complete', args);
         }
       });
+    }
+  };
 
-      // Compact mode link.
+  /**
+   * Adds dynamic item descriptions toggling.
+   */
+  Drupal.behaviors.checklistapiCompactModeLink = {
+    attach: function (context) {
       $('#checklistapi-checklist-form .compact-link a', context).click(function () {
         $(this).closest('#checklistapi-checklist-form').toggleClass('compact-mode');
         var is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');
@@ -25,7 +32,6 @@
         document.cookie = 'Drupal.visitor.checklistapi_compact_mode=' + ((is_compact_mode) ? 1 : 0);
         return false;
       });
-
     }
   };
 

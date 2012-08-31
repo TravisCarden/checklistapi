@@ -67,6 +67,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     '#tree' => TRUE,
     '#type' => 'vertical_tabs',
   );
+
   // Loop through groups.
   $num_autochecked_items = 0;
   $groups = $checklist->items;
@@ -79,6 +80,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     if (!empty($group['#description'])) {
       $form['checklistapi'][$group_key]['#description'] = filter_xss_admin($group['#description']);
     }
+
     // Loop through items.
     foreach (element_children($group) as $item_key) {
       $item = &$group[$item_key];
@@ -129,6 +131,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
       );
     }
   }
+
   $form['actions'] = array(
     '#access' => $user_has_edit_access,
     '#type' => 'actions',
