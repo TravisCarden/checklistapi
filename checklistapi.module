@@ -281,8 +281,16 @@ function checklistapi_strtolowercamel($string) {
 function checklistapi_theme() {
   return array(
     'checklistapi_compact_link' => array(
-      'variables' => array('id' => NULL),
       'file' => 'checklistapi.pages.inc',
+    ),
+    'checklistapi_progress_bar' => array(
+      'template' => 'checklistapi.progress-bar',
+      'variables' => array(
+        'message' => '&nbsp;',
+        'number_complete' => 0,
+        'number_of_items' => 0,
+        'percent_complete' => 0,
+      ),
     ),
   );
 }

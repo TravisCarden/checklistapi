@@ -30,13 +30,13 @@ function checklistapi_report_form() {
         'data' => ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title),
         'title' => (!empty($checklist->description)) ? $checklist->description : '',
       );
-      $row[] = t('@completed of @total (@percent%) complete', array(
-        '@completed' => $completed = (!empty($checklist->savedProgress['#completed_items'])) ? $checklist->savedProgress['#completed_items'] : 0,
-        '@total' => $checklist->totalItems,
-        '@percent' => round($completed / $checklist->totalItems * 100),
+      $row[] = t('@completed of @total (@percent%)', array(
+        '@completed' => $checklist->getNumberCompleted(),
+        '@total' => $checklist->getNumberOfItems(),
+        '@percent' => round($checklist->getPercentComplete()),
       ));
-      $row[] = (!empty($checklist->savedProgress['#changed'])) ? format_date($checklist->savedProgress['#changed']) : t('n/a');
-      $row[] = (isset($checklist->savedProgress['#changed_by'])) ? theme('username', array('account' => user_load($checklist->savedProgress['#changed_by']))) : t('n/a');
+      $row[] = $checklist->getLastUpdatedDate();
+      $row[] = $checklist->getLastUpdatedUser();
       $row[] = ($checklist->userHasAccess('edit') && $checklist->hasSavedProgress()) ? l(t('clear saved progress'), $checklist->path . '/clear', array(
         'query' => array('destination' => 'admin/reports/checklistapi'),
       )) : '';

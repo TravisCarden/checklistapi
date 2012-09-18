@@ -12,7 +12,7 @@
           args['@complete'] = $(':checkbox.checklistapi-item:checked', context).size();
           args['@total'] = total;
           args['@percent'] = Math.round(args['@complete'] / args['@total'] * 100);
-          return Drupal.t('@complete of @total (@percent%) complete', args);
+          return Drupal.t('@complete of @total (@percent%)', args);
         }
       });
     }

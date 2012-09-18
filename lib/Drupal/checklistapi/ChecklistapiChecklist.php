@@ -64,7 +64,7 @@ class ChecklistapiChecklist {
    *
    * @var int
    */
-  public $totalItems = 0;
+  public $numberOfItems = 0;
 
   /**
    * The checklist groups and items.
@@ -88,7 +88,7 @@ class ChecklistapiChecklist {
    */
   public function __construct(array $definition) {
     foreach (element_children($definition) as $group_key) {
-      $this->totalItems += count(element_children($definition[$group_key]));
+      $this->numberOfItems += count(element_children($definition[$group_key]));
       $this->items[$group_key] = $definition[$group_key];
       unset($definition[$group_key]);
     }
@@ -97,6 +97,67 @@ class ChecklistapiChecklist {
       $this->$property_name = $value;
     }
     $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
+  }
+
+  /**
+   * Gets the total number of completed items.
+   *
+   * @return int
+   *   The number of completed items.
+   */
+  public function getNumberCompleted() {
+    return (!empty($this->savedProgress['#completed_items'])) ? $this->savedProgress['#completed_items'] : 0;
+  }
+
+  /**
+   * Gets the total number of items.
+   *
+   * @return int
+   *   The number of items.
+   */
+  public function getNumberOfItems() {
+    return $this->numberOfItems;
+  }
+
+  /**
+   * Gets the name of the last user to update the checklist.
+   *
+   * @return string
+   *   The themed name of the last user to update the checklist, or 'n/a' if
+   *   there is no record of such a user.
+   */
+  public function getLastUpdatedUser() {
+    if (isset($this->savedProgress['#changed_by'])) {
+      $last_updated_user = user_load($this->savedProgress['#changed_by']);
+      return theme('username', array('account' => $last_updated_user));
+    }
+    else {
+      return t('n/a');
+    }
+  }
+
+  /**
+   * Gets the last updated date.
+   *
+   * @return string
+   *   The last updated date formatted with format_date(), or 'n/a' if there is
+   *   no saved progress.
+   */
+  public function getLastUpdatedDate() {
+    return (!empty($this->savedProgress['#changed'])) ? format_date($this->savedProgress['#changed']) : t('n/a');
+  }
+
+  /**
+   * Gets the percentage of items complete.
+   *
+   * @return float
+   *   The percent complete.
+   */
+  public function getPercentComplete() {
+    if ($this->getNumberOfItems() == 0) {
+      return 100;
+    }
+    return ($this->getNumberCompleted() / $this->getNumberOfItems()) * 100;
   }
 
   /**

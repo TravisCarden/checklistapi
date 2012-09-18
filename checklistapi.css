@@ -9,3 +9,17 @@
 #checklistapi-checklist-form.compact-mode div.description p {
   display: none;
 }
+
+/**
+ * Progress bar.
+ *
+ * @see system.theme.css
+ */
+#checklistapi-checklist-form .progress {
+  font-weight: normal;
+  margin-bottom: 0.5em;
+}
+#checklistapi-checklist-form .progress .bar,
+#checklistapi-checklist-form .progress .filled {
+  background-image: none;
+}

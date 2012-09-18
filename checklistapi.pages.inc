@@ -54,6 +54,18 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $form['#checklist'] = $checklist = checklistapi_checklist_load($id);
 
+  $form['progress_bar'] = array(
+    '#type' => 'markup',
+    '#markup' => theme('checklistapi_progress_bar', array(
+      'message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by !user', array(
+        '@date' => $checklist->getLastUpdatedDate(),
+        '!user' => $checklist->getLastUpdatedUser(),
+      )) : '&nbsp;',
+      'number_complete' => $checklist->getNumberCompleted(),
+      'number_of_items' => $checklist->getNumberOfItems(),
+      'percent_complete' => round($checklist->getPercentComplete()),
+    )),
+  );
   if (checklistapi_compact_mode()) {
     $form['#attributes']['class'] = array('compact-mode');
   }
