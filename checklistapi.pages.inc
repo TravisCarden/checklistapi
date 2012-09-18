@@ -53,12 +53,14 @@ function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
  */
 function checklistapi_checklist_form($form, &$form_state, $id) {
   $form['#checklist'] = $checklist = checklistapi_checklist_load($id);
+
   if (checklistapi_compact_mode()) {
     $form['#attributes']['class'] = array('compact-mode');
   }
   $form['compact_mode_link'] = array(
     '#markup' => theme('checklistapi_compact_link'),
   );
+
   $form['checklistapi'] = array(
     '#attached' => array(
       'css' => array(drupal_get_path('module', 'checklistapi') . '/checklistapi.css'),
