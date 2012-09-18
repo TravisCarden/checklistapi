@@ -218,11 +218,11 @@ function theme_checklistapi_compact_link() {
   $output = '<div class="compact-link">';
   if (checklistapi_compact_mode()) {
     $output .= l(
-      t('Show descriptions'),
+      t('Show item descriptions'),
       current_path() . '/compact/off',
       array(
         'attributes' => array(
-          'title' => t('Expand layout to include descriptions.'),
+          'title' => t('Expand layout to include item descriptions.'),
         ),
         'query' => drupal_get_destination(),
       )
@@ -230,11 +230,11 @@ function theme_checklistapi_compact_link() {
   }
   else {
     $output .= l(
-      t('Hide descriptions'),
+      t('Hide item descriptions'),
       current_path() . '/compact/on',
       array(
         'attributes' => array(
-          'title' => t('Compress layout by hiding descriptions.'),
+          'title' => t('Compress layout by hiding item descriptions.'),
         ),
         'query' => drupal_get_destination(),
       )
