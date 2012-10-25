@@ -284,7 +284,8 @@ function checklistapi_theme() {
       'file' => 'checklistapi.pages.inc',
     ),
     'checklistapi_progress_bar' => array(
-      'template' => 'checklistapi.progress-bar',
+      'path' => drupal_get_path('module', 'checklistapi') . '/templates',
+      'template' => 'checklistapi-progress-bar',
       'variables' => array(
         'message' => '&nbsp;',
         'number_complete' => 0,
