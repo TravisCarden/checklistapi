@@ -35,4 +35,25 @@
     }
   };
 
+  /**
+   * Prompts the user if they try to leave the page with unsaved changes.
+   *
+   * Note: Auto-checked items are not considered unsaved changes for the
+   * purcpose of this feature.
+   */
+  Drupal.behaviors.checklistapiPromptBeforeLeaving = {
+    getFormState: function () {
+      return $('#checklistapi-checklist-form :checkbox.checklistapi-item').serializeArray().toString();
+    },
+    attach: function () {
+      var beginningState = this.getFormState();
+      $(window).bind('beforeunload', function () {
+        var endingState = Drupal.behaviors.checklistapiPromptBeforeLeaving.getFormState();
+        if (beginningState !== endingState) {
+          return Drupal.t('Your changes will be lost if you leave the page without saving.');
+        }
+      });
+    }
+  };
+
 })(jQuery);
