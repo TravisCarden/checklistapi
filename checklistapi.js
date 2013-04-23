@@ -2,7 +2,7 @@
   "use strict";
 
   /**
-   * Provides the summary information for the block settings vertical tabs.
+   * Provides the summary information for the checklist form vertical tabs.
    */
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
@@ -38,8 +38,8 @@
   /**
    * Prompts the user if they try to leave the page with unsaved changes.
    *
-   * Note: Auto-checked items are not considered unsaved changes for the
-   * purcpose of this feature.
+   * Note: Auto-checked items are not considered unsaved changes for the purpose
+   * of this feature.
    */
   Drupal.behaviors.checklistapiPromptBeforeLeaving = {
     getFormState: function () {
