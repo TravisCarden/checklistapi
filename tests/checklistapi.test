@@ -34,7 +34,8 @@ class ChecklistapiUnitTestCase extends DrupalUnitTestCase {
    * Test checklistapi_sort_array().
    */
   public function testChecklistapiSortArray() {
-    $input = array_pop(checklistapi_test_checklistapi_checklist_info());
+    $checklistapi_test_definition = checklistapi_test_checklistapi_checklist_info();
+    $input = array_pop($checklistapi_test_definition);
     $output = checklistapi_sort_array($input);
     $this->assertEqual($output['group_two']['#weight'], 0, 'Supplied a default for omitted element weight.');
     $this->assertEqual($output['group_three']['#weight'], 0, 'Supplied a default in place of invalid element weight.');
