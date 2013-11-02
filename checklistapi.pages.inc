@@ -167,17 +167,16 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
   // to prevent it from reappearing after saving the form. (Testing the request
   // method may not be the "correct" way to accomplish this.)
   if ($num_autochecked_items && $_SERVER['REQUEST_METHOD'] == 'GET') {
-    drupal_set_message(t(
-      format_plural(
-        $num_autochecked_items,
-        '%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.',
-        '%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.'
-      ),
-      array(
-        '%checklist' => $checklist->title,
-        '@num' => $num_autochecked_items,
-      )
-    ), 'status');
+    $args = array(
+      '%checklist' => $checklist->title,
+      '@num' => $num_autochecked_items,
+    );
+    $message = format_plural(
+      $num_autochecked_items,
+      t('%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.', $args),
+      t('%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.', $args)
+    );
+    drupal_set_message($message, 'status');
   }
 
   return $form;
