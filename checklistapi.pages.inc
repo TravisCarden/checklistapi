@@ -18,25 +18,25 @@
 function checklistapi_checklist_clear_confirm($form, &$form_state, $id) {
   $checklist = checklistapi_checklist_load($id);
   $form['#checklist'] = $checklist;
-  return confirm_form(
-    $form,
-    t('Are you sure you want to clear %title saved progress?', array(
-      '%title' => $checklist->title,
-    )),
-    $checklist->path,
-    t('All progress details will be erased. This action cannot be undone.'),
-    t('Clear'),
-    t('Cancel')
-  );
+  $question = t('Are you sure you want to clear %title saved progress?', array(
+    '%title' => $checklist->title,
+  ));
+  $description = t('All progress details will be erased. This action cannot be undone.');
+  $yes = t('Clear');
+  $no = t('Cancel');
+  return confirm_form($form, $question, $checklist->path, $description, $yes, $no);
 }
 
 /**
  * Form submission handler for checklistapi_checklist_clear_confirm().
  */
 function checklistapi_checklist_clear_confirm_submit($form, &$form_state) {
+  // If user confirmed, clear saved progress.
   if ($form_state['values']['confirm']) {
     $form['#checklist']->clearSavedProgress();
   }
+
+  // Redirect back to checklist.
   $form_state['redirect'] = $form['#checklist']->path;
 }
 
@@ -203,7 +203,7 @@ function checklistapi_checklist_form_submit($form, &$form_state) {
  * can be set in the settings.php file.
  *
  * @return bool
- *   TRUE when in compact mode, FALSE when in expanded mode.
+ *   TRUE when in compact mode, or FALSE when in expanded mode.
  */
 function checklistapi_compact_mode() {
   return isset($_COOKIE['Drupal_visitor_checklistapi_compact_mode']) ? $_COOKIE['Drupal_visitor_checklistapi_compact_mode'] : variable_get('checklistapi_compact_mode', FALSE);
@@ -213,7 +213,8 @@ function checklistapi_compact_mode() {
  * Menu callback: Sets whether the admin menu is in compact mode or not.
  *
  * @param string $mode
- *   Valid values are 'on' and 'off'.
+ *   (optional) The mode to set compact mode to. Accepted values are "on" and
+ *   "off". Defaults to "off".
  */
 function checklistapi_compact_page($mode = 'off') {
   user_cookie_save(array('checklistapi_compact_mode' => ($mode == 'on')));
