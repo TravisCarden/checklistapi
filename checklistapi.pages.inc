@@ -157,6 +157,7 @@ function checklistapi_checklist_form($form, &$form_state, $id) {
     ),
     'clear' => array(
       '#access' => $checklist->hasSavedProgress(),
+      '#attributes' => array('class' => array('clear-saved-progress')),
       '#href' => $checklist->path . '/clear',
       '#title' => t('Clear saved progress'),
       '#type' => 'link',
