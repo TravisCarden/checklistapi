@@ -27,7 +27,7 @@
  *   - #help: (optional) User help to be displayed in the "System help" block
  *     via hook_help().
  *   - #menu_name: (optional) The machine name of a menu to place the checklist
- *     into (e.g. "main-menu" or "navigation"). If this is omitted, Drupal will
+ *     into (e.g., "main-menu" or "navigation"). If this is omitted, Drupal will
  *     try to infer the correct menu placement from the specified path.
  *   - #weight: (optional) A floating point number used to sort the list of
  *     checklists before being output. Lower numbers appear before higher
@@ -50,8 +50,8 @@
  *       - #default_value: (optional) The default checked state of the
  *         item--TRUE for checked or FALSE for unchecked. Defaults to FALSE.
  *         This is useful for automatically checking items that can be
- *         programmatically tested (e.g. a module is installed or a variable has
- *         a certain value).
+ *         programmatically tested (e.g., a module is installed or a
+ *         configuration setting has a certain value).
  *       - #weight: (optional) A floating point number used to sort the list of
  *         items before being output. Lower numbers appear before higher
  *         numbers.

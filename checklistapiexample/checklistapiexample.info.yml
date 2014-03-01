@@ -1,0 +1,9 @@
+name: Checklist API Example
+type: module
+description: Provides an example implementation of the Checklist API.
+version: VERSION
+package: Example modules
+core: 8.x
+dependencies:
+  - checklistapi
+configure: checklistapi.checklists.example_checklist

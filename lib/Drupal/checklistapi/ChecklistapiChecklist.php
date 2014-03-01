@@ -2,13 +2,23 @@
 
 /**
  * @file
- * Class for Checklist API checklists.
+ * Contains \Drupal\checklistapi\ChecklistapiChecklist.
  */
+
+namespace Drupal\checklistapi;
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Defines the checklist class.
  */
 class ChecklistapiChecklist {
+
+  /**
+   * The configuration key for saved progress.
+   */
+  const PROGRESS_CONFIG_KEY = 'progress';
 
   /**
    * The checklist ID.
@@ -81,14 +91,21 @@ class ChecklistapiChecklist {
   public $savedProgress;
 
   /**
+   * The configuration object for saving progress.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  public $config;
+
+  /**
    * Constructs a ChecklistapiChecklist object.
    *
    * @param array $definition
    *   A checklist definition, as returned by checklistapi_get_checklist_info().
    */
   public function __construct(array $definition) {
-    foreach (element_children($definition) as $group_key) {
-      $this->numberOfItems += count(element_children($definition[$group_key]));
+    foreach (Element::children($definition) as $group_key) {
+      $this->numberOfItems += count(Element::children($definition[$group_key]));
       $this->items[$group_key] = $definition[$group_key];
       unset($definition[$group_key]);
     }
@@ -96,7 +113,23 @@ class ChecklistapiChecklist {
       $property_name = checklistapi_strtolowercamel(drupal_substr($property_key, 1));
       $this->$property_name = $value;
     }
-    $this->savedProgress = variable_get($this->getSavedProgressVariableName(), array());
+
+    $this->config = \Drupal::config("checklistapi.progress.{$this->id}");
+    $this->savedProgress = $this->config->get($this::PROGRESS_CONFIG_KEY);
+  }
+
+  /**
+   * Clears the saved progress for the checklist.
+   *
+   * Deletes the Drupal configuration object containing the checklist's saved
+   * progress.
+   */
+  public function clearSavedProgress() {
+    $this->config->delete();
+
+    drupal_set_message(t('%title saved progress has been cleared.', array(
+      '%title' => $this->title,
+    )));
   }
 
   /**
@@ -128,8 +161,11 @@ class ChecklistapiChecklist {
    */
   public function getLastUpdatedUser() {
     if (isset($this->savedProgress['#changed_by'])) {
-      $last_updated_user = user_load($this->savedProgress['#changed_by']);
-      return theme('username', array('account' => $last_updated_user));
+      $username = array(
+        '#theme' => 'username',
+        '#account' => user_load($this->savedProgress['#changed_by']),
+      );
+      return drupal_render($username);
     }
     else {
       return t('n/a');
@@ -161,25 +197,23 @@ class ChecklistapiChecklist {
   }
 
   /**
-   * Clears the saved progress for the checklist.
+   * Gets the route name.
    *
-   * Deletes the Drupal variable containing the checklist's saved progress.
+   * @return string
+   *   The route name.
    */
-  public function clearSavedProgress() {
-    variable_del($this->getSavedProgressVariableName());
-    drupal_set_message(t('%title saved progress has been cleared.', array(
-      '%title' => $this->title,
-    )));
+  public function getRouteName() {
+    return "checklistapi.checklists.{$this->id}";
   }
 
   /**
-   * Gets the name of the Drupal variable for the checklist's saved progress.
+   * Gets the checklist form URL.
    *
-   * @return string
-   *   The Drupal variable name.
+   * @return Url
+   *   The URL to the checklist form.
    */
-  public function getSavedProgressVariableName() {
-    return "checklistapi_checklist_{$this->id}";
+  public function getUrl() {
+    return new Url($this->getRouteName());
   }
 
   /**
@@ -189,11 +223,11 @@ class ChecklistapiChecklist {
    *   TRUE if the checklist has saved progress, or FALSE if it doesn't.
    */
   public function hasSavedProgress() {
-    return (bool) variable_get($this->getSavedProgressVariableName(), FALSE);
+    return (bool) $this->config->get($this::PROGRESS_CONFIG_KEY);
   }
 
   /**
-   * Saves checklist progress to a Drupal variable.
+   * Saves checklist progress.
    *
    * @param array $values
    *   A multidimensional array of form state checklist values.
@@ -201,12 +235,13 @@ class ChecklistapiChecklist {
    * @see checklistapi_checklist_form_submit()
    */
   public function saveProgress(array $values) {
-    global $user;
+    $user = \Drupal::currentUser();
+
     $time = time();
     $num_changed_items = 0;
     $progress = array(
       '#changed' => $time,
-      '#changed_by' => $user->uid,
+      '#changed_by' => $user->id(),
       '#completed_items' => 0,
     );
 
@@ -235,7 +270,7 @@ class ChecklistapiChecklist {
             // Item is newly checked. Set new value.
             $new_item = array(
               '#completed' => $time,
-              '#uid' => $user->uid,
+              '#uid' => $user->id(),
             );
             $num_changed_items++;
           }
@@ -254,11 +289,12 @@ class ChecklistapiChecklist {
 
     // Sort array elements alphabetically so changes to the order of items in
     // checklist definitions over time don't affect the order of elements in the
-    // saved progress variable. This simplifies use with Strongarm.
+    // saved progress details. This reduces non-substantive changes to
+    // configuration files.
     ksort($progress);
 
-    variable_set($this->getSavedProgressVariableName(), $progress);
-    drupal_set_message(format_plural(
+    $this->config->set($this::PROGRESS_CONFIG_KEY, $progress)->save();
+    drupal_set_message(\Drupal::translation()->formatPlural(
       $num_changed_items,
       '%title progress has been saved. 1 item changed.',
       '%title progress has been saved. @count items changed.',
@@ -270,8 +306,8 @@ class ChecklistapiChecklist {
    * Determines whether the current user has access to the checklist.
    *
    * @param string $operation
-   *   The operation to test access for. Possible values are "view", "edit", and
-   *   "any". Defaults to "any".
+   *   (optional) The operation to test access for. Possible values are "view",
+   *   "edit", and "any". Defaults to "any".
    *
    * @return bool
    *   Returns TRUE if the user has access, or FALSE if not.

@@ -8,6 +8,10 @@
  * completion times and users.
  */
 
+use Drupal\checklistapi\ChecklistapiChecklist;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Render\Element;
+
 /**
  * Access callback: Checks the current user's access to a given checklist.
  *
@@ -20,17 +24,19 @@
  * @return bool
  *   Returns TRUE if the current user has access to perform a given operation on
  *   the specified checklist, or FALSE if not.
+ *
+ * @throws InvalidArgumentException
+ *   Throws an exception if an unsupported operation is supplied.
  */
 function checklistapi_checklist_access($id, $operation = 'any') {
   $all_operations = array('view', 'edit', 'any');
   if (!in_array($operation, $all_operations)) {
-    throw new Exception(t('No such operation "@operation"', array(
-      '@operation' => $operation,
-    )));
+    throw new \InvalidArgumentException(sprintf('No such operation "%s"', $operation));
   }
 
-  $access['view'] = user_access('view any checklistapi checklist') || user_access('view ' . $id . ' checklistapi checklist');
-  $access['edit'] = user_access('edit any checklistapi checklist') || user_access('edit ' . $id . ' checklistapi checklist');
+  $current_user = \Drupal::currentUser();
+  $access['view'] = $current_user->hasPermission('view any checklistapi checklist') || $current_user->hasPermission("view {$id} checklistapi checklist");
+  $access['edit'] = $current_user->hasPermission('edit any checklistapi checklist') || $current_user->hasPermission("edit {$id} checklistapi checklist");
   $access['any'] = $access['view'] || $access['edit'];
   return $access[$operation];
 }
@@ -50,6 +56,22 @@ function checklistapi_checklist_load($id) {
 }
 
 /**
+ * Determines whether the current user is in compact mode.
+ *
+ * Compact mode shows checklist forms with less description text.
+ *
+ * Whether the user is in compact mode is determined by a cookie, which is set
+ * for the user by ChecklistapiController::setCompactMode(). If the user does
+ * not have the cookie, the setting defaults to off.
+ *
+ * @return bool
+ *   TRUE when in compact mode, or FALSE when in expanded mode.
+ */
+function checklistapi_compact_mode() {
+  return isset($_COOKIE['Drupal_visitor_checklistapi_compact_mode']) ? (bool) $_COOKIE['Drupal_visitor_checklistapi_compact_mode'] : FALSE;
+}
+
+/**
  * Gets checklist definitions.
  *
  * @param string $id
@@ -63,10 +85,10 @@ function checklistapi_get_checklist_info($id = NULL) {
   $definitions = &drupal_static(__FUNCTION__);
   if (!isset($definitions)) {
     // Get definitions.
-    $definitions = module_invoke_all('checklistapi_checklist_info');
+    $definitions = \Drupal::moduleHandler()->invokeAll('checklistapi_checklist_info');
     $definitions = checklistapi_sort_array($definitions);
     // Let other modules alter them.
-    drupal_alter('checklistapi_checklist_info', $definitions);
+    \Drupal::moduleHandler()->alter('checklistapi_checklist_info', $definitions);
     $definitions = checklistapi_sort_array($definitions);
     // Inject checklist IDs.
     foreach ($definitions as $key => $value) {
@@ -83,82 +105,19 @@ function checklistapi_get_checklist_info($id = NULL) {
  * Implements hook_help().
  */
 function checklistapi_help($path, $arg) {
-  foreach (checklistapi_get_checklist_info() as $definition) {
-    if ($definition['#path'] == $path && !empty($definition['#help'])) {
-      return $definition['#help'];
-    }
-  }
-}
-
-/**
- * Implements hook_init().
- */
-function checklistapi_init() {
-  // Disable page caching on all Checklist API module paths.
-  $module_paths = array_keys(checklistapi_menu());
-  if (in_array(current_path(), $module_paths)) {
-    drupal_page_is_cacheable(FALSE);
-  }
-}
-
-/**
- * Implements hook_menu().
- */
-function checklistapi_menu() {
-  $items = array();
-
-  // Checklists report.
-  $items['admin/reports/checklistapi'] = array(
-    'title' => 'Checklists',
-    'page callback' => 'checklistapi_report_form',
-    'access arguments' => array('view checklistapi checklists report'),
-    'description' => 'Get an overview of your installed checklists with progress details.',
-    'file' => 'checklistapi.admin.inc',
-  );
-
-  // Individual checklists.
   foreach (checklistapi_get_checklist_info() as $id => $definition) {
-    if (empty($definition['#path']) || empty($definition['#title'])) {
-      continue;
+    if ($definition['#path'] == $path) {
+      // The checklist has help and the current user has access to view it.
+      if (!empty($definition['#help']) && checklistapi_checklist_access($id)) {
+        return $definition['#help'];
+      }
+      // Otherwise the loop can break early since only one checklist can occupy
+      // a given path.
+      else {
+        break;
+      }
     }
-
-    // View/edit checklist.
-    $items[$definition['#path']] = array(
-      'title' => $definition['#title'],
-      'description' => (!empty($definition['#description'])) ? $definition['#description'] : '',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('checklistapi_checklist_form', $id),
-      'access callback' => 'checklistapi_checklist_access',
-      'access arguments' => array($id),
-      'file' => 'checklistapi.pages.inc',
-    );
-    if (!empty($definition['#menu_name'])) {
-      $items[$definition['#path']]['menu_name'] = $definition['#menu_name'];
-    }
-
-    // Clear saved progress.
-    $items[$definition['#path'] . '/clear'] = array(
-      'title' => 'Clear',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('checklistapi_checklist_clear_confirm', $id),
-      'access callback' => 'checklistapi_checklist_access',
-      'access arguments' => array($id, 'edit'),
-      'file' => 'checklistapi.pages.inc',
-      'type' => MENU_CALLBACK,
-    );
-
-    // Toggle compact mode.
-    $items[$definition['#path'] . '/compact'] = array(
-      'title' => 'Compact mode',
-      'page callback' => 'checklistapi_compact_page',
-      'access callback' => 'checklistapi_checklist_access',
-      'access arguments' => array($id),
-      'file' => 'checklistapi.pages.inc',
-      'type' => MENU_CALLBACK,
-    );
   }
-
-  return $items;
 }
 
 /**
@@ -171,7 +130,7 @@ function checklistapi_permission() {
   $perms['view checklistapi checklists report'] = array(
     'title' => t(
       'View the !name report',
-      array('!name' => (user_access('view checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
+      array('!name' => (\Drupal::currentUser()->hasPermission('view checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
     ),
   );
   $perms['view any checklistapi checklist'] = array(
@@ -188,18 +147,14 @@ function checklistapi_permission() {
     if (empty($id)) {
       continue;
     }
-    $perms['view ' . $id . ' checklistapi checklist'] = array(
-      'title' => t(
-        'View the !name checklist',
-        array('!name' => (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']))
-      ),
+
+    $checklist_name = (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']);
+    $perms["view {$id} checklistapi checklist"] = array(
+      'title' => t('View the !name checklist', array('!name' => $checklist_name)),
       'description' => $view_checklist_perm_description,
     );
-    $perms['edit ' . $id . ' checklistapi checklist'] = array(
-      'title' => t(
-        'Edit the !name checklist',
-        array('!name' => (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']))
-      ),
+    $perms["edit {$id} checklistapi checklist"] = array(
+      'title' => t('Edit the !name checklist', array('!name' => $checklist_name)),
       'description' => $edit_checklist_perm_description,
     );
   }
@@ -220,7 +175,7 @@ function checklistapi_permission() {
  * @see checklistapi_get_checklist_info()
  */
 function checklistapi_sort_array(array $array) {
-  $child_keys = element_children($array);
+  $child_keys = Element::children($array);
 
   if (!count($child_keys)) {
     // No children to sort.
@@ -245,7 +200,7 @@ function checklistapi_sort_array(array $array) {
     $children[$key] = checklistapi_sort_array($children[$key]);
   }
   // Sort by weight.
-  uasort($children, 'element_sort');
+  uasort($children, array('Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
   // Remove incremental weight hack.
   foreach ($children as $key => $child) {
     $children[$key]['#weight'] = floor($children[$key]['#weight']);
@@ -269,9 +224,7 @@ function checklistapi_strtolowercamel($string) {
   $string = str_replace('_', ' ', $string);
   $string = ucwords($string);
   $string = str_replace(' ', '', $string);
-  // Lowercase first character. lcfirst($string) would be nicer, but let's not
-  // create a dependency on PHP 5.3 just for that.
-  $string[0] = strtolower($string[0]);
+  $string = Unicode::lcfirst($string);
   return $string;
 }
 
@@ -281,7 +234,8 @@ function checklistapi_strtolowercamel($string) {
 function checklistapi_theme() {
   return array(
     'checklistapi_compact_link' => array(
-      'file' => 'checklistapi.pages.inc',
+      'template' => 'checklistapi-compact-link',
+      'variables' => array('link' => ''),
     ),
     'checklistapi_progress_bar' => array(
       'path' => drupal_get_path('module', 'checklistapi') . '/templates',
@@ -294,4 +248,32 @@ function checklistapi_theme() {
       ),
     ),
   );
+}
+
+/**
+ * Prepares variables for checklist compact link templates.
+ *
+ * Default template: checklistapi-compact-link.html.twig.
+ *
+ * @param array $variables
+ *   An empty array.
+ */
+function template_preprocess_checklistapi_compact_link(&$variables) {
+  if (checklistapi_compact_mode()) {
+    $text = t('Show item descriptions');
+    $path = current_path() . '/compact/off';
+    $title = t('Expand layout to include item descriptions.');
+  }
+  else {
+    $text = t('Hide item descriptions');
+    $path = current_path() . '/compact/on';
+    $title = t('Compress layout by hiding item descriptions.');
+  }
+
+  $variables['link'] = l($text, $path, array(
+    'attributes' => array(
+      'title' => $title,
+    ),
+    'query' => drupal_get_destination(),
+  ));
 }

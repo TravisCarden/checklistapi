@@ -12,7 +12,7 @@
  * @link http://buytaert.net/drupal-learning-curve Dries Buytaert's Drupal learning curve @endlink
  * .
  */
-function checklistapi_example_checklistapi_checklist_info() {
+function checklistapiexample_checklistapi_checklist_info() {
   $definitions = array();
   $definitions['example_checklist'] = array(
     '#title' => t('Checklist API example'),
@@ -206,14 +206,14 @@ function checklistapi_example_checklistapi_checklist_info() {
 /**
  * Implements hook_checklistapi_checklist_info_alter().
  *
- * Alters the checklist from checklistapi_example_checklistapi_checklist_info()
+ * Alters the checklist from checklistapiexample_checklistapi_checklist_info()
  * according to
  * @link http://www.unleashedmind.com/files/drupal-learning-curve.png sun's modifications @endlink
  * of
  * @link http://buytaert.net/drupal-learning-curve Dries Buytaert's Drupal learning curve @endlink
  * .
  */
-function checklistapi_example_checklistapi_checklist_info_alter(&$definitions) {
+function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
   $definitions['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
   $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
   $definitions['example_checklist']['i_kick_butt']['advanced_tasks'] += $definitions['example_checklist']['i_kick_butt']['development'];
