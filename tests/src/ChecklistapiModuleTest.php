@@ -10,7 +10,7 @@ namespace Drupal\checklistapi\Tests;
 use Drupal\Core\Render\Element;
 use Drupal\Tests\UnitTestCase;
 
-require_once __DIR__ . '/../../../../checklistapi.module';
+require_once __DIR__ . '/../../checklistapi.module';
 
 /**
  * Tests the functions in checklistapi.module.
