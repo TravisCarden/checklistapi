@@ -62,5 +62,5 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection, $provider) {}
+  protected function alterRoutes(RouteCollection $collection) {}
 }
