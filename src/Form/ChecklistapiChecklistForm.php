@@ -7,6 +7,7 @@
 
 namespace Drupal\checklistapi\Form;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Render\Element;
 
@@ -70,12 +71,12 @@ class ChecklistapiChecklistForm implements FormInterface {
     foreach (Element::children($groups) as $group_key) {
       $group = &$groups[$group_key];
       $form[$group_key] = array(
-        '#title' => filter_xss($group['#title']),
+        '#title' => Xss::filter($group['#title']),
         '#type' => 'details',
         '#group' => 'checklistapi',
       );
       if (!empty($group['#description'])) {
-        $form[$group_key]['#description'] = filter_xss_admin($group['#description']);
+        $form[$group_key]['#description'] = Xss::filterAdmin($group['#description']);
       }
 
       // Loop through items.
@@ -83,7 +84,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         $item = &$group[$item_key];
         $saved_item = !empty($checklist->savedProgress[$item_key]) ? $checklist->savedProgress[$item_key] : 0;
         // Build title.
-        $title = filter_xss($item['#title']);
+        $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
           $user = array(
@@ -109,7 +110,7 @@ class ChecklistapiChecklistForm implements FormInterface {
           }
         }
         // Get description.
-        $description = (isset($item['#description'])) ? '<p>' . filter_xss_admin($item['#description']) . '</p>' : '';
+        $description = (isset($item['#description'])) ? '<p>' . Xss::filterAdmin($item['#description']) . '</p>' : '';
         // Append links.
         $links = array();
         foreach (Element::children($item) as $link_key) {
@@ -124,9 +125,9 @@ class ChecklistapiChecklistForm implements FormInterface {
         $form[$group_key][$item_key] = array(
           '#attributes' => array('class' => array('checklistapi-item')),
           '#default_value' => $default_value,
-          '#description' => filter_xss_admin($description),
+          '#description' => Xss::filterAdmin($description),
           '#disabled' => !($user_has_edit_access),
-          '#title' => filter_xss_admin($title),
+          '#title' => Xss::filterAdmin($title),
           '#type' => 'checkbox',
           '#group' => $group_key,
           '#parents' => array('checklistapi', $group_key, $item_key),
