@@ -11,6 +11,7 @@
 use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Access callback: Checks the current user's access to a given checklist.
@@ -104,15 +105,16 @@ function checklistapi_get_checklist_info($id = NULL) {
 /**
  * Implements hook_help().
  */
-function checklistapi_help($path, $arg) {
+function checklistapi_help($route_name, Request $request) {
   foreach (checklistapi_get_checklist_info() as $id => $definition) {
-    if ($definition['#path'] == $path) {
+    $checklist = new ChecklistapiChecklist($definition);
+    if ($checklist->getRouteName() == $route_name) {
       // The checklist has help and the current user has access to view it.
       if (!empty($definition['#help']) && checklistapi_checklist_access($id)) {
         return $definition['#help'];
       }
       // Otherwise the loop can break early since only one checklist can occupy
-      // a given path.
+      // a given route.
       else {
         break;
       }
