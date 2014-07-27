@@ -11,20 +11,10 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\checklistapi\Controller\ChecklistapiController;
 
 /**
- * Tests the ChecklistapiController class.
+ * @coversDefaultClass \Drupal\checklistapi\ChecklistapiController
+ * @group checklistapi
  */
 class ChecklistapiControllerTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'ChecklistapiController class',
-      'description' => 'Test the ChecklistapiController class.',
-      'group' => 'Checklist API',
-    );
-  }
 
   /**
    * Tests that setCompactMode() rejects an invalid mode.

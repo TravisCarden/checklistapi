@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Functionally tests Checklist API.
  *
+ * @group checklistapi
+ *
  * @todo Add tests for vertical tabs progress indicators.
  * @todo Add tests for saving and retrieving checklist progress.
  * @todo Add tests for clearing saved progress.
@@ -33,17 +35,6 @@ class ChecklistapiTest extends WebTestBase {
    *   A user object with permission to edit any checklist.
    */
   protected $privilegedUser;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Checklist API functionality',
-      'description' => 'Tests Checklist API functionality.',
-      'group' => 'Checklist API',
-    );
-  }
 
   /**
    * {@inheritdoc}

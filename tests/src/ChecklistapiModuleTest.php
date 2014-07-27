@@ -14,19 +14,10 @@ require_once __DIR__ . '/../../checklistapi.module';
 
 /**
  * Tests the functions in checklistapi.module.
+ *
+ * @group checklistapi
  */
 class ChecklistapiModuleTest extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Checklist API module',
-      'description' => 'Test checklistapi.module.',
-      'group' => 'Checklist API',
-    );
-  }
 
   /**
    * Tests checklistapi_sort_array().
