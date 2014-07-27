@@ -11,7 +11,7 @@
 use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Access callback: Checks the current user's access to a given checklist.
@@ -105,7 +105,7 @@ function checklistapi_get_checklist_info($id = NULL) {
 /**
  * Implements hook_help().
  */
-function checklistapi_help($route_name, Request $request) {
+function checklistapi_help($route_name, RouteMatchInterface $route_match) {
   foreach (checklistapi_get_checklist_info() as $id => $definition) {
     $checklist = new ChecklistapiChecklist($definition);
     if ($checklist->getRouteName() == $route_name) {
