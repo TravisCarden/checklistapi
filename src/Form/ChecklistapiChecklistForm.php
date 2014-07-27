@@ -36,7 +36,7 @@ class ChecklistapiChecklistForm implements FormInterface {
       '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by !user', array(
         '@date' => $checklist->getLastUpdatedDate(),
         '!user' => $checklist->getLastUpdatedUser(),
-      )) : '&nbsp;',
+      )) : '',
       '#number_complete' => $checklist->getNumberCompleted(),
       '#number_of_items' => $checklist->getNumberOfItems(),
       '#percent_complete' => (int) round($checklist->getPercentComplete()),

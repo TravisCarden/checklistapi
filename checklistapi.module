@@ -243,7 +243,7 @@ function checklistapi_theme() {
       'path' => drupal_get_path('module', 'checklistapi') . '/templates',
       'template' => 'checklistapi-progress-bar',
       'variables' => array(
-        'message' => '&nbsp;',
+        'message' => '',
         'number_complete' => 0,
         'number_of_items' => 0,
         'percent_complete' => 0,
