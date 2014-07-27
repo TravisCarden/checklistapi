@@ -38,7 +38,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return $this->checklist->getUrl();
   }
 
