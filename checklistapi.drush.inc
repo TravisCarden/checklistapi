@@ -51,7 +51,7 @@ function drush_checklistapi_list() {
       '@percent' => round($checklist->getPercentComplete()),
     ));
     $row[] = $checklist->getLastUpdatedDate();
-    $row[] = $checklist->getLastUpdatedUser();
+    $row[] = strip_tags($checklist->getLastUpdatedUser());
     $rows[] = $row;
   }
 
