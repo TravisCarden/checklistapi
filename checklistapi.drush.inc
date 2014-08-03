@@ -15,7 +15,7 @@ function checklistapi_drush_command() {
   if (function_exists('drush_format_table')) {
     $items['checklistapi-list'] = array(
       'aliases' => array('capi-list'),
-      'description' => 'List of available checklists.',
+      'description' => 'Get an overview of your installed checklists with progress details.',
     );
   }
 
