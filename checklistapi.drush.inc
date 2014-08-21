@@ -31,6 +31,16 @@ function checklistapi_drush_command() {
 }
 
 /**
+ * Implements hook_drush_help().
+ */
+function checklistapi_drush_help($section) {
+  switch ($section) {
+    case 'meta:checklistapi:title':
+      return dt('Checklist API commands');
+  }
+}
+
+/**
  * Drush callback for checklist listing.
  */
 function drush_checklistapi_list() {
@@ -85,15 +95,15 @@ function drush_checklistapi_info_validate() {
       '!id' => $id,
     )));
   }
+
+  drush_set_context('checklist', $checklist);
 }
 
 /**
  * Drush callback for checklist info.
  */
 function drush_checklistapi_info() {
-  $arguments = drush_get_arguments();
-  $id = $arguments[1];
-  $checklist = checklistapi_checklist_load($id);
+  $checklist = drush_get_context('checklist');
 
   // Print the help.
   if (!empty($checklist->help)) {
