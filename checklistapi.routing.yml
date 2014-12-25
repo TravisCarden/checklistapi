@@ -2,7 +2,7 @@ checklistapi.report:
   path: /admin/reports/checklistapi
   defaults:
     _title: Checklists
-    _content: \Drupal\checklistapi\Controller\ChecklistapiController::report
+    _controller: \Drupal\checklistapi\Controller\ChecklistapiController::report
   requirements:
     _permission: view checklistapi checklists report
 

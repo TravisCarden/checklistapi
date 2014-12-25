@@ -49,7 +49,7 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
       // Toggle compact mode.
       $routes["checklistapi.checklists.{$id}.compact"] = new Route("{$definition['#path']}/compact/{mode}", array(
         '_title' => 'Compact mode',
-        '_content' => '\Drupal\checklistapi\Controller\ChecklistapiController::setCompactMode',
+        '_controller' => '\Drupal\checklistapi\Controller\ChecklistapiController::setCompactMode',
         'checklist_id' => $id,
         'op' => 'any',
         'mode' => 'off',
