@@ -7,6 +7,7 @@
 
 namespace Drupal\checklistapi;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
@@ -110,7 +111,7 @@ class ChecklistapiChecklist {
       unset($definition[$group_key]);
     }
     foreach ($definition as $property_key => $value) {
-      $property_name = checklistapi_strtolowercamel(drupal_substr($property_key, 1));
+      $property_name = checklistapi_strtolowercamel(Unicode::substr($property_key, 1));
       $this->$property_name = $value;
     }
 
