@@ -45,17 +45,17 @@ class ChecklistapiModuleTest extends UnitTestCase {
           '#weight' => -1,
           'link_three' => array(
             '#text' => 'Link three',
-            '#path' => 'http://example.com/three',
+            '#url' => Url::fromUri('http://example.com/three'),
             '#weight' => 3,
           ),
           'link_two' => array(
             '#text' => 'Link two',
-            '#path' => 'http://example.com/two',
+            '#url' => Url::fromUri('http://example.com/two'),
             '#weight' => 2,
           ),
           'link_one' => array(
             '#text' => 'Link one',
-            '#path' => 'http://example.com/one',
+            '#url' => Url::fromUri('http://example.com/one'),
             '#weight' => 1,
           ),
         ),

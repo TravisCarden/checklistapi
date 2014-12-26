@@ -10,6 +10,7 @@ namespace Drupal\checklistapi\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Url;
 
 /**
  * Controller for Checklist API.
@@ -48,7 +49,7 @@ class ChecklistapiController extends ControllerBase {
       $checklist = checklistapi_checklist_load($id);
       $row = array();
       $row[] = array(
-        'data' => ($checklist->userHasAccess()) ? l($checklist->title, $checklist->path) : drupal_placeholder($checklist->title),
+        'data' => ($checklist->userHasAccess()) ? \Drupal::l($checklist->title, $checklist->getUrl()) : drupal_placeholder($checklist->title),
         'title' => (!empty($checklist->description)) ? $checklist->description : '',
       );
       $row[] = t('@completed of @total (@percent%)', array(

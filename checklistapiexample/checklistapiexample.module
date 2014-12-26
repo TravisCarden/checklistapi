@@ -5,6 +5,8 @@
  * An example implementation of the Checklist API.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_checklistapi_checklist_info().
  *
@@ -27,7 +29,7 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#description' => t('Prepare for installation, run the installation script, and take the steps that should be done after the installation script has completed.'),
         'handbook_page' => array(
           '#text' => t('Installation Guide'),
-          '#path' => 'http://drupal.org/documentation/install',
+          '#url' => Url::fromUri('http://drupal.org/documentation/install'),
         ),
       ),
       'node_system' => array(
@@ -35,7 +37,7 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#description' => t('Perform a variety of operations on one or more nodes.'),
         'handbook_page' => array(
           '#text' => t('Manage nodes'),
-          '#path' => 'http://drupal.org/node/306808',
+          '#url' => Url::fromUri('http://drupal.org/node/306808'),
         ),
       ),
       'block_system' => array(
@@ -43,7 +45,7 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#description' => t('Create blocks and adjust their appearance, shape, size and position.'),
         'handbook_page' => array(
           '#text' => t('Working with blocks (content in regions)'),
-          '#path' => 'http://drupal.org/documentation/modules/block',
+          '#url' => Url::fromUri('http://drupal.org/documentation/modules/block'),
         ),
       ),
       'users' => array(
@@ -51,7 +53,7 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#description' => t('Create and manage users and access control.'),
         'handbook_page' => array(
           '#text' => t('Managing users'),
-          '#path' => 'http://drupal.org/node/627158',
+          '#url' => Url::fromUri('http://drupal.org/node/627158'),
         ),
       ),
       'contrib' => array(
@@ -59,7 +61,7 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#description' => t('Customize Drupal to your tastes by adding modules and themes.'),
         'handbook_page' => array(
           '#text' => t('Installing modules and themes'),
-          '#path' => 'http://drupal.org/documentation/install/modules-themes',
+          '#url' => Url::fromUri('http://drupal.org/documentation/install/modules-themes'),
         ),
       ),
     ),
@@ -70,51 +72,51 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#title' => t('Upgrading, patching, (security) monitoring'),
         'handbook_page_upgrading' => array(
           '#text' => t('Upgrading from previous versions'),
-          '#path' => 'http://drupal.org/upgrade',
+          '#url' => Url::fromUri('http://drupal.org/upgrade'),
         ),
         'handbook_page_patching' => array(
           '#text' => t('Applying patches'),
-          '#path' => 'http://drupal.org/patch/apply',
+          '#url' => Url::fromUri('http://drupal.org/patch/apply'),
         ),
         'security_advisories' => array(
           '#text' => t('Security advisories'),
-          '#path' => 'http://drupal.org/security',
+          '#url' => Url::fromUri('http://drupal.org/security'),
         ),
         'handbook_page_monitoring' => array(
           '#text' => t('Monitoring a site'),
-          '#path' => 'http://drupal.org/node/627162',
+          '#url' => Url::fromUri('http://drupal.org/node/627162'),
         ),
       ),
       'navigation_menus_taxonomy' => array(
         '#title' => t('Navigation, menus, taxonomy'),
         'handbook_page_menus' => array(
           '#text' => t('Working with Menus'),
-          '#path' => 'http://drupal.org/documentation/modules/menu',
+          '#url' => Url::fromUri('http://drupal.org/documentation/modules/menu'),
         ),
         'handbook_page_taxonomy' => array(
           '#text' => t('Organizing content with taxonomy'),
-          '#path' => 'http://drupal.org/documentation/modules/taxonomy',
+          '#url' => Url::fromUri('http://drupal.org/documentation/modules/taxonomy'),
         ),
       ),
       'locale_i18n' => array(
         '#title' => t('Locale and internationalization'),
         'handbook_page' => array(
           '#text' => t('Multilingual Guide'),
-          '#path' => 'http://drupal.org/documentation/multilingual',
+          '#url' => Url::fromUri('http://drupal.org/documentation/multilingual'),
         ),
       ),
       'customize_front_page' => array(
         '#title' => t('Drastically customize front page'),
         'handbook_page' => array(
           '#text' => t('Totally customize the LOOK of your front page'),
-          '#path' => 'http://drupal.org/node/317461',
+          '#url' => Url::fromUri('http://drupal.org/node/317461'),
         ),
       ),
       'theme_modification' => array(
         '#title' => t('Theme and template modifications'),
         'handbook_page' => array(
           '#text' => t('Theming Guide'),
-          '#path' => 'http://drupal.org/documentation/theme',
+          '#url' => Url::fromUri('http://drupal.org/documentation/theme'),
         ),
       ),
     ),
@@ -124,66 +126,66 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#title' => t('Contributing documentation and support'),
         'handbook_page_docs' => array(
           '#text' => t('Contribute to documentation'),
-          '#path' => 'http://drupal.org/contribute/documentation',
+          '#url' => Url::fromUri('http://drupal.org/contribute/documentation'),
         ),
         'handbook_page_support' => array(
           '#text' => t('Provide online support'),
-          '#path' => 'http://drupal.org/contribute/support',
+          '#url' => Url::fromUri('http://drupal.org/contribute/support'),
         ),
       ),
       'content_types_views' => array(
         '#title' => t('Content types and views'),
         'handbook_page_content_types' => array(
           '#text' => t('Working with nodes, content types and fields'),
-          '#path' => 'http://drupal.org/node/717120',
+          '#url' => Url::fromUri('http://drupal.org/node/717120'),
         ),
         'handbook_page_views' => array(
           '#text' => t('Working with Views'),
-          '#path' => 'http://drupal.org/documentation/modules/views',
+          '#url' => Url::fromUri('http://drupal.org/documentation/modules/views'),
         ),
       ),
       'actions_workflows' => array(
         '#title' => t('Actions and workflows'),
         'handbook_page' => array(
           '#text' => t('Actions and Workflows'),
-          '#path' => 'http://drupal.org/node/924538',
+          '#url' => Url::fromUri('http://drupal.org/node/924538'),
         ),
       ),
       'development' => array(
         '#title' => t('Theme and module development'),
         'handbook_page_theming' => array(
           '#text' => t('Theming Guide'),
-          '#path' => 'http://drupal.org/documentation/theme',
+          '#url' => Url::fromUri('http://drupal.org/documentation/theme'),
         ),
         'handbook_page_development' => array(
           '#text' => t('Develop for Drupal'),
-          '#path' => 'http://drupal.org/documentation/develop',
+          '#url' => Url::fromUri('http://drupal.org/documentation/develop'),
         ),
       ),
       'advanced_tasks' => array(
         '#title' => t('jQuery, Form API, security audits, performance tuning'),
         'handbook_page_jquery' => array(
           '#text' => t('JavaScript and jQuery'),
-          '#path' => 'http://drupal.org/node/171213',
+          '#url' => Url::fromUri('http://drupal.org/node/171213'),
         ),
         'handbook_page_form_api' => array(
           '#text' => t('Form API'),
-          '#path' => 'http://drupal.org/node/37775',
+          '#url' => Url::fromUri('http://drupal.org/node/37775'),
         ),
         'handbook_page_security' => array(
           '#text' => t('Securing your site'),
-          '#path' => 'http://drupal.org/security/secure-configuration',
+          '#url' => Url::fromUri('http://drupal.org/security/secure-configuration'),
         ),
         'handbook_page_performance' => array(
           '#text' => t('Managing site performance'),
-          '#path' => 'http://drupal.org/node/627252',
+          '#url' => Url::fromUri('http://drupal.org/node/627252'),
         ),
       ),
       'contribute_code' => array(
         '#title' => t('Contributing code, designs and patches back to Drupal'),
         'handbook_page' => array(
           '#text' => t('Contribute to development'),
-          '#path' => 'http://drupal.org/contribute/development',
+          '#url' => Url::fromUri('http://drupal.org/contribute/development'),
         ),
       ),
       'professional' => array(
@@ -193,8 +195,8 @@ function checklistapiexample_checklistapi_checklist_info() {
         '#title' => t(
           "I'm a !chx or !UnConeD.",
           array(
-            '!chx' => l(t('chx'), 'http://drupal.org/user/9446'),
-            '!UnConeD' => l(t('UnConeD'), 'http://drupal.org/user/10'),
+            '!chx' => \Drupal::l(t('chx'), Url::fromUri('http://drupal.org/user/9446')),
+            '!UnConeD' => \Drupal::l(t('UnConeD'), Url::fromUri('http://drupal.org/user/10')),
           )
         ),
       ),
@@ -226,29 +228,29 @@ function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
       '#title' => t('Contribute code and patches to Drupal core'),
       'handbook_page' => array(
         '#text' => t('Core contribution mentoring (core office hours)'),
-        '#path' => 'http://drupal.org/core-office-hours',
+        '#url' => Url::fromUri('http://drupal.org/core-office-hours'),
       ),
       'issue_queue' => array(
         '#text' => t('Core issue queue'),
-        '#path' => 'http://drupal.org/project/issues/drupal',
+        '#url' => Url::fromUri('http://drupal.org/project/issues/drupal'),
       ),
     ),
     'unit_tests' => array(
       '#title' => t('Write unit tests to get own patch committed.'),
       'handbook_page' => array(
         '#text' => t('Unit Testing with Simpletest'),
-        '#path' => 'http://drupal.org/node/811254',
+        '#url' => Url::fromUri('http://drupal.org/node/811254'),
       ),
     ),
     'review_core_patches' => array(
       '#title' => t("Review other people's core patches, understanding coding standards."),
       'pending_patches' => array(
         '#text' => t('Pending patches'),
-        '#path' => 'http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14',
+        '#url' => Url::fromUri('http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14'),
       ),
       'handbook_page' => array(
         '#text' => t('Coding standards'),
-        '#path' => 'http://drupal.org/coding-standards',
+        '#url' => Url::fromUri('http://drupal.org/coding-standards'),
       ),
     ),
     'security_performance' => array(
@@ -276,7 +278,7 @@ function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
     'im_chx' => array(
       '#title' => t(
         "I'm !chx.",
-        array('!chx' => l(t('chx'), 'http://drupal.org/user/9446'))
+        array('!chx' => \Drupal::l(t('chx'), Url::fromUri('http://drupal.org/user/9446')))
       ),
     ),
   );

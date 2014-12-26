@@ -61,9 +61,7 @@
  *         arbitrary unique identifier. The corresponding multimensional array
  *         describing the link may contain the following key-value pairs:
  *         - #text: The link text.
- *         - #path: The link path.
- *         - #options: (optional) An associative array of additional options
- *           used by the l() function.
+ *         - #url: The link url as a \Drupal\Core\Url object.
  *         - #weight: (optional) A floating point number used to sort the list
  *           of items before being output. Lower numbers appear before higher
  *           numbers.
@@ -85,7 +83,7 @@ function hook_checklistapi_checklist_info() {
         '#title' => t('Example item 1'),
         'example_link' => array(
           '#text' => t('Example.com'),
-          '#path' => 'http://www.example.com/',
+          '#url' => \Drupal\Core\Url::fromUri('http://www.example.com/'),
         ),
       ),
       'example_item_2' => array(

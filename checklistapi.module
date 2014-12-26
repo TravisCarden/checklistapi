@@ -222,19 +222,21 @@ function checklistapi_theme() {
 function template_preprocess_checklistapi_compact_link(array &$variables) {
   if (checklistapi_compact_mode()) {
     $text = t('Show item descriptions');
-    $path = Url::fromRoute('<current>') . '/compact/off';
+    $mode = 'off';
     $title = t('Expand layout to include item descriptions.');
   }
   else {
     $text = t('Hide item descriptions');
-    $path = Url::fromRoute('<current>') . '/compact/on';
+    $mode = 'on';
     $title = t('Compress layout by hiding item descriptions.');
   }
 
-  $variables['link'] = l($text, $path, array(
-    'attributes' => array(
-      'title' => $title,
-    ),
-    'query' => drupal_get_destination(),
-  ));
+  $current_route = \Drupal::routeMatch()->getRouteName();
+  $route_name = "{$current_route}.compact";
+  $route_parameters = array('mode' => $mode);
+  $options = array('query' => drupal_get_destination());
+  $url = Url::fromRoute($route_name, $route_parameters, $options)
+    ->setOption('attributes', array('title' => $title));
+
+  $variables['link'] = \Drupal::l($text, $url);
 }

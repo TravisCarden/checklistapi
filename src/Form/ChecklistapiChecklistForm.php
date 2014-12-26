@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 
 /**
  * Provides a checklist form.
@@ -116,8 +117,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         $links = array();
         foreach (Element::children($item) as $link_key) {
           $link = &$item[$link_key];
-          $options = (!empty($link['#options']) && is_array($link['#options'])) ? $link['#options'] : array();
-          $links[] = l($link['#text'], $link['#path'], $options);
+          $links[] = \Drupal::l($link['#text'], Url::fromUri($link['#url']));
         }
         if (count($links)) {
           $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
