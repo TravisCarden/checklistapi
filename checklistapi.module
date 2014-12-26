@@ -12,6 +12,7 @@ use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Access callback: Checks the current user's access to a given checklist.
@@ -263,12 +264,12 @@ function checklistapi_theme() {
 function template_preprocess_checklistapi_compact_link(array &$variables) {
   if (checklistapi_compact_mode()) {
     $text = t('Show item descriptions');
-    $path = current_path() . '/compact/off';
+    $path = Url::fromRoute('<current>') . '/compact/off';
     $title = t('Expand layout to include item descriptions.');
   }
   else {
     $text = t('Hide item descriptions');
-    $path = current_path() . '/compact/on';
+    $path = Url::fromRoute('<current>') . '/compact/on';
     $title = t('Compress layout by hiding item descriptions.');
   }
 

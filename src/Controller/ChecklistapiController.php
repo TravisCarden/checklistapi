@@ -112,7 +112,7 @@ class ChecklistapiController extends ControllerBase {
 
     // Redirect to the checklist.
     // @todo There must be a better way than this.
-    $path = explode('/', current_path());
+    $path = explode('/', Url::fromRoute('<current>'));
     array_pop($path);
     array_pop($path);
     $checklist_path = implode('/', $path);
