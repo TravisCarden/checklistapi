@@ -9,6 +9,7 @@ namespace Drupal\checklistapi\Form;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -26,7 +27,7 @@ class ChecklistapiChecklistForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $checklist_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $checklist_id = NULL) {
     $form['#checklist'] = $checklist = checklistapi_checklist_load($checklist_id);
     $user_has_edit_access = $checklist->userHasAccess('edit');
 
@@ -176,13 +177,14 @@ class ChecklistapiChecklistForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $form['#checklist']->saveProgress($form_state['values']['checklistapi']);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValue('checklistapi');
+    $form['#checklist']->saveProgress($values);
   }
 
   /**

@@ -8,6 +8,7 @@
 namespace Drupal\checklistapi\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form to clear saved progress for a given checklist.
@@ -68,7 +69,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $checklist_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $checklist_id = NULL) {
     $this->checklist = checklistapi_checklist_load($checklist_id);
     $form['#checklist'] = $this->checklist;
     return parent::buildForm($form, $form_state);
@@ -77,7 +78,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Clear saved progress.
     $form['#checklist']->clearSavedProgress();
 
