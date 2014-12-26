@@ -7,6 +7,7 @@
 
 namespace Drupal\checklistapi\Access;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,6 @@ class ChecklistapiAccessCheck implements AccessInterface {
     $op = $request->attributes->get('op');
     $op = !empty($op) ? $op : 'any';
 
-    return checklistapi_checklist_access($request->attributes->get('checklist_id'), $op) ? static::ALLOW : static::DENY;
+    return checklistapi_checklist_access($request->attributes->get('checklist_id'), $op) ? AccessResult::allowed() : AccessResult::forbidden();
   }
 }
