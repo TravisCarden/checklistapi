@@ -30,6 +30,7 @@ class ChecklistapiChecklistForm implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state, $checklist_id = NULL) {
     $form['#checklist'] = $checklist = checklistapi_checklist_load($checklist_id);
     $user_has_edit_access = $checklist->userHasAccess('edit');
+    $renderer = \Drupal::service('renderer');
 
     // Progress bar.
     $progress_bar = array(
@@ -44,7 +45,7 @@ class ChecklistapiChecklistForm implements FormInterface {
     );
     $form['progress_bar'] = array(
       '#type' => 'markup',
-      '#markup' => drupal_render($progress_bar),
+      '#markup' => $renderer->render($progress_bar),
     );
 
     // Compact mode.
@@ -53,7 +54,7 @@ class ChecklistapiChecklistForm implements FormInterface {
     }
     $compact_link = array('#theme' => 'checklistapi_compact_link');
     $form['compact_mode_link'] = array(
-      '#markup' => drupal_render($compact_link),
+      '#markup' => $renderer->render($compact_link),
     );
 
     // General properties.
@@ -95,7 +96,7 @@ class ChecklistapiChecklistForm implements FormInterface {
             '<span class="completion-details"> - Completed @time by !user</a>',
             array(
               '@time' => format_date($saved_item['#completed'], 'short'),
-              '!user' => drupal_render($user),
+              '!user' => \Drupal::service('renderer')->render($user),
             )
           );
         }

@@ -166,7 +166,7 @@ class ChecklistapiChecklist {
         '#theme' => 'username',
         '#account' => user_load($this->savedProgress['#changed_by']),
       );
-      return drupal_render($username);
+      return \Drupal::service('renderer')->render($username);
     }
     else {
       return t('n/a');
