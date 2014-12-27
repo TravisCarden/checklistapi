@@ -12,6 +12,9 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
+/**
+ * An access check service determining access rules for checklist routes.
+ */
 class ChecklistapiAccessCheck implements AccessInterface {
 
   /**

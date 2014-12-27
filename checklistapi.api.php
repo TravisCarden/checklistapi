@@ -16,6 +16,8 @@
  * Any number of checklists can be defined in an implementation of this hook.
  * Checklist API will register menu items and create permissions for each one.
  *
+ * For a working example, see checklistapi_example.module.
+ *
  * @return array
  *   An array of checklist definitions. Each definition is keyed by an arbitrary
  *   unique identifier. The corresponding multidimensional array describing the
@@ -66,8 +68,6 @@
  *           of items before being output. Lower numbers appear before higher
  *           numbers.
  *
- * For a working example, see checklistapi_example.module.
- *
  * @see checklistapi_example_checklistapi_checklist_info()
  * @see hook_checklistapi_checklist_info_alter()
  */
@@ -103,11 +103,11 @@ function hook_checklistapi_checklist_info() {
  * definitions are passed in by reference. Additional checklists may be added,
  * or existing checklists may be altered or removed.
  *
+ * For a working example, see checklistapi_example.module.
+ *
  * @param array $definitions
  *   The multidimensional array of checklist definitions returned by
  *   hook_checklistapi_checklist_info().
- *
- * For a working example, see checklistapi_example.module.
  *
  * @see checklistapi_get_checklist_info()
  * @see hook_checklistapi_checklist_info()

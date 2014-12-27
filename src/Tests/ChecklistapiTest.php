@@ -31,8 +31,9 @@ class ChecklistapiTest extends WebTestBase {
   );
 
   /**
+   * A user object with permission to edit any checklist.
+   *
    * @var \Drupal\user\Entity\User
-   *   A user object with permission to edit any checklist.
    */
   protected $privilegedUser;
 

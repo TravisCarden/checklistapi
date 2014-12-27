@@ -17,7 +17,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
   /**
    * The checklist object.
    *
-   * @var Drupal\checklistapi\ChecklistapiChecklist
+   * @var \Drupal\checklistapi\ChecklistapiChecklist
    */
   public $checklist;
 

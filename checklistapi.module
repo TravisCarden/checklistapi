@@ -260,7 +260,7 @@ function checklistapi_theme() {
  * @param array $variables
  *   An empty array.
  */
-function template_preprocess_checklistapi_compact_link(&$variables) {
+function template_preprocess_checklistapi_compact_link(array &$variables) {
   if (checklistapi_compact_mode()) {
     $text = t('Show item descriptions');
     $path = current_path() . '/compact/off';
