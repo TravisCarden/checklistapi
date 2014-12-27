@@ -59,8 +59,7 @@ class ChecklistapiChecklistForm implements FormInterface {
     // General properties.
     $form['checklistapi'] = array(
       '#attached' => array(
-        'css' => array(drupal_get_path('module', 'checklistapi') . '/checklistapi.css'),
-        'js'  => array(drupal_get_path('module', 'checklistapi') . '/checklistapi.js'),
+        'library' => array('checklistapi/checklistapi'),
       ),
       '#tree' => TRUE,
       '#type' => 'vertical_tabs',
