@@ -124,48 +124,6 @@ function checklistapi_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function checklistapi_permission() {
-  $perms = array();
-
-  // Universal permissions.
-  $perms['view checklistapi checklists report'] = array(
-    'title' => t(
-      'View the !name report',
-      array('!name' => (\Drupal::currentUser()->hasPermission('view checklistapi checklists report')) ? l(t('Checklists'), 'admin/reports/checklistapi') : drupal_placeholder('Checklists'))
-    ),
-  );
-  $perms['view any checklistapi checklist'] = array(
-    'title' => t('View any checklist'),
-    'description' => $view_checklist_perm_description = t('Read-only access: View list items and saved progress.'),
-  );
-  $perms['edit any checklistapi checklist'] = array(
-    'title' => t('Edit any checklist'),
-    'description' => $edit_checklist_perm_description = t('Check and uncheck list items and save changes, or clear saved progress.'),
-  );
-
-  // Per checklist permissions.
-  foreach (checklistapi_get_checklist_info() as $id => $definition) {
-    if (empty($id)) {
-      continue;
-    }
-
-    $checklist_name = (checklistapi_checklist_access($id)) ? l($definition['#title'], $definition['#path']) : drupal_placeholder($definition['#title']);
-    $perms["view {$id} checklistapi checklist"] = array(
-      'title' => t('View the !name checklist', array('!name' => $checklist_name)),
-      'description' => $view_checklist_perm_description,
-    );
-    $perms["edit {$id} checklistapi checklist"] = array(
-      'title' => t('Edit the !name checklist', array('!name' => $checklist_name)),
-      'description' => $edit_checklist_perm_description,
-    );
-  }
-
-  return $perms;
-}
-
-/**
  * Recursively sorts array elements by #weight.
  *
  * @param array $array
