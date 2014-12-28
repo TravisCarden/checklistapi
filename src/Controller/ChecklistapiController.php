@@ -66,8 +66,9 @@ class ChecklistapiController extends ControllerBase {
             '#links' => array(
               'clear' => array(
                 'title' => t('Clear'),
-                'href' => "{$checklist->path}/clear",
-                'query' => array('destination' => 'admin/reports/checklistapi'),
+                'url' => Url::fromRoute($checklist->getRouteName() . '.clear', array(), array(
+                  'query' => drupal_get_destination(),
+                )),
               ),
             ),
           ),
