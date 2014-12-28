@@ -74,11 +74,23 @@ class ChecklistapiTest extends WebTestBase {
    * Tests checklist composition.
    */
   public function testChecklistComposition() {
-    $permissions = array('edit example_checklist checklistapi checklist');
-    $this->assertTrue($this->checkPermissions($permissions), 'Created per-checklist permission.');
-
     $this->drupalGet('admin/config/development/checklistapi-example');
     $this->assertRaw('This checklist based on', 'Created per-checklist help block.');
+  }
+
+  /**
+   * Tests permissions.
+   */
+  public function testPermissions() {
+    $this->assertTrue($this->checkPermissions(array(
+      'view checklistapi checklists report',
+      'view any checklistapi checklist',
+      'edit any checklistapi checklist',
+    )), 'Created universal permissions.');
+    $this->assertTrue($this->checkPermissions(array(
+      'view example_checklist checklistapi checklist',
+      'edit example_checklist checklistapi checklist',
+    )), 'Created per-checklist permissions.');
   }
 
 }
