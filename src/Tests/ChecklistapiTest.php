@@ -49,10 +49,7 @@ class ChecklistapiTest extends WebTestBase {
     $this->drupalLogin($this->privilegedUser);
 
     // Place help block.
-    $this->drupalPlaceBlock('system_help_block', array(
-      'label' => '',
-      'region' => 'help',
-    ));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
   }
 
   /**
