@@ -5,7 +5,7 @@
  * Contains \Drupal\checklistapi\Tests\ChecklistapiControllerTest.
  */
 
-namespace Drupal\checklistapi\Tests;
+namespace Drupal\Tests\checklistapi\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\checklistapi\Controller\ChecklistapiController;

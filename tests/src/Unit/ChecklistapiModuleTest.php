@@ -5,12 +5,13 @@
  * Contains \Drupal\checklistapi\Tests\ChecklistapiModuleTest.
  */
 
-namespace Drupal\checklistapi\Tests;
+namespace Drupal\Tests\checklistapi\Unit;
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 
-require_once __DIR__ . '/../../checklistapi.module';
+require_once __DIR__ . '/../../../checklistapi.module';
 
 /**
  * Tests the functions in checklistapi.module.
