@@ -192,11 +192,11 @@ class ChecklistapiChecklistForm implements FormInterface {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function clear(array $form, array &$form_state) {
-    $form_state['redirect_route']['route_name'] = $form['#checklist']->getRouteName() . '.clear';
+  public function clear(array &$form, FormStateInterface $form_state) {
+    $form_state->setRedirect($form['#checklist']->getRouteName() . '.clear');
   }
 
 }

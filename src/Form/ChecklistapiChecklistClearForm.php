@@ -83,6 +83,6 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
     $form['#checklist']->clearSavedProgress();
 
     // Redirect back to checklist.
-    $form_state['redirect'] = $form['#checklist']->path;
+    $form_state->setRedirect($form['#checklist']->getRouteName());
   }
 }
