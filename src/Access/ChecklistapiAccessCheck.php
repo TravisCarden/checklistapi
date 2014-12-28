@@ -9,9 +9,6 @@ namespace Drupal\checklistapi\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Route;
 
 /**
  * An access check service determining access rules for checklist routes.
@@ -19,12 +16,16 @@ use Symfony\Component\Routing\Route;
 class ChecklistapiAccessCheck implements AccessInterface {
 
   /**
-   * {@inheritdoc}
+   * Checks routing access for the checklist.
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   Returns an access result.
    */
-  public function access(Route $route, Request $request, AccountInterface $account) {
+  public function access() {
+    $request = \Drupal::request();
     $op = $request->attributes->get('op');
     $op = !empty($op) ? $op : 'any';
 
-    return checklistapi_checklist_access($request->attributes->get('checklist_id'), $op) ? AccessResult::allowed() : AccessResult::forbidden();
+    return AccessResult::allowedIf(checklistapi_checklist_access($request->attributes->get('checklist_id'), $op));
   }
 }
