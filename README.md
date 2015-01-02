@@ -5,6 +5,7 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Implementation](#implementation)
+- [Drush](#drush)
 
 
 ## Introduction
@@ -31,3 +32,10 @@ menu items and permissions. Progress details are saved in one config file per
 checklist.
 
 See checklistapi.api.php for more details.
+
+
+## Drush
+
+Checklist API has Drush integration. To see the list of available commands, run
+`drush --filter=checklistapi`. For more about Drush, including installation
+instructions, see the [Drush docs](http://drush.org/).
