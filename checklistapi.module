@@ -12,7 +12,6 @@ use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 
 /**
  * Access callback: Checks the current user's access to a given checklist.
@@ -69,8 +68,9 @@ function checklistapi_checklist_load($id) {
  * @return bool
  *   TRUE when in compact mode, or FALSE when in expanded mode.
  */
-function checklistapi_compact_mode() {
-  return isset($_COOKIE['Drupal_visitor_checklistapi_compact_mode']) ? (bool) $_COOKIE['Drupal_visitor_checklistapi_compact_mode'] : FALSE;
+function checklistapi_compact_mode_is_on() {
+  // PHP converts dots into underscores in cookie names.
+  return (bool) \Drupal::request()->cookies->get('Drupal_visitor_checklistapi_compact_mode', FALSE);
 }
 
 /**
@@ -194,10 +194,6 @@ function checklistapi_strtolowercamel($string) {
  */
 function checklistapi_theme() {
   return array(
-    'checklistapi_compact_link' => array(
-      'template' => 'checklistapi-compact-link',
-      'variables' => array('link' => ''),
-    ),
     'checklistapi_progress_bar' => array(
       'path' => drupal_get_path('module', 'checklistapi') . '/templates',
       'template' => 'checklistapi-progress-bar',
@@ -209,34 +205,4 @@ function checklistapi_theme() {
       ),
     ),
   );
-}
-
-/**
- * Prepares variables for checklist compact link templates.
- *
- * Default template: checklistapi-compact-link.html.twig.
- *
- * @param array $variables
- *   An empty array.
- */
-function template_preprocess_checklistapi_compact_link(array &$variables) {
-  if (checklistapi_compact_mode()) {
-    $text = t('Show item descriptions');
-    $mode = 'off';
-    $title = t('Expand layout to include item descriptions.');
-  }
-  else {
-    $text = t('Hide item descriptions');
-    $mode = 'on';
-    $title = t('Compress layout by hiding item descriptions.');
-  }
-
-  $current_route = \Drupal::routeMatch()->getRouteName();
-  $route_name = "{$current_route}.compact";
-  $route_parameters = array('mode' => $mode);
-  $options = array('query' => drupal_get_destination());
-  $url = Url::fromRoute($route_name, $route_parameters, $options)
-    ->setOption('attributes', array('title' => $title));
-
-  $variables['link'] = \Drupal::l($text, $url);
 }

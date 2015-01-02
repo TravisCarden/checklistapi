@@ -30,13 +30,15 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
         continue;
       }
 
+      $requirements = array('_checklistapi_access' => 'TRUE');
+
       // View/edit checklist.
       $routes["checklistapi.checklists.{$id}"] = new Route($definition['#path'], array(
         '_title' => $definition['#title'],
         '_form' => '\Drupal\checklistapi\Form\ChecklistapiChecklistForm',
         'checklist_id' => $id,
         'op' => 'any',
-      ), $requirements = array('_checklistapi_access' => 'TRUE'));
+      ), $requirements);
 
       // Clear saved progress.
       $routes["checklistapi.checklists.{$id}.clear"] = new Route("{$definition['#path']}/clear", array(
@@ -44,15 +46,6 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
         '_form' => '\Drupal\checklistapi\Form\ChecklistapiChecklistClearForm',
         'checklist_id' => $id,
         'op' => 'edit',
-      ), $requirements);
-
-      // Toggle compact mode.
-      $routes["checklistapi.checklists.{$id}.compact"] = new Route("{$definition['#path']}/compact/{mode}", array(
-        '_title' => 'Compact mode',
-        '_controller' => '\Drupal\checklistapi\Controller\ChecklistapiController::setCompactMode',
-        'checklist_id' => $id,
-        'op' => 'any',
-        'mode' => 'off',
       ), $requirements);
 
       return $routes;
@@ -63,4 +56,5 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {}
+
 }

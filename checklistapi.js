@@ -45,6 +45,9 @@
    */
   Drupal.behaviors.checklistapiCompactModeLink = {
     attach: function (context) {
+      var is_compact_mode = $('#checklistapi-checklist-form', context).hasClass('compact-mode');
+      var text = is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions');
+      $('#checklistapi-checklist-form .compact-link', context).html('<a href="#">' + text + '</a>');
       $('#checklistapi-checklist-form .compact-link a', context).click(function () {
         $(this).closest('#checklistapi-checklist-form').toggleClass('compact-mode');
         var is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');

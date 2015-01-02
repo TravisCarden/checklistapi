@@ -79,33 +79,6 @@ class ChecklistapiTest extends WebTestBase {
   }
 
   /**
-   * Tests compact mode.
-   */
-  public function testCompactMode() {
-    $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertTrue($this->isCompactModeEffective(), 'Compact mode disabled by default.');
-    $this->assertLink('Hide item descriptions', 0, 'Enable compact mode link present.');
-
-    $this->clickLink('Hide item descriptions');
-    $this->assertFalse($this->isCompactModeEffective(), 'Compact mode in effect.');
-    $this->assertLink('Show item descriptions', 0, 'Disable compact mode link present.');
-
-    $this->clickLink('Show item descriptions');
-    $this->assertTrue($this->isCompactModeEffective(), 'Compact mode back in effect.');
-    $this->assertLink('Hide item descriptions', 0, 'Enable compact mode link present again.');
-  }
-
-  /**
-   * Determines whether compact mode has taken effect or not.
-   *
-   * @return bool
-   *   Returns TRUE if compact mode is effective, or FALSE if not.
-   */
-  public function isCompactModeEffective() {
-    return !$this->cssSelect('#checklistapi-checklist-form.compact-mode');
-  }
-
-  /**
    * Tests permissions.
    */
   public function testPermissions() {

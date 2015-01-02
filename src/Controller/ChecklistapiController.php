@@ -8,8 +8,6 @@
 namespace Drupal\checklistapi\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Route;
 use Drupal\Core\Url;
 
 /**
@@ -91,33 +89,4 @@ class ChecklistapiController extends ControllerBase {
     return $output;
   }
 
-  /**
-   * Sets whether the admin menu is in compact mode or not.
-   *
-   * @param string $mode
-   *   The mode to set compact mode to. Accepted values are "on" and "off".
-   *
-   * @throws NotFoundHttpException
-   *   Throws an exception if an invalid mode is supplied.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Return a redirect response object.
-   */
-  public function setCompactMode($mode) {
-    $all_modes = array('on', 'off');
-    if (!in_array($mode, $all_modes)) {
-      throw new NotFoundHttpException();
-    }
-
-    // Persist the setting for the current user.
-    user_cookie_save(array('checklistapi_compact_mode' => ($mode == 'on')));
-
-    // Redirect to the checklist.
-    // @todo There must be a better way than this.
-    $path = explode('/', Url::fromRoute('<current>'));
-    array_pop($path);
-    array_pop($path);
-    $checklist_path = implode('/', $path);
-    return $this->redirect(new Route($checklist_path));
-  }
 }

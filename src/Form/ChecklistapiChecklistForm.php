@@ -50,10 +50,10 @@ class ChecklistapiChecklistForm implements FormInterface {
     );
 
     // Compact mode.
-    if (checklistapi_compact_mode()) {
+    if (checklistapi_compact_mode_is_on()) {
       $form['#attributes']['class'] = array('compact-mode');
     }
-    $compact_link = array('#theme' => 'checklistapi_compact_link');
+    $compact_link = array('#markup' => '<div class="compact-link"></div>');
     $form['compact_mode_link'] = array(
       '#markup' => $renderer->render($compact_link),
     );
