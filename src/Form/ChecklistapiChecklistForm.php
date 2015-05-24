@@ -117,7 +117,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         $links = array();
         foreach (Element::children($item) as $link_key) {
           $link = &$item[$link_key];
-          $links[] = \Drupal::l($link['#text'], Url::fromUri($link['#url']));
+          $links[] = \Drupal::l($link['#text'], $link['#url']);
         }
         if (count($links)) {
           $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
