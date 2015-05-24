@@ -115,7 +115,7 @@ class ChecklistapiChecklist {
       $this->$property_name = $value;
     }
 
-    $this->config = \Drupal::config("checklistapi.progress.{$this->id}");
+    $this->config = \Drupal::configFactory()->getEditable("checklistapi.progress.{$this->id}");
     $this->savedProgress = $this->config->get($this::PROGRESS_CONFIG_KEY);
   }
 
