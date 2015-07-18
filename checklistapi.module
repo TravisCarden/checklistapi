@@ -61,9 +61,8 @@ function checklistapi_checklist_load($id) {
  *
  * Compact mode shows checklist forms with less description text.
  *
- * Whether the user is in compact mode is determined by a cookie, which is set
- * for the user by ChecklistapiController::setCompactMode(). If the user does
- * not have the cookie, the setting defaults to off.
+ * Whether the user is in compact mode is determined by a cookie. If the user
+ * does not have the cookie, the setting defaults to off.
  *
  * @return bool
  *   TRUE when in compact mode, or FALSE when in expanded mode.
