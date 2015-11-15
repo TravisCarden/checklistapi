@@ -12,20 +12,20 @@ use \Drupal\user\Entity\User;
  * Implements hook_drush_command().
  */
 function checklistapi_drush_command() {
-  $items = array();
+  $items = [];
 
-  $items['checklistapi-list'] = array(
-    'aliases' => array('capi-list', 'capil'),
+  $items['checklistapi-list'] = [
+    'aliases' => ['capi-list', 'capil'],
     'description' => 'Get an overview of your installed checklists with progress details.',
-  );
-  $items['checklistapi-info'] = array(
-    'aliases' => array('capi-info', 'capii'),
+  ];
+  $items['checklistapi-info'] = [
+    'aliases' => ['capi-info', 'capii'],
     'description' => 'Show detailed info for a given checklist.',
-    'arguments' => array(
+    'arguments' => [
       'checklist' => 'The checklist machine name, e.g., "example_checklist".',
-    ),
+    ],
     'required-arguments' => TRUE,
-  );
+  ];
 
   return $items;
 }
@@ -51,26 +51,26 @@ function drush_checklistapi_list() {
   }
 
   // Build table rows.
-  $rows = array();
+  $rows = [];
   // The first row is the table header.
-  $rows[] = array(
+  $rows[] = [
     dt('Checklist'),
     dt('Progress'),
     dt('Last updated'),
     dt('Last updated by'),
-  );
+  ];
   foreach ($definitions as $id => $definition) {
     $checklist = checklistapi_checklist_load($id);
-    $row = array();
-    $row[] = dt('!title (!id)', array(
+    $row = [];
+    $row[] = dt('!title (!id)', [
       '!title' => strip_tags($checklist->title),
       '!id' => $id,
-    ));
-    $row[] = dt('@completed of @total (@percent%)', array(
+    ]);
+    $row[] = dt('@completed of @total (@percent%)', [
       '@completed' => $checklist->getNumberCompleted(),
       '@total' => $checklist->getNumberOfItems(),
       '@percent' => round($checklist->getPercentComplete()),
-    ));
+    ]);
     $row[] = $checklist->getLastUpdatedDate();
     $row[] = strip_tags($checklist->getLastUpdatedUser());
     $rows[] = $row;
@@ -91,9 +91,9 @@ function drush_checklistapi_info_validate() {
 
   // Make sure the given checklist exists.
   if (!$checklist) {
-    drush_set_error('CHECKLISTAPI_INVALID_ARGUMENT', dt('No such checklist "!id".', array(
+    drush_set_error('CHECKLISTAPI_INVALID_ARGUMENT', dt('No such checklist "!id".', [
       '!id' => $id,
-    )));
+    ]));
   }
 
   drush_set_context('checklist', $checklist);
@@ -113,15 +113,15 @@ function drush_checklistapi_info() {
   // Print last updated and progress details.
   if ($checklist->hasSavedProgress()) {
     drush_print('');
-    drush_print(dt('Last updated @date by !user', array(
+    drush_print(dt('Last updated @date by !user', [
       '@date' => $checklist->getLastUpdatedDate(),
       '!user' => strip_tags($checklist->getLastUpdatedUser()),
-    )));
-    drush_print(dt('@completed of @total (@percent%) complete', array(
+    ]));
+    drush_print(dt('@completed of @total (@percent%) complete', [
       '@completed' => $checklist->getNumberCompleted(),
       '@total' => $checklist->getNumberOfItems(),
       '@percent' => round($checklist->getPercentComplete()),
-    )));
+    ]));
   }
 
   // Loop through groups.
@@ -142,16 +142,16 @@ function drush_checklistapi_info() {
       if ($saved_item) {
         // Append completion details.
         $user = User::load($saved_item['#uid']);
-        $title .= dt(' - Completed @time by !user', array(
+        $title .= dt(' - Completed @time by !user', [
           '@time' => format_date($saved_item['#completed'], 'short'),
           '!user' => $user->getUsername(),
-        ));
+        ]);
       }
       // Print the list item.
-      drush_print(dt(' [!x] !title', array(
+      drush_print(dt(' [!x] !title', [
         '!x' => ($saved_item) ? 'x' : ' ',
         '!title' => $title,
-      )));
+      ]));
     }
   }
 }

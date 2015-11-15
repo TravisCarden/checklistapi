@@ -24,55 +24,55 @@ class ChecklistapiModuleTest extends UnitTestCase {
    * Tests checklistapi_sort_array().
    */
   public function testChecklistapiSortArray() {
-    $input = array(
+    $input = [
       '#title' => 'Checklist API test',
       '#path' => 'admin/config/development/checklistapi-test',
       '#description' => 'A test checklist.',
       '#help' => '<p>This is a test checklist.</p>',
-      'group_two' => array(
+      'group_two' => [
         '#title' => 'Group two',
-      ),
-      'group_one' => array(
+      ],
+      'group_one' => [
         '#title' => 'Group one',
         '#description' => '<p>Group one description.</p>',
         '#weight' => -1,
-        'item_three' => array(
+        'item_three' => [
           '#title' => 'Item three',
           '#weight' => 1,
-        ),
-        'item_one' => array(
+        ],
+        'item_one' => [
           '#title' => 'Item one',
           '#description' => 'Item one description',
           '#weight' => -1,
-          'link_three' => array(
+          'link_three' => [
             '#text' => 'Link three',
             '#url' => Url::fromUri('http://example.com/three'),
             '#weight' => 3,
-          ),
-          'link_two' => array(
+          ],
+          'link_two' => [
             '#text' => 'Link two',
             '#url' => Url::fromUri('http://example.com/two'),
             '#weight' => 2,
-          ),
-          'link_one' => array(
+          ],
+          'link_one' => [
             '#text' => 'Link one',
             '#url' => Url::fromUri('http://example.com/one'),
             '#weight' => 1,
-          ),
-        ),
-        'item_two' => array(
+          ],
+        ],
+        'item_two' => [
           '#title' => 'Item two',
-        ),
-      ),
-      'group_four' => array(
+        ],
+      ],
+      'group_four' => [
         '#title' => 'Group four',
         '#weight' => 1,
-      ),
-      'group_three' => array(
+      ],
+      'group_three' => [
         '#title' => 'Group three',
         '#weight' => 'invalid',
-      ),
-    );
+      ],
+    ];
 
     $output = checklistapi_sort_array($input);
 
@@ -80,12 +80,12 @@ class ChecklistapiModuleTest extends UnitTestCase {
     $this->assertEquals(0, $output['group_three']['#weight'], 'Failed to supply a default in place of invalid element weight.');
     $this->assertEquals(-1, $output['group_one']['#weight'], 'Failed to retain a valid element weight.');
     $this->assertEquals(
-      array('group_one', 'group_two', 'group_three', 'group_four'),
+      ['group_one', 'group_two', 'group_three', 'group_four'],
       Element::children($output),
       'Failed to sort elements by weight.'
     );
     $this->assertEquals(
-      array('link_one', 'link_two', 'link_three'),
+      ['link_one', 'link_two', 'link_three'],
       Element::children($output['group_one']['item_one']),
       'Failed to recurse through element descendants.'
     );

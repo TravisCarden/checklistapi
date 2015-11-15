@@ -23,30 +23,30 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
    *   An array of route objects.
    */
   public function routes() {
-    $routes = array();
+    $routes = [];
     foreach (checklistapi_get_checklist_info() as $id => $definition) {
       // Ignore incomplete definitions.
       if (empty($definition['#path']) || empty($definition['#title'])) {
         continue;
       }
 
-      $requirements = array('_checklistapi_access' => 'TRUE');
+      $requirements = ['_checklistapi_access' => 'TRUE'];
 
       // View/edit checklist.
-      $routes["checklistapi.checklists.{$id}"] = new Route($definition['#path'], array(
+      $routes["checklistapi.checklists.{$id}"] = new Route($definition['#path'], [
         '_title' => $definition['#title'],
         '_form' => '\Drupal\checklistapi\Form\ChecklistapiChecklistForm',
         'checklist_id' => $id,
         'op' => 'any',
-      ), $requirements);
+      ], $requirements);
 
       // Clear saved progress.
-      $routes["checklistapi.checklists.{$id}.clear"] = new Route("{$definition['#path']}/clear", array(
+      $routes["checklistapi.checklists.{$id}.clear"] = new Route("{$definition['#path']}/clear", [
         '_title' => 'Clear',
         '_form' => '\Drupal\checklistapi\Form\ChecklistapiChecklistClearForm',
         'checklist_id' => $id,
         'op' => 'edit',
-      ), $requirements);
+      ], $requirements);
 
       return $routes;
     }

@@ -23,12 +23,12 @@ class ChecklistapiTest extends WebTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = array(
+  public static $modules = [
     'checklistapi',
     'checklistapiexample',
     'help',
     'block',
-  );
+  ];
 
   /**
    * A user object with permission to edit any checklist.
@@ -44,12 +44,12 @@ class ChecklistapiTest extends WebTestBase {
     parent::setUp();
 
     // Create a privileged user.
-    $permissions = array('edit any checklistapi checklist');
+    $permissions = ['edit any checklistapi checklist'];
     $this->privilegedUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->privilegedUser);
 
     // Place help block.
-    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', ['region' => 'help']);
   }
 
   /**
@@ -59,7 +59,7 @@ class ChecklistapiTest extends WebTestBase {
     $this->drupalGet('admin/config/development/checklistapi-example');
     $this->assertResponse(200, 'Granted access to user with "edit any checklistapi checklist" permission.');
 
-    $permissions = array('edit example_checklist checklistapi checklist');
+    $permissions = ['edit example_checklist checklistapi checklist'];
     $semi_privileged_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($semi_privileged_user);
     $this->drupalGet('admin/config/development/checklistapi-example');
@@ -82,15 +82,15 @@ class ChecklistapiTest extends WebTestBase {
    * Tests permissions.
    */
   public function testPermissions() {
-    $this->assertTrue($this->checkPermissions(array(
+    $this->assertTrue($this->checkPermissions([
       'view checklistapi checklists report',
       'view any checklistapi checklist',
       'edit any checklistapi checklist',
-    )), 'Created universal permissions.');
-    $this->assertTrue($this->checkPermissions(array(
+    ]), 'Created universal permissions.');
+    $this->assertTrue($this->checkPermissions([
       'view example_checklist checklistapi checklist',
       'edit example_checklist checklistapi checklist',
-    )), 'Created per-checklist permissions.');
+    ]), 'Created per-checklist permissions.');
   }
 
 }

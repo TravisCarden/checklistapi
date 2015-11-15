@@ -34,49 +34,49 @@ class ChecklistapiChecklistForm implements FormInterface {
     $renderer = \Drupal::service('renderer');
 
     // Progress bar.
-    $progress_bar = array(
+    $progress_bar = [
       '#theme' => 'checklistapi_progress_bar',
-      '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by !user', array(
+      '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by !user', [
         '@date' => $checklist->getLastUpdatedDate(),
         '!user' => $checklist->getLastUpdatedUser(),
-      )) : '',
+      ]) : '',
       '#number_complete' => $checklist->getNumberCompleted(),
       '#number_of_items' => $checklist->getNumberOfItems(),
       '#percent_complete' => (int) round($checklist->getPercentComplete()),
-    );
-    $form['progress_bar'] = array(
+    ];
+    $form['progress_bar'] = [
       '#type' => 'markup',
       '#markup' => $renderer->render($progress_bar),
-    );
+    ];
 
     // Compact mode.
     if (checklistapi_compact_mode_is_on()) {
-      $form['#attributes']['class'] = array('compact-mode');
+      $form['#attributes']['class'] = ['compact-mode'];
     }
-    $compact_link = array('#markup' => '<div class="compact-link"></div>');
-    $form['compact_mode_link'] = array(
+    $compact_link = ['#markup' => '<div class="compact-link"></div>'];
+    $form['compact_mode_link'] = [
       '#markup' => $renderer->render($compact_link),
-    );
+    ];
 
     // General properties.
-    $form['checklistapi'] = array(
-      '#attached' => array(
-        'library' => array('checklistapi/checklistapi'),
-      ),
+    $form['checklistapi'] = [
+      '#attached' => [
+        'library' => ['checklistapi/checklistapi'],
+      ],
       '#tree' => TRUE,
       '#type' => 'vertical_tabs',
-    );
+    ];
 
     // Loop through groups.
     $num_autochecked_items = 0;
     $groups = $checklist->items;
     foreach (Element::children($groups) as $group_key) {
       $group = &$groups[$group_key];
-      $form[$group_key] = array(
+      $form[$group_key] = [
         '#title' => Xss::filter($group['#title']),
         '#type' => 'details',
         '#group' => 'checklistapi',
-      );
+      ];
       if (!empty($group['#description'])) {
         $form[$group_key]['#description'] = Xss::filterAdmin($group['#description']);
       }
@@ -89,16 +89,16 @@ class ChecklistapiChecklistForm implements FormInterface {
         $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
-          $user = array(
+          $user = [
             '#theme' => 'username',
             '#account' => user_load($saved_item['#uid']),
-          );
+          ];
           $title .= t(
             '<span class="completion-details"> - Completed @time by !user</a>',
-            array(
+            [
               '@time' => format_date($saved_item['#completed'], 'short'),
               '!user' => \Drupal::service('renderer')->render($user),
-            )
+            ]
           );
         }
         // Set default value.
@@ -114,7 +114,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         // Get description.
         $description = (isset($item['#description'])) ? '<p>' . Xss::filterAdmin($item['#description']) . '</p>' : '';
         // Append links.
-        $links = array();
+        $links = [];
         foreach (Element::children($item) as $link_key) {
           $link = &$item[$link_key];
           $links[] = \Drupal::l($link['#text'], $link['#url']);
@@ -123,47 +123,47 @@ class ChecklistapiChecklistForm implements FormInterface {
           $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
         }
         // Compile the list item.
-        $form[$group_key][$item_key] = array(
-          '#attributes' => array('class' => array('checklistapi-item')),
+        $form[$group_key][$item_key] = [
+          '#attributes' => ['class' => ['checklistapi-item']],
           '#default_value' => $default_value,
           '#description' => Xss::filterAdmin($description),
           '#disabled' => !($user_has_edit_access),
           '#title' => Xss::filterAdmin($title),
           '#type' => 'checkbox',
           '#group' => $group_key,
-          '#parents' => array('checklistapi', $group_key, $item_key),
-        );
+          '#parents' => ['checklistapi', $group_key, $item_key],
+        ];
       }
     }
 
     // Actions.
-    $form['actions'] = array(
+    $form['actions'] = [
       '#access' => $user_has_edit_access,
       '#type' => 'actions',
       '#weight' => 100,
-      'save' => array(
+      'save' => [
         '#button_type' => 'primary',
         '#type' => 'submit',
         '#value' => t('Save'),
-      ),
-      'clear' => array(
+      ],
+      'clear' => [
         '#access' => $checklist->hasSavedProgress(),
         '#button_type' => 'danger',
-        '#attributes' => array('class' => array('clear-saved-progress')),
-        '#submit' => array(array($this, 'clear')),
+        '#attributes' => ['class' => ['clear-saved-progress']],
+        '#submit' => [[$this, 'clear']],
         '#type' => 'submit',
         '#value' => t('Clear saved progress'),
-      ),
-    );
+      ],
+    ];
 
     // Alert the user of autochecked items. Only set the message on GET requests
     // to prevent it from reappearing after saving the form. (Testing the
     // request method may not be the "correct" way to accomplish this.)
     if ($num_autochecked_items && $_SERVER['REQUEST_METHOD'] == 'GET') {
-      $args = array(
+      $args = [
         '%checklist' => $checklist->title,
         '@num' => $num_autochecked_items,
-      );
+      ];
       $message = \Drupal::translation()->formatPlural(
         $num_autochecked_items,
         t('%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.', $args),

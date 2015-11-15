@@ -23,54 +23,54 @@ class ChecklistapiController extends ControllerBase {
    */
   public function report() {
     // Define table header.
-    $header = array(
-      array('data' => t('Checklist')),
-      array(
+    $header = [
+      ['data' => t('Checklist')],
+      [
         'data' => t('Progress'),
-        'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-      ),
-      array(
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
+      [
         'data' => t('Last updated'),
-        'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-      ),
-      array(
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
+      [
         'data' => t('Last updated by'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      array('data' => t('Operations')),
-    );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      ['data' => t('Operations')],
+    ];
 
     // Build table rows.
-    $rows = array();
+    $rows = [];
     $definitions = checklistapi_get_checklist_info();
     foreach ($definitions as $id => $definition) {
       $checklist = checklistapi_checklist_load($id);
-      $row = array();
-      $row[] = array(
+      $row = [];
+      $row[] = [
         'data' => ($checklist->userHasAccess()) ? \Drupal::l($checklist->title, $checklist->getUrl()) : drupal_placeholder($checklist->title),
         'title' => (!empty($checklist->description)) ? $checklist->description : '',
-      );
-      $row[] = t('@completed of @total (@percent%)', array(
+      ];
+      $row[] = t('@completed of @total (@percent%)', [
         '@completed' => $checklist->getNumberCompleted(),
         '@total' => $checklist->getNumberOfItems(),
         '@percent' => round($checklist->getPercentComplete()),
-      ));
+      ]);
       $row[] = $checklist->getLastUpdatedDate();
       $row[] = $checklist->getLastUpdatedUser();
       if ($checklist->userHasAccess('edit') && $checklist->hasSavedProgress()) {
-        $row[] = array(
-          'data' => array(
+        $row[] = [
+          'data' => [
             '#type' => 'operations',
-            '#links' => array(
-              'clear' => array(
+            '#links' => [
+              'clear' => [
                 'title' => t('Clear'),
-                'url' => Url::fromRoute($checklist->getRouteName() . '.clear', array(), array(
+                'url' => Url::fromRoute($checklist->getRouteName() . '.clear', [], [
                   'query' => $this->getDestinationArray(),
-                )),
-              ),
-            ),
-          ),
-        );
+                ]),
+              ],
+            ],
+          ],
+        ];
       }
       else {
         $row[] = '';
@@ -79,12 +79,12 @@ class ChecklistapiController extends ControllerBase {
     }
 
     // Compile output.
-    $output['table'] = array(
+    $output['table'] = [
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
       '#empty' => t('No checklists available.'),
-    );
+    ];
 
     return $output;
   }

@@ -70,27 +70,27 @@
  * @see hook_checklistapi_checklist_info_alter()
  */
 function hook_checklistapi_checklist_info() {
-  $definitions = array();
-  $definitions['example_checklist'] = array(
+  $definitions = [];
+  $definitions['example_checklist'] = [
     '#title' => t('Example checklist'),
     '#path' => 'example-checklist',
     '#description' => t('An example checklist.'),
     '#help' => t('<p>This is an example checklist.</p>'),
-    'example_group' => array(
+    'example_group' => [
       '#title' => t('Example group'),
       '#description' => t('<p>Here are some example items.</p>'),
-      'example_item_1' => array(
+      'example_item_1' => [
         '#title' => t('Example item 1'),
-        'example_link' => array(
+        'example_link' => [
           '#text' => t('Example.com'),
           '#url' => \Drupal\Core\Url::fromUri('http://www.example.com/'),
-        ),
-      ),
-      'example_item_2' => array(
+        ],
+      ],
+      'example_item_2' => [
         '#title' => t('Example item 2'),
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
   return $definitions;
 }
 
@@ -112,13 +112,13 @@ function hook_checklistapi_checklist_info() {
  */
 function hook_checklistapi_checklist_info_alter(array &$definitions) {
   // Add an item.
-  $definitions['example_checklist']['example_group']['new_item'] = array(
+  $definitions['example_checklist']['example_group']['new_item'] = [
     'title' => t('New item'),
-  );
+  ];
   // Add a group.
-  $definitions['example_checklist']['new_group'] = array(
+  $definitions['example_checklist']['new_group'] = [
     '#title' => t('New group'),
-  );
+  ];
   // Move an item.
   $definitions['example_checklist']['new_group']['example_item_1'] = $definitions['example_checklist']['example_group']['example_item_1'];
   unset($definitions['example_checklist']['example_group']['example_item_1']);

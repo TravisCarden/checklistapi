@@ -82,7 +82,7 @@ class ChecklistapiChecklist {
    *
    * @var array
    */
-  public $items = array();
+  public $items = [];
 
   /**
    * The saved progress data.
@@ -128,9 +128,9 @@ class ChecklistapiChecklist {
   public function clearSavedProgress() {
     $this->config->delete();
 
-    drupal_set_message(t('%title saved progress has been cleared.', array(
+    drupal_set_message(t('%title saved progress has been cleared.', [
       '%title' => $this->title,
-    )));
+    ]));
   }
 
   /**
@@ -162,10 +162,10 @@ class ChecklistapiChecklist {
    */
   public function getLastUpdatedUser() {
     if (isset($this->savedProgress['#changed_by'])) {
-      $username = array(
+      $username = [
         '#theme' => 'username',
         '#account' => user_load($this->savedProgress['#changed_by']),
-      );
+      ];
       return \Drupal::service('renderer')->render($username);
     }
     else {
@@ -240,11 +240,11 @@ class ChecklistapiChecklist {
 
     $time = time();
     $num_changed_items = 0;
-    $progress = array(
+    $progress = [
       '#changed' => $time,
       '#changed_by' => $user->id(),
       '#completed_items' => 0,
-    );
+    ];
 
     // Loop through groups.
     foreach ($values as $group_key => $group) {
@@ -269,10 +269,10 @@ class ChecklistapiChecklist {
           }
           else {
             // Item is newly checked. Set new value.
-            $new_item = array(
+            $new_item = [
               '#completed' => $time,
               '#uid' => $user->id(),
-            );
+            ];
             $num_changed_items++;
           }
         }
@@ -299,7 +299,7 @@ class ChecklistapiChecklist {
       $num_changed_items,
       '%title progress has been saved. 1 item changed.',
       '%title progress has been saved. @count items changed.',
-      array('%title' => $this->title)
+      ['%title' => $this->title]
     ));
   }
 

@@ -30,7 +30,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
  *   Throws an exception if an unsupported operation is supplied.
  */
 function checklistapi_checklist_access($id, $operation = 'any') {
-  $all_operations = array('view', 'edit', 'any');
+  $all_operations = ['view', 'edit', 'any'];
   if (!in_array($operation, $all_operations)) {
     throw new \InvalidArgumentException(sprintf('No such operation "%s"', $operation));
   }
@@ -93,7 +93,7 @@ function checklistapi_get_checklist_info($id = NULL) {
     $definitions = checklistapi_sort_array($definitions);
     // Inject checklist IDs.
     foreach ($definitions as $key => $value) {
-      $definitions[$key] = array('#id' => $key) + $definitions[$key];
+      $definitions[$key] = ['#id' => $key] + $definitions[$key];
     }
   }
   if (!empty($id)) {
@@ -143,7 +143,7 @@ function checklistapi_sort_array(array $array) {
   }
 
   $incrementer = 0;
-  $children = array();
+  $children = [];
   foreach ($child_keys as $key) {
     // Move child to a temporary array for sorting.
     $children[$key] = $array[$key];
@@ -160,7 +160,7 @@ function checklistapi_sort_array(array $array) {
     $children[$key] = checklistapi_sort_array($children[$key]);
   }
   // Sort by weight.
-  uasort($children, array('Drupal\Component\Utility\SortArray', 'sortByWeightProperty'));
+  uasort($children, ['Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
   // Remove incremental weight hack.
   foreach ($children as $key => $child) {
     $children[$key]['#weight'] = floor($children[$key]['#weight']);
@@ -192,16 +192,16 @@ function checklistapi_strtolowercamel($string) {
  * Implements hook_theme().
  */
 function checklistapi_theme() {
-  return array(
-    'checklistapi_progress_bar' => array(
+  return [
+    'checklistapi_progress_bar' => [
       'path' => drupal_get_path('module', 'checklistapi') . '/templates',
       'template' => 'checklistapi-progress-bar',
-      'variables' => array(
+      'variables' => [
         'message' => '',
         'number_complete' => 0,
         'number_of_items' => 0,
         'percent_complete' => 0,
-      ),
-    ),
-  );
+      ],
+    ],
+  ];
 }

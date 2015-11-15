@@ -47,9 +47,9 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('All progress details for %checklist will be erased. This action cannot be undone.', array(
+    return t('All progress details for %checklist will be erased. This action cannot be undone.', [
       '%checklist' => $this->checklist->title,
-    ));
+    ]);
   }
 
   /**

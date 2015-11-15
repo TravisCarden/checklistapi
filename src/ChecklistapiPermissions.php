@@ -29,19 +29,19 @@ class ChecklistapiPermissions {
    *   An array of permission details.
    */
   public function universalPermissions() {
-    $perms['view checklistapi checklists report'] = array(
-      'title' => t('View the !name report', array(
+    $perms['view checklistapi checklists report'] = [
+      'title' => t('View the !name report', [
         '!name' => (\Drupal::currentUser()->hasPermission('view checklistapi checklists report')) ? \Drupal::l(t('Checklists'), Url::fromRoute('checklistapi.report')) : drupal_placeholder('Checklists'),
-      )),
-    );
-    $perms['view any checklistapi checklist'] = array(
+      ]),
+    ];
+    $perms['view any checklistapi checklist'] = [
       'title' => t('View any checklist'),
       'description' => $this->viewPermissionDescription,
-    );
-    $perms['edit any checklistapi checklist'] = array(
+    ];
+    $perms['edit any checklistapi checklist'] = [
       'title' => t('Edit any checklist'),
       'description' => $this->editPermissionDescription,
-    );
+    ];
     return $perms;
   }
 
@@ -52,7 +52,7 @@ class ChecklistapiPermissions {
    *   An array of permission details.
    */
   public function perChecklistPermissions() {
-    $perms = array();
+    $perms = [];
 
     // Per checklist permissions.
     foreach (checklistapi_get_checklist_info() as $id => $definition) {
@@ -68,14 +68,14 @@ class ChecklistapiPermissions {
         $checklist_name = \Drupal::l($checklist->title, Url::fromRoute($checklist->getRouteName()));
       }
 
-      $perms["view {$id} checklistapi checklist"] = array(
-        'title' => t('View the !name checklist', array('!name' => $checklist_name)),
+      $perms["view {$id} checklistapi checklist"] = [
+        'title' => t('View the !name checklist', ['!name' => $checklist_name]),
         'description' => $this->viewPermissionDescription,
-      );
-      $perms["edit {$id} checklistapi checklist"] = array(
-        'title' => t('Edit the !name checklist', array('!name' => $checklist_name)),
+      ];
+      $perms["edit {$id} checklistapi checklist"] = [
+        'title' => t('Edit the !name checklist', ['!name' => $checklist_name]),
         'description' => $this->editPermissionDescription,
-      );
+      ];
     }
 
     return $perms;
