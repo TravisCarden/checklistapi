@@ -34,7 +34,7 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
 
       // View/edit checklist.
       $routes["checklistapi.checklists.{$id}"] = new Route($definition['#path'], [
-        '_title' => $definition['#title'],
+        '_title' => (string) $definition['#title'],
         '_form' => '\Drupal\checklistapi\Form\ChecklistapiChecklistForm',
         'checklist_id' => $id,
         'op' => 'any',
