@@ -10,6 +10,7 @@ namespace Drupal\checklistapi;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * Defines the checklist class.
@@ -162,11 +163,8 @@ class ChecklistapiChecklist {
    */
   public function getLastUpdatedUser() {
     if (isset($this->savedProgress['#changed_by'])) {
-      $username = [
-        '#theme' => 'username',
-        '#account' => user_load($this->savedProgress['#changed_by']),
-      ];
-      return \Drupal::service('renderer')->render($username);
+      return User::load($this->savedProgress['#changed_by'])
+        ->getUsername();
     }
     else {
       return t('n/a');

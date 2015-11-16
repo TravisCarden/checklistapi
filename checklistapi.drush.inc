@@ -62,9 +62,9 @@ function drush_checklistapi_list() {
   foreach ($definitions as $id => $definition) {
     $checklist = checklistapi_checklist_load($id);
     $row = [];
-    $row[] = dt('!title (!id)', [
+    $row[] = dt('!title (@id)', [
       '!title' => strip_tags($checklist->title),
-      '!id' => $id,
+      '@id' => $id,
     ]);
     $row[] = dt('@completed of @total (@percent%)', [
       '@completed' => $checklist->getNumberCompleted(),
@@ -72,7 +72,7 @@ function drush_checklistapi_list() {
       '@percent' => round($checklist->getPercentComplete()),
     ]);
     $row[] = $checklist->getLastUpdatedDate();
-    $row[] = strip_tags($checklist->getLastUpdatedUser());
+    $row[] = $checklist->getLastUpdatedUser();
     $rows[] = $row;
   }
 
@@ -91,8 +91,8 @@ function drush_checklistapi_info_validate() {
 
   // Make sure the given checklist exists.
   if (!$checklist) {
-    drush_set_error('CHECKLISTAPI_INVALID_ARGUMENT', dt('No such checklist "!id".', [
-      '!id' => $id,
+    drush_set_error('CHECKLISTAPI_INVALID_ARGUMENT', dt('No such checklist "@id".', [
+      '@id' => $id,
     ]));
   }
 
@@ -113,9 +113,9 @@ function drush_checklistapi_info() {
   // Print last updated and progress details.
   if ($checklist->hasSavedProgress()) {
     drush_print('');
-    drush_print(dt('Last updated @date by !user', [
+    drush_print(dt('Last updated @date by @user', [
       '@date' => $checklist->getLastUpdatedDate(),
-      '!user' => strip_tags($checklist->getLastUpdatedUser()),
+      '@user' => $checklist->getLastUpdatedUser(),
     ]));
     drush_print(dt('@completed of @total (@percent%) complete', [
       '@completed' => $checklist->getNumberCompleted(),
@@ -142,14 +142,14 @@ function drush_checklistapi_info() {
       if ($saved_item) {
         // Append completion details.
         $user = User::load($saved_item['#uid']);
-        $title .= dt(' - Completed @time by !user', [
+        $title .= dt(' - Completed @time by @user', [
           '@time' => format_date($saved_item['#completed'], 'short'),
-          '!user' => $user->getUsername(),
+          '@user' => $user->getUsername(),
         ]);
       }
       // Print the list item.
-      drush_print(dt(' [!x] !title', [
-        '!x' => ($saved_item) ? 'x' : ' ',
+      drush_print(dt(' [@x] !title', [
+        '@x' => ($saved_item) ? 'x' : ' ',
         '!title' => $title,
       ]));
     }

@@ -7,8 +7,6 @@
 
 namespace Drupal\checklistapi;
 
-use Drupal\Core\Url;
-
 /**
  * Defines a class containing permission callbacks.
  */
@@ -30,9 +28,7 @@ class ChecklistapiPermissions {
    */
   public function universalPermissions() {
     $perms['view checklistapi checklists report'] = [
-      'title' => t('View the !name report', [
-        '!name' => (\Drupal::currentUser()->hasPermission('view checklistapi checklists report')) ? \Drupal::l(t('Checklists'), Url::fromRoute('checklistapi.report')) : drupal_placeholder('Checklists'),
-      ]),
+      'title' => t('View the Checklists report'),
     ];
     $perms['view any checklistapi checklist'] = [
       'title' => t('View any checklist'),
@@ -62,18 +58,13 @@ class ChecklistapiPermissions {
         continue;
       }
 
-      $checklist_name = drupal_placeholder($checklist->title);
-      // Hyperlink the checklist name if the current user has access to view it.
-      if (checklistapi_checklist_access($id)) {
-        $checklist_name = \Drupal::l($checklist->title, Url::fromRoute($checklist->getRouteName()));
-      }
-
+      $title = $checklist->title;
       $perms["view {$id} checklistapi checklist"] = [
-        'title' => t('View the !name checklist', ['!name' => $checklist_name]),
+        'title' => t('View the @name checklist', ['@name' => $title]),
         'description' => $this->viewPermissionDescription,
       ];
       $perms["edit {$id} checklistapi checklist"] = [
-        'title' => t('Edit the !name checklist', ['!name' => $checklist_name]),
+        'title' => t('Edit the @name checklist', ['@name' => $title]),
         'description' => $this->editPermissionDescription,
       ];
     }

@@ -193,10 +193,9 @@ function checklistapiexample_checklistapi_checklist_info() {
       ],
       'chx_or_unconed' => [
         '#title' => t(
-          "I'm a !chx or !UnConeD.",
-          [
-            '!chx' => \Drupal::l(t('chx'), Url::fromUri('http://drupal.org/user/9446')),
-            '!UnConeD' => \Drupal::l(t('UnConeD'), Url::fromUri('http://drupal.org/user/10')),
+          'I\'m a <a href=":chx_url">chx</a> or <a href=":unconed_url">UnConeD</a>.', [
+            ':chx_url' => 'http://drupal.org/user/9446',
+            ':unconed_url' => 'http://drupal.org/user/10',
           ]
         ),
       ],
@@ -277,8 +276,9 @@ function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
     '#title' => t('I know every bit of core'),
     'im_chx' => [
       '#title' => t(
-        "I'm !chx.",
-        ['!chx' => \Drupal::l(t('chx'), Url::fromUri('http://drupal.org/user/9446'))]
+        'I\'m <a href=":url">chx</a>.', [
+          ':url' => 'http://drupal.org/user/9446',
+        ]
       ),
     ],
   ];

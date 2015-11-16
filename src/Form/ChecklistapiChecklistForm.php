@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * Provides a checklist form.
@@ -36,9 +37,9 @@ class ChecklistapiChecklistForm implements FormInterface {
     // Progress bar.
     $progress_bar = [
       '#theme' => 'checklistapi_progress_bar',
-      '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by !user', [
+      '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by @user', [
         '@date' => $checklist->getLastUpdatedDate(),
-        '!user' => $checklist->getLastUpdatedUser(),
+        '@user' => $checklist->getLastUpdatedUser(),
       ]) : '',
       '#number_complete' => $checklist->getNumberCompleted(),
       '#number_of_items' => $checklist->getNumberOfItems(),
@@ -89,17 +90,10 @@ class ChecklistapiChecklistForm implements FormInterface {
         $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
-          $user = [
-            '#theme' => 'username',
-            '#account' => user_load($saved_item['#uid']),
-          ];
-          $title .= t(
-            '<span class="completion-details"> - Completed @time by !user</a>',
-            [
-              '@time' => format_date($saved_item['#completed'], 'short'),
-              '!user' => \Drupal::service('renderer')->render($user),
-            ]
-          );
+          $title .= t('<span class="completion-details"> - Completed @time by @user</a>', [
+            '@time' => format_date($saved_item['#completed'], 'short'),
+            '@user' => User::load($saved_item['#uid'])->getUsername(),
+          ]);
         }
         // Set default value.
         $default_value = FALSE;
