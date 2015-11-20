@@ -32,10 +32,9 @@ class ChecklistapiChecklistForm implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state, $checklist_id = NULL) {
     $form['#checklist'] = $checklist = checklistapi_checklist_load($checklist_id);
     $user_has_edit_access = $checklist->userHasAccess('edit');
-    $renderer = \Drupal::service('renderer');
 
     // Progress bar.
-    $progress_bar = [
+    $form['progress_bar'] = [
       '#theme' => 'checklistapi_progress_bar',
       '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by @user', [
         '@date' => $checklist->getLastUpdatedDate(),
@@ -45,18 +44,13 @@ class ChecklistapiChecklistForm implements FormInterface {
       '#number_of_items' => $checklist->getNumberOfItems(),
       '#percent_complete' => (int) round($checklist->getPercentComplete()),
     ];
-    $form['progress_bar'] = [
-      '#type' => 'markup',
-      '#markup' => $renderer->render($progress_bar),
-    ];
 
     // Compact mode.
     if (checklistapi_compact_mode_is_on()) {
       $form['#attributes']['class'] = ['compact-mode'];
     }
-    $compact_link = ['#markup' => '<div class="compact-link"></div>'];
     $form['compact_mode_link'] = [
-      '#markup' => $renderer->render($compact_link),
+      '#markup' => '<div class="compact-link"></div>',
     ];
 
     // General properties.
