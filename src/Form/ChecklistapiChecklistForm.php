@@ -43,6 +43,11 @@ class ChecklistapiChecklistForm implements FormInterface {
       '#number_complete' => $checklist->getNumberCompleted(),
       '#number_of_items' => $checklist->getNumberOfItems(),
       '#percent_complete' => (int) round($checklist->getPercentComplete()),
+      '#attached' => [
+        'library' => [
+          'classy/progress',
+        ],
+      ],
     ];
 
     // Compact mode.
