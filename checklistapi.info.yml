@@ -1,7 +1,6 @@
 name: Checklist API
 type: module
 description: Provides an API for creating fillable, persistent checklists.
-version: VERSION
 package: Other
 core: 8.x
 configure: checklistapi.report
