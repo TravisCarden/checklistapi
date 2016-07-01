@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Controller\ChecklistapiController.
- */
-
 namespace Drupal\checklistapi\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

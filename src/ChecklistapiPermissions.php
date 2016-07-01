@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\ChecklistapiPermissions.
- */
-
 namespace Drupal\checklistapi;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Tests\ChecklistapiModuleTest.
- */
-
 namespace Drupal\Tests\checklistapi\Unit;
 
 use Drupal\Core\Render\Element;

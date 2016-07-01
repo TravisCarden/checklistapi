@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\ChecklistapiChecklist.
- */
-
 namespace Drupal\checklistapi;
 
 use Drupal\Component\Utility\Unicode;

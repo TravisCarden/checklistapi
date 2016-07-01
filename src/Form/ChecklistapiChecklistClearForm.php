@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Form\ChecklistapiChecklistClearForm.
- */
-
 namespace Drupal\checklistapi\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;

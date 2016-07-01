@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Routing\ChecklistapiRouteSubscriber.
- */
-
 namespace Drupal\checklistapi\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;

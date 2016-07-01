@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Tests\ChecklistapiTest.
- */
-
 namespace Drupal\checklistapi\Tests;
 
 use Drupal\simpletest\WebTestBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Access\ChecklistapiAccessCheck.
- */
-
 namespace Drupal\checklistapi\Access;
 
 use Drupal\Core\Access\AccessResult;

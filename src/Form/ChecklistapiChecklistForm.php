@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\checklistapi\Form\ChecklistapiChecklistForm.
- */
-
 namespace Drupal\checklistapi\Form;
 
 use Drupal\Component\Utility\Xss;
