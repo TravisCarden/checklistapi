@@ -2,17 +2,15 @@
 
 namespace Drupal\checklistapi\Routing;
 
-use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Listens to the dynamic route events.
+ * Builds the routes for checklists.
  */
-class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
+class ChecklistapiRouteSubscriber {
 
   /**
-   * Provides dynamic routes for Checklist API.
+   * Provides dynamic routes.
    *
    * @return \Symfony\Component\Routing\Route[]
    *   An array of route objects.
@@ -42,14 +40,8 @@ class ChecklistapiRouteSubscriber extends RouteSubscriberBase {
         'checklist_id' => $id,
         'op' => 'edit',
       ], $requirements);
-
-      return $routes;
     }
+    return $routes;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function alterRoutes(RouteCollection $collection) {}
 
 }
