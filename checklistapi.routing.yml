@@ -7,4 +7,4 @@ checklistapi.report:
     _permission: view checklistapi checklists report
 
 route_callbacks:
-  - \Drupal\checklistapi\Routing\ChecklistapiRouteSubscriber::routes
+  - \Drupal\checklistapi\Routing\ChecklistapiRoutes::routes

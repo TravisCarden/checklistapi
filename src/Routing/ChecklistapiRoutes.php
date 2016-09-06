@@ -5,9 +5,9 @@ namespace Drupal\checklistapi\Routing;
 use Symfony\Component\Routing\Route;
 
 /**
- * Builds the routes for checklists.
+ * Provides routes for checklists.
  */
-class ChecklistapiRouteSubscriber {
+class ChecklistapiRoutes {
 
   /**
    * Provides dynamic routes.
