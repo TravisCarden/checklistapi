@@ -4,11 +4,29 @@ namespace Drupal\checklistapi\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * An access check service determining access rules for checklist routes.
+ * An access check service for checklist routes.
  */
-class ChecklistapiAccessCheck implements AccessInterface {
+class ChecklistapiAccessCheck implements AccessInterface  {
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * Constructs a new ChecklistapiAccessCheck.
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   */
+  public function __construct(RequestStack $request_stack) {
+    $this->requestStack = $request_stack;
+  }
 
   /**
    * Checks routing access for the checklist.
@@ -17,10 +35,11 @@ class ChecklistapiAccessCheck implements AccessInterface {
    *   Returns an access result.
    */
   public function access() {
-    $request = \Drupal::request();
+    $request = $this->requestStack->getCurrentRequest();
     $op = $request->attributes->get('op');
     $op = !empty($op) ? $op : 'any';
 
-    return AccessResult::allowedIf(checklistapi_checklist_access($request->attributes->get('checklist_id'), $op));
+    $id = $request->attributes->get('checklist_id');
+    return AccessResult::allowedIf(checklistapi_checklist_access($id, $op));
   }
 }

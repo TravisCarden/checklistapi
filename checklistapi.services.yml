@@ -1,5 +1,6 @@
 services:
   access_check.checklistapi:
     class: Drupal\checklistapi\Access\ChecklistapiAccessCheck
+    arguments: ['@request_stack']
     tags:
       - { name: access_check, applies_to: _checklistapi_access }
