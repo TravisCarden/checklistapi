@@ -1,0 +1,12 @@
+# @todo This route is automatically declared by Checklist API and should not
+#   need to be manually declared, but a core bug currently necessitates it.
+#   See https://www.drupal.org/node/2773975. Remove once resolved.
+checklistapi.checklists.example_checklist:
+  path: '/admin/config/development/checklistapi-example'
+  defaults:
+    _title: 'Checklist API example'
+    _form: '\Drupal\checklistapi\Form\ChecklistapiChecklistForm'
+    checklist_id: example_checklist
+    op: any
+  requirements:
+    _checklistapi_access: 'TRUE'
