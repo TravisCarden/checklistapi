@@ -123,6 +123,13 @@ function checklistapi_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_module_preinstall().
+ */
+function checklistapi_module_preinstall($module) {
+  drupal_static_reset('checklistapi_get_checklist_info');
+}
+
+/**
  * Recursively sorts array elements by #weight.
  *
  * @param array $array
