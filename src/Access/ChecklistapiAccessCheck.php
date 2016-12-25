@@ -40,6 +40,11 @@ class ChecklistapiAccessCheck implements AccessInterface  {
     $op = !empty($op) ? $op : 'any';
 
     $id = $request->attributes->get('checklist_id');
+
+    if (!$id) {
+      return AccessResult::neutral();
+    }
+
     return AccessResult::allowedIf(checklistapi_checklist_access($id, $op));
   }
 }
