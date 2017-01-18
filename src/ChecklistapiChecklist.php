@@ -237,6 +237,7 @@ class ChecklistapiChecklist {
       '#changed' => $time,
       '#changed_by' => $user->id(),
       '#completed_items' => 0,
+      '#items' => [],
     ];
 
     // Loop through groups.
@@ -268,16 +269,15 @@ class ChecklistapiChecklist {
             ];
             $num_changed_items++;
           }
+          $progress['#items'][$item_key] = $new_item;
         }
         else {
           // Item is unchecked.
-          $new_item = 0;
           if ($old_item) {
             // Item was previously checked.
             $num_changed_items++;
           }
         }
-        $progress[$item_key] = $new_item;
       }
     }
 
