@@ -27,7 +27,7 @@
    */
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
-      $('#checklistapi-checklist-form .vertical-tabs-panes > details', context).drupalSetSummary(function (context) {
+      $('#checklistapi-checklist-form .vertical-tabs__panes > details', context).drupalSetSummary(function (context) {
         var total = $(':checkbox.checklistapi-item', context).size(),
           args = {};
         if (total) {
