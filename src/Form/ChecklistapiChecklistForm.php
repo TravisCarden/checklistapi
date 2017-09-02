@@ -171,8 +171,17 @@ class ChecklistapiChecklistForm implements FormInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\checklistapi\ChecklistapiChecklist $checklist */
+    $checklist = $form['#checklist'];
+
+    // Save progress.
     $values = $form_state->getValue('checklistapi');
-    $form['#checklist']->saveProgress($values);
+    $checklist->saveProgress($values);
+
+    // Preserve the active tab after submission.
+    $form_state->setRedirect($checklist->getRouteName(), [], [
+      'fragment' => $values['checklistapi__active_tab'],
+    ]);
   }
 
   /**
