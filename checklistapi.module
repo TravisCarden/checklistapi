@@ -53,7 +53,6 @@ function checklistapi_checklist_access($id, $operation = 'any') {
  */
 function checklistapi_checklist_load($id) {
   $definition = checklistapi_get_checklist_info($id);
-  $definition = checklistapi_add_checklist_items($definition);
   return ($definition) ? new ChecklistapiChecklist($definition) : FALSE;
 }
 

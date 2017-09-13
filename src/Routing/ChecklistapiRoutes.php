@@ -17,7 +17,8 @@ class ChecklistapiRoutes {
    */
   public function routes() {
     $routes = [];
-    foreach (checklistapi_get_checklist_info() as $id => $definition) {
+    $definitions = \Drupal::moduleHandler()->invokeAll('checklistapi_checklist_info');
+    foreach ($definitions as $id => $definition) {
       // Ignore incomplete definitions.
       if (empty($definition['#path']) || empty($definition['#title'])) {
         continue;

@@ -124,6 +124,10 @@ function callback_checklistapi_checklist_items() {
  * definitions are passed in by reference. Additional checklists may be added,
  * or existing checklists may be altered or removed.
  *
+ * Note: Checklist paths (#path) cannot be altered. See
+ * https://www.drupal.org/docs/8/api/routing-system/altering-existing-routes-and-adding-new-routes-based-on-dynamic-ones
+ * instead.
+ *
  * @param array $definitions
  *   The multidimensional array of checklist definitions returned by
  *   hook_checklistapi_checklist_info().

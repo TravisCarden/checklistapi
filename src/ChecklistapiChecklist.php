@@ -248,7 +248,6 @@ class ChecklistapiChecklist {
       // Loop through items.
       foreach ($group as $item_key => $item) {
         $definition = checklistapi_get_checklist_info($this->id);
-        $definition = checklistapi_add_checklist_items($definition);
         if (!in_array($item_key, array_keys($definition[$group_key]))) {
           // This item wasn't in the checklist definition. Don't include it with
           // saved progress.
