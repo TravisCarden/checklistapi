@@ -19,8 +19,18 @@ function checklistapiexample_checklistapi_checklist_info() {
   $definitions['example_checklist'] = [
     '#title' => t('Checklist API example'),
     '#path' => '/admin/config/development/checklistapi-example',
+    '#callback' => 'checklistapiexample_checklistapi_checklist_items',
     '#description' => t('An example implementation of the Checklist API.'),
     '#help' => t('<p>This checklist based on <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>'),
+  ];
+  return $definitions;
+}
+
+/**
+ * Implements callback_checklistapi_checklist_items() for example_checklist.
+ */
+function checklistapiexample_checklistapi_checklist_items() {
+  return [
     'i_suck' => [
       '#title' => t('I suck'),
       '#description' => t('<p>Gain these skills to pass the <em><a href="http://headrush.typepad.com/creating_passionate_users/2005/10/getting_users_p.html">suck threshold</a></em> and start being creative with Drupal.</p>'),
@@ -201,7 +211,6 @@ function checklistapiexample_checklistapi_checklist_info() {
       ],
     ],
   ];
-  return $definitions;
 }
 
 /**
