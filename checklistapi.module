@@ -53,7 +53,29 @@ function checklistapi_checklist_access($id, $operation = 'any') {
  */
 function checklistapi_checklist_load($id) {
   $definition = checklistapi_get_checklist_info($id);
+  $definition = checklistapi_add_checklist_items($definition);
   return ($definition) ? new ChecklistapiChecklist($definition) : FALSE;
+}
+
+/**
+ * Adds the checklist items to a given definition.
+ *
+ * @param array $definition
+ *   A checklist definition as returned from checklistapi_get_checklist_info().
+ *
+ * @return array
+ *   The checklist definition with checklist items added.
+ */
+function checklistapi_add_checklist_items(array $definition) {
+  if (!empty($definition['#callback']) && is_callable($definition['#callback'])) {
+    // Remove any checklist items from the original definition.
+    foreach (Element::children($definition) as $child) {
+      unset($definition[$child]);
+    }
+    // Invoke the callback function.
+    $definition += call_user_func($definition['#callback']);
+  }
+  return $definition;
 }
 
 /**
@@ -87,6 +109,9 @@ function checklistapi_get_checklist_info($id = NULL) {
   if (!isset($definitions)) {
     // Get definitions.
     $definitions = \Drupal::moduleHandler()->invokeAll('checklistapi_checklist_info');
+    foreach ($definitions as $key => $value) {
+      $definitions[$key] = checklistapi_add_checklist_items($value);
+    }
     $definitions = checklistapi_sort_array($definitions);
     // Let other modules alter them.
     \Drupal::moduleHandler()->alter('checklistapi_checklist_info', $definitions);
