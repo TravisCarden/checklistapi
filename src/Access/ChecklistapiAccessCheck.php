@@ -4,42 +4,25 @@ namespace Drupal\checklistapi\Access;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * An access check service for checklist routes.
  */
-class ChecklistapiAccessCheck implements AccessInterface  {
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * Constructs a new ChecklistapiAccessCheck.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
-  }
+class ChecklistapiAccessCheck implements AccessInterface {
 
   /**
    * Checks routing access for the checklist.
    *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
+   *
    * @return \Drupal\Core\Access\AccessResult
    *   Returns an access result.
    */
-  public function access() {
-    $request = $this->requestStack->getCurrentRequest();
-    $op = $request->attributes->get('op');
-    $op = !empty($op) ? $op : 'any';
-
-    $id = $request->attributes->get('checklist_id');
+  public function access(RouteMatchInterface $route_match) {
+    $op = $route_match->getParameter('op') ?: 'any';
+    $id = $route_match->getParameter('checklist_id');
 
     if (!$id) {
       return AccessResult::neutral();
@@ -47,4 +30,5 @@ class ChecklistapiAccessCheck implements AccessInterface  {
 
     return AccessResult::allowedIf(checklistapi_checklist_access($id, $op));
   }
+
 }
