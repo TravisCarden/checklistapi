@@ -6,11 +6,11 @@
    */
   Drupal.behaviors.checklistapiUpdateProgressBar = {
     attach: function (context) {
-      var total_items = $(':checkbox.checklistapi-item', context).size(),
+      var total_items = $(':checkbox.checklistapi-item', context).length,
         progress_bar = $('#checklistapi-checklist-form .progress__bar', context),
         progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
       $(':checkbox.checklistapi-item', context).change(function () {
-        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).size(),
+        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).length,
           percent_complete = Math.round(num_items_checked / total_items * 100),
           args = {};
         progress_bar.css('width', percent_complete + '%');
@@ -28,10 +28,10 @@
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
       $('#checklistapi-checklist-form .vertical-tabs__panes > details', context).drupalSetSummary(function (context) {
-        var total = $(':checkbox.checklistapi-item', context).size(),
+        var total = $(':checkbox.checklistapi-item', context).length,
           args = {};
         if (total) {
-          args['@complete'] = $(':checkbox.checklistapi-item:checked', context).size();
+          args['@complete'] = $(':checkbox.checklistapi-item:checked', context).length;
           args['@total'] = total;
           args['@percent'] = Math.round(args['@complete'] / args['@total'] * 100);
           return Drupal.t('@complete of @total (@percent%)', args);
