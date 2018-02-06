@@ -5,8 +5,8 @@
  * Drush commands for the Checklist API module.
  */
 
-use \Drupal\Core\Render\Element;
-use \Drupal\user\Entity\User;
+use Drupal\Core\Render\Element;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_drush_command().

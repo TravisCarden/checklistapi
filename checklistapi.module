@@ -48,7 +48,7 @@ function checklistapi_checklist_access($id, $operation = 'any') {
  * @param string $id
  *   The checklist ID.
  *
- * @return ChecklistapiChecklist|false
+ * @return Drupal\checklistapi\ChecklistapiChecklist|false
  *   A fully-loaded checklist object, or FALSE if the checklist is not found.
  */
 function checklistapi_checklist_load($id) {

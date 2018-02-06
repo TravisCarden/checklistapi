@@ -80,4 +80,5 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
     // Redirect back to checklist.
     $form_state->setRedirect($form['#checklist']->getRouteName());
   }
+
 }

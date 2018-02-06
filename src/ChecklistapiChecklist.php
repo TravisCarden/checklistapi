@@ -203,7 +203,7 @@ class ChecklistapiChecklist {
   /**
    * Gets the checklist form URL.
    *
-   * @return Url
+   * @return \Drupal\Core\Url
    *   The URL to the checklist form.
    */
   public function getUrl() {

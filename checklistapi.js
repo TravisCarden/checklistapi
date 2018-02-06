@@ -1,18 +1,17 @@
 (function ($) {
-  "use strict";
 
   /**
    * Updates the progress bar as checkboxes are changed.
    */
   Drupal.behaviors.checklistapiUpdateProgressBar = {
     attach: function (context) {
-      var total_items = $(':checkbox.checklistapi-item', context).length,
-        progress_bar = $('#checklistapi-checklist-form .progress__bar', context),
-        progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
+      var total_items = $(':checkbox.checklistapi-item', context).length;
+      var progress_bar = $('#checklistapi-checklist-form .progress__bar', context);
+      var progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
       $(':checkbox.checklistapi-item', context).change(function () {
-        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).length,
-          percent_complete = Math.round(num_items_checked / total_items * 100),
-          args = {};
+        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).length;
+        var percent_complete = Math.round(num_items_checked / total_items * 100);
+        var args = {};
         progress_bar.css('width', percent_complete + '%');
         args['@complete'] = num_items_checked;
         args['@total'] = total_items;
@@ -28,8 +27,8 @@
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
       $('#checklistapi-checklist-form .vertical-tabs__panes > details', context).drupalSetSummary(function (context) {
-        var total = $(':checkbox.checklistapi-item', context).length,
-          args = {};
+        var total = $(':checkbox.checklistapi-item', context).length;
+        var args = {};
         if (total) {
           args['@complete'] = $(':checkbox.checklistapi-item:checked', context).length;
           args['@total'] = total;

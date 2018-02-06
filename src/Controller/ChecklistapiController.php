@@ -19,20 +19,20 @@ class ChecklistapiController extends ControllerBase {
   public function report() {
     // Define table header.
     $header = [
-      ['data' => t('Checklist')],
+      ['data' => $this->t('Checklist')],
       [
-        'data' => t('Progress'),
+        'data' => $this->t('Progress'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       [
-        'data' => t('Last updated'),
+        'data' => $this->t('Last updated'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       [
-        'data' => t('Last updated by'),
+        'data' => $this->t('Last updated by'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
       ],
-      ['data' => t('Operations')],
+      ['data' => $this->t('Operations')],
     ];
 
     // Build table rows.
@@ -41,11 +41,12 @@ class ChecklistapiController extends ControllerBase {
     foreach ($definitions as $id => $definition) {
       $checklist = checklistapi_checklist_load($id);
       $row = [];
+
       $row[] = [
-        'data' => ($checklist->userHasAccess()) ? \Drupal::l($checklist->title, $checklist->getUrl()) : drupal_placeholder($checklist->title),
+        'data' => ($checklist->userHasAccess()) ? $this->l($checklist->title, $checklist->getUrl()) : drupal_placeholder($checklist->title),
         'title' => (!empty($checklist->description)) ? $checklist->description : '',
       ];
-      $row[] = t('@completed of @total (@percent%)', [
+      $row[] = $this->t('@completed of @total (@percent%)', [
         '@completed' => $checklist->getNumberCompleted(),
         '@total' => $checklist->getNumberOfItems(),
         '@percent' => round($checklist->getPercentComplete()),
@@ -58,7 +59,7 @@ class ChecklistapiController extends ControllerBase {
             '#type' => 'operations',
             '#links' => [
               'clear' => [
-                'title' => t('Clear'),
+                'title' => $this->t('Clear'),
                 'url' => Url::fromRoute($checklist->getRouteName() . '.clear', [], [
                   'query' => $this->getDestinationArray(),
                 ]),
@@ -78,7 +79,7 @@ class ChecklistapiController extends ControllerBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No checklists available.'),
+      '#empty' => $this->t('No checklists available.'),
     ];
 
     return $output;
