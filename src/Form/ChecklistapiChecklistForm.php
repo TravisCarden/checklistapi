@@ -83,10 +83,10 @@ class ChecklistapiChecklistForm implements FormInterface {
         $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
-          $title .= t('<span class="completion-details"> - Completed @time by @user</a>', [
+          $title .= '<span class="completion-details"> - ' . t('Completed @time by @user', [
             '@time' => format_date($saved_item['#completed'], 'short'),
             '@user' => User::load($saved_item['#uid'])->getUsername(),
-          ]);
+          ]) . '</span>';
         }
         // Set default value.
         $default_value = FALSE;
