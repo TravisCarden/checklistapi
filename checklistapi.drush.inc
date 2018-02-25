@@ -136,7 +136,7 @@ function drush_checklistapi_info() {
     // Loop through items.
     foreach (Element::children($group) as $item_key) {
       $item = &$group[$item_key];
-      $saved_item = !empty($checklist->savedProgress[$item_key]) ? $checklist->savedProgress[$item_key] : 0;
+      $saved_item = !empty($checklist->savedProgress['#items'][$item_key]) ? $checklist->savedProgress['#items'][$item_key] : 0;
       // Build title.
       $title = strip_tags($item['#title']);
       if ($saved_item) {
