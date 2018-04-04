@@ -22,6 +22,7 @@ class ChecklistapiModuleTest extends UnitTestCase {
     $input = [
       '#title' => 'Checklist API test',
       '#path' => 'admin/config/development/checklistapi-test',
+      // @codingStandardsIgnoreLine
       '#description' => 'A test checklist.',
       '#help' => '<p>This is a test checklist.</p>',
       'group_two' => [
@@ -29,6 +30,7 @@ class ChecklistapiModuleTest extends UnitTestCase {
       ],
       'group_one' => [
         '#title' => 'Group one',
+        // @codingStandardsIgnoreLine
         '#description' => '<p>Group one description.</p>',
         '#weight' => -1,
         'item_three' => [
@@ -37,6 +39,7 @@ class ChecklistapiModuleTest extends UnitTestCase {
         ],
         'item_one' => [
           '#title' => 'Item one',
+          // @codingStandardsIgnoreLine
           '#description' => 'Item one description',
           '#weight' => -1,
           'link_three' => [
@@ -95,11 +98,9 @@ class ChecklistapiModuleTest extends UnitTestCase {
 
   /**
    * Tests that checklistapi_checklist_access() rejects an invalid mode.
-   *
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage No such operation "invalid operation"
    */
   public function testChecklistapiChecklistAccessInvalidMode() {
+    $this->setExpectedException(\InvalidArgumentException::class, 'No such operation "invalid operation');
     checklistapi_checklist_access(NULL, 'invalid operation');
   }
 
