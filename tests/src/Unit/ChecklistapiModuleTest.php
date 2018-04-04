@@ -68,7 +68,6 @@ class ChecklistapiModuleTest extends UnitTestCase {
       ],
       'group_three' => [
         '#title' => 'Group three',
-        '#weight' => 'invalid',
       ],
     ];
 
