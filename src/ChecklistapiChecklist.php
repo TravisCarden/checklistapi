@@ -253,7 +253,7 @@ class ChecklistapiChecklist {
           // saved progress.
           continue;
         }
-        $old_item = (!empty($this->savedProgress[$item_key])) ? $this->savedProgress[$item_key] : 0;
+        $old_item = (!empty($this->savedProgress['#items'][$item_key])) ? $this->savedProgress['#items'][$item_key] : 0;
         if ($item == 1) {
           // Item is checked.
           $progress['#completed_items']++;
