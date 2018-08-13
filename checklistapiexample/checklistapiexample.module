@@ -22,6 +22,7 @@ function checklistapiexample_checklistapi_checklist_info() {
     '#callback' => 'checklistapiexample_checklistapi_checklist_items',
     '#description' => t('An example implementation of the Checklist API.'),
     '#help' => t('<p>This checklist based on <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>'),
+    '#storage' => 'state',
   ];
   return $definitions;
 }

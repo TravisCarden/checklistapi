@@ -14,6 +14,8 @@ class ChecklistapiChecklist {
 
   /**
    * The configuration key for saved progress.
+   *
+   * @deprecated since version 8.x-1.9, to be removed in 8.x-2.0.
    */
   const PROGRESS_CONFIG_KEY = 'progress';
 
@@ -60,6 +62,13 @@ class ChecklistapiChecklist {
   public $menuName;
 
   /**
+   * The storage backend for saved progress.
+   *
+   * @var \Drupal\checklistapi\Storage\StorageInterface
+   */
+  private $storage;
+
+  /**
    * The checklist weight.
    *
    * @var float
@@ -91,6 +100,8 @@ class ChecklistapiChecklist {
    * The configuration object for saving progress.
    *
    * @var \Drupal\Core\Config\Config
+   *
+   * @deprecated since version 8.x-1.9, to be removed in 8.x-2.0.
    */
   public $config;
 
@@ -107,22 +118,31 @@ class ChecklistapiChecklist {
       unset($definition[$group_key]);
     }
     foreach ($definition as $property_key => $value) {
+      if ($property_key === '#storage') {
+        continue;
+      }
       $property_name = checklistapi_strtolowercamel(Unicode::substr($property_key, 1));
       $this->$property_name = $value;
     }
 
-    $this->config = \Drupal::configFactory()->getEditable("checklistapi.progress.{$this->id}");
-    $this->savedProgress = $this->config->get($this::PROGRESS_CONFIG_KEY);
+    $storage = 'config';
+    $allowed_storage_values = ['config', 'state'];
+    if (isset($definition['#storage']) && in_array($definition['#storage'], $allowed_storage_values)) {
+      $storage = $definition['#storage'];
+    }
+    $this->storage = \Drupal::service("checklistapi_storage.{$storage}")
+      ->setChecklistId($this->id);
+
+    $this->savedProgress = $this->storage->getSavedProgress();
   }
 
   /**
    * Clears the saved progress for the checklist.
    *
-   * Deletes the Drupal configuration object containing the checklist's saved
-   * progress.
+   * Deletes the storage object containing the checklist's saved progress.
    */
   public function clearSavedProgress() {
-    $this->config->delete();
+    $this->storage->deleteSavedProgress();
 
     drupal_set_message(t('%title saved progress has been cleared.', [
       '%title' => $this->title,
@@ -217,7 +237,7 @@ class ChecklistapiChecklist {
    *   TRUE if the checklist has saved progress, or FALSE if it doesn't.
    */
   public function hasSavedProgress() {
-    return (bool) $this->config->get($this::PROGRESS_CONFIG_KEY);
+    return (bool) $this->storage->getSavedProgress();
   }
 
   /**
@@ -287,7 +307,7 @@ class ChecklistapiChecklist {
     // configuration files.
     ksort($progress);
 
-    $this->config->set($this::PROGRESS_CONFIG_KEY, $progress)->save();
+    $this->storage->setSavedProgress($progress);
     drupal_set_message(\Drupal::translation()->formatPlural(
       $num_changed_items,
       '%title progress has been saved. 1 item changed.',

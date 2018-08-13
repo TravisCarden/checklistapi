@@ -35,6 +35,9 @@
  *   - #menu_name: (optional) The machine name of a menu to place the checklist
  *     into (e.g., "main-menu" or "navigation"). If this is omitted, Drupal will
  *     try to infer the correct menu placement from the specified path.
+ *   - #storage: (optional) The storage backend for saving checklist progress.
+ *     Allowed values are "config" and "state" for the Configuration and State
+ *     systems respectively.
  *   - #weight: (optional) A floating point number used to sort the list of
  *     checklists before being output. Lower numbers appear before higher
  *     numbers.
