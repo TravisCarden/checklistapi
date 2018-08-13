@@ -37,7 +37,7 @@
  *     try to infer the correct menu placement from the specified path.
  *   - #storage: (optional) The storage backend for saving checklist progress.
  *     Allowed values are "config" and "state" for the Configuration and State
- *     systems respectively.
+ *     systems respectively. Defaults to "config".
  *   - #weight: (optional) A floating point number used to sort the list of
  *     checklists before being output. Lower numbers appear before higher
  *     numbers.
