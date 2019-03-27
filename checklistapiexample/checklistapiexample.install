@@ -26,6 +26,10 @@ function checklistapiexample_update_8101() {
   $saved_progress = $old_config_storage->setChecklistId($checklist_id)
     ->getSavedProgress();
 
+  if (!$saved_progress) {
+    return;
+  }
+
   // Copy saved progress to new state storage.
   /** @var \Drupal\checklistapi\Storage\StateStorage $new_state_storage */
   $new_state_storage = \Drupal::service('checklistapi_storage.state');
