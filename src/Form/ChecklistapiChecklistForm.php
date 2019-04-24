@@ -3,15 +3,58 @@
 namespace Drupal\checklistapi\Form;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\user\Entity\User;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a checklist form.
  */
-class ChecklistapiChecklistForm implements FormInterface {
+class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInterface {
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * Constructs an instance.
+   *
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
+   */
+  public function __construct(DateFormatterInterface $date_formatter, MessengerInterface $messenger) {
+    $this->dateFormatter = $date_formatter;
+    $this->messenger = $messenger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $container->get('date.formatter');
+    /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
+    $messenger = $container->get('messenger');
+    return new static($date_formatter, $messenger);
+  }
 
   /**
    * {@inheritdoc}
@@ -84,8 +127,8 @@ class ChecklistapiChecklistForm implements FormInterface {
         if ($saved_item) {
           // Append completion details.
           $title .= '<span class="completion-details"> - ' . t('Completed @time by @user', [
-            '@time' => format_date($saved_item['#completed'], 'short'),
-            '@user' => User::load($saved_item['#uid'])->getUsername(),
+            '@time' => $this->dateFormatter->format($saved_item['#completed'], 'short'),
+            '@user' => User::load($saved_item['#uid'])->getAccountName(),
           ]) . '</span>';
         }
         // Set default value.
@@ -104,7 +147,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         $links = [];
         foreach (Element::children($item) as $link_key) {
           $link = &$item[$link_key];
-          $links[] = \Drupal::l($link['#text'], $link['#url']);
+          $links[] = Link::fromTextAndUrl($link['#text'], $link['#url'])->toString();
         }
         if (count($links)) {
           $description .= '<div class="links">' . implode(' | ', $links) . '</div>';
@@ -156,7 +199,7 @@ class ChecklistapiChecklistForm implements FormInterface {
         t('%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.', $args),
         t('%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.', $args)
       );
-      drupal_set_message($message, 'status');
+      $this->messenger->addStatus($message);
     }
     return $form;
   }

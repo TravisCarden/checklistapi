@@ -2,7 +2,6 @@
 
 namespace Drupal\checklistapi;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
@@ -121,7 +120,7 @@ class ChecklistapiChecklist {
       if ($property_key === '#storage') {
         continue;
       }
-      $property_name = checklistapi_strtolowercamel(Unicode::substr($property_key, 1));
+      $property_name = checklistapi_strtolowercamel(mb_substr($property_key, 1));
       $this->$property_name = $value;
     }
 
@@ -144,7 +143,7 @@ class ChecklistapiChecklist {
   public function clearSavedProgress() {
     $this->storage->deleteSavedProgress();
 
-    drupal_set_message(t('%title saved progress has been cleared.', [
+    \Drupal::messenger()->addMessage(t('%title saved progress has been cleared.', [
       '%title' => $this->title,
     ]));
   }
@@ -179,7 +178,7 @@ class ChecklistapiChecklist {
   public function getLastUpdatedUser() {
     if (isset($this->savedProgress['#changed_by'])) {
       return User::load($this->savedProgress['#changed_by'])
-        ->getUsername();
+        ->getAccountName();
     }
     else {
       return t('n/a');
@@ -194,7 +193,7 @@ class ChecklistapiChecklist {
    *   no saved progress.
    */
   public function getLastUpdatedDate() {
-    return (!empty($this->savedProgress['#changed'])) ? format_date($this->savedProgress['#changed']) : t('n/a');
+    return (!empty($this->savedProgress['#changed'])) ? \Drupal::service('date.formatter')->format($this->savedProgress['#changed']) : t('n/a');
   }
 
   /**
@@ -308,7 +307,7 @@ class ChecklistapiChecklist {
     ksort($progress);
 
     $this->storage->setSavedProgress($progress);
-    drupal_set_message(\Drupal::translation()->formatPlural(
+    \Drupal::messenger()->addMessage(\Drupal::translation()->formatPlural(
       $num_changed_items,
       '%title progress has been saved. 1 item changed.',
       '%title progress has been saved. @count items changed.',

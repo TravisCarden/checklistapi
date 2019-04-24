@@ -143,8 +143,8 @@ function drush_checklistapi_info() {
         // Append completion details.
         $user = User::load($saved_item['#uid']);
         $title .= ' - ' . dt('Completed @time by @user', [
-          '@time' => format_date($saved_item['#completed'], 'short'),
-          '@user' => $user->getUsername(),
+          '@time' => \Drupal::service('date.formatter')->format($saved_item['#completed'], 'short'),
+          '@user' => $user->getAccountName(),
         ]);
       }
       // Print the list item.
