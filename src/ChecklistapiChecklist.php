@@ -172,17 +172,16 @@ class ChecklistapiChecklist {
    * Gets the name of the last user to update the checklist.
    *
    * @return string
-   *   The themed name of the last user to update the checklist, or 'n/a' if
-   *   there is no record of such a user.
+   *   The themed name of the last user to update the checklist, 'n/a' if there
+   *   is no saved progress, or '[missing user] if the user no longer exists.
    */
   public function getLastUpdatedUser() {
-    if (isset($this->savedProgress['#changed_by'])) {
-      return User::load($this->savedProgress['#changed_by'])
-        ->getAccountName();
-    }
-    else {
+    if (!isset($this->savedProgress['#changed_by'])) {
       return t('n/a');
     }
+
+    $user = User::load($this->savedProgress['#changed_by']);
+    return ($user) ? $user->getAccountName() : t('[missing user]');
   }
 
   /**

@@ -126,9 +126,10 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
         $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
+          $user = User::load($saved_item['#uid']);
           $title .= '<span class="completion-details"> - ' . t('Completed @time by @user', [
             '@time' => $this->dateFormatter->format($saved_item['#completed'], 'short'),
-            '@user' => User::load($saved_item['#uid'])->getAccountName(),
+            '@user' => ($user) ? $user->getAccountName() : t('[missing user]'),
           ]) . '</span>';
         }
         // Set default value.
