@@ -72,7 +72,7 @@ function checklistapi_add_checklist_items(array $definition) {
       unset($definition[$child]);
     }
     // Invoke the callback function.
-    $definition += call_user_func($definition['#callback']);
+    $definition += call_user_func_array($definition['#callback'], $definition['#callback_arguments'] ?? []);
   }
   return $definition;
 }

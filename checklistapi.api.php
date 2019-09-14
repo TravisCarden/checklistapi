@@ -28,6 +28,8 @@
  *     callback_checklistapi_checklist_items(). (This value is technically
  *     optional in order to provide backward compatibility for modules using the
  *     deprecated method of defining checklist items right in this array.)
+ *   - #callback_arguments: (optional) An array of values to pass as arguments
+ *     to the callback.
  *   - #description: (optional) A brief description of the checklist for its
  *     corresponding menu item.
  *   - #help: (optional) User help to be displayed in the "System help" block
@@ -54,6 +56,7 @@ function hook_checklistapi_checklist_info() {
     '#title' => t('Example checklist'),
     '#path' => 'example-checklist',
     '#callback' => 'callback_checklistapi_checklist_items',
+    '#callback_arguments' => ['Example value'],
     '#description' => t('An example checklist.'),
     '#help' => t('<p>This is an example checklist.</p>'),
   ];
@@ -64,6 +67,10 @@ function hook_checklistapi_checklist_info() {
  * Define the checklist items for a given checklist.
  *
  * Declared in hook_checklistapi_checklist_info().
+ *
+ * @param mixed $argument
+ *   Any number of arguments may be passed from a checklist definition via its
+ *   #callback_arguments array.
  *
  * @return array
  *   An array of arrays representing groups of items, to be presented as
@@ -101,7 +108,7 @@ function hook_checklistapi_checklist_info() {
  * @see hook_checklistapi_checklist_info()
  * @see checklistapiexample_checklistapi_checklist_items()
  */
-function callback_checklistapi_checklist_items() {
+function callback_checklistapi_checklist_items($argument) {
   return [
     'example_group' => [
       '#title' => t('Example group'),
