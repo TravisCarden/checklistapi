@@ -5,7 +5,9 @@
  * An example implementation of the Checklist API.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\checklistapi\ChecklistapiChecklist;
 
 /**
  * Implements hook_checklistapi_checklist_info().
@@ -298,4 +300,24 @@ function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
       '#title' => t("I'm Chuck Norris."),
     ],
   ];
+}
+
+/**
+ * Implements hook_help().
+ */
+function checklistapiexample_help($route_name, RouteMatchInterface $route_match) {
+  foreach (checklistapi_get_checklist_info() as $id => $definition) {
+    $checklist = new ChecklistapiChecklist($definition);
+    if ($checklist->getRouteName() == $route_name) {
+      // The checklist has help and the current user has access to view it.
+      if (!empty($definition['#help']) && checklistapi_checklist_access($id)) {
+        return $definition['#help'];
+      }
+      // Otherwise the loop can break early since only one checklist can occupy
+      // a given route.
+      else {
+        break;
+      }
+    }
+  }
 }
