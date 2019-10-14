@@ -1,17 +1,18 @@
 (function ($) {
+  'use strict';
 
   /**
    * Updates the progress bar as checkboxes are changed.
    */
   Drupal.behaviors.checklistapiUpdateProgressBar = {
     attach: function (context) {
-      var total_items = $(':checkbox.checklistapi-item', context).length;
-      var progress_bar = $('#checklistapi-checklist-form .progress__bar', context);
-      var progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
+      const total_items = $(':checkbox.checklistapi-item', context).length;
+      let progress_bar = $('#checklistapi-checklist-form .progress__bar', context);
+      let progress_percentage = $('#checklistapi-checklist-form .progress__percentage', context);
       $(':checkbox.checklistapi-item', context).change(function () {
-        var num_items_checked = $(':checkbox.checklistapi-item:checked', context).length;
-        var percent_complete = Math.round(num_items_checked / total_items * 100);
-        var args = {};
+        const num_items_checked = $(':checkbox.checklistapi-item:checked', context).length;
+        const percent_complete = Math.round(num_items_checked / total_items * 100);
+        let args = {};
         progress_bar.css('width', percent_complete + '%');
         args['@complete'] = num_items_checked;
         args['@total'] = total_items;
@@ -27,8 +28,8 @@
   Drupal.behaviors.checklistapiFieldsetSummaries = {
     attach: function (context) {
       $('#checklistapi-checklist-form .vertical-tabs__panes > details', context).drupalSetSummary(function (context) {
-        var total = $(':checkbox.checklistapi-item', context).length;
-        var args = {};
+        const total = $(':checkbox.checklistapi-item', context).length;
+        let args = {};
         if (total) {
           args['@complete'] = $(':checkbox.checklistapi-item:checked', context).length;
           args['@total'] = total;
@@ -44,12 +45,12 @@
    */
   Drupal.behaviors.checklistapiCompactModeLink = {
     attach: function (context) {
-      var is_compact_mode = $('#checklistapi-checklist-form', context).hasClass('compact-mode');
-      var text = is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions');
+      let is_compact_mode = $('#checklistapi-checklist-form', context).hasClass('compact-mode');
+      const text = is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions');
       $('#checklistapi-checklist-form .compact-link', context).html('<a href="#">' + text + '</a>');
       $('#checklistapi-checklist-form .compact-link a', context).click(function () {
         $(this).closest('#checklistapi-checklist-form').toggleClass('compact-mode');
-        var is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');
+        let is_compact_mode = $(this).closest('#checklistapi-checklist-form').hasClass('compact-mode');
         $(this)
           .text(is_compact_mode ? Drupal.t('Show item descriptions') : Drupal.t('Hide item descriptions'))
           .attr('title', is_compact_mode ? Drupal.t('Expand layout to include item descriptions.') : Drupal.t('Compress layout by hiding item descriptions.'));
@@ -70,7 +71,7 @@
       return $('#checklistapi-checklist-form :checkbox.checklistapi-item').serializeArray().toString();
     },
     attach: function () {
-      var beginningState = this.getFormState();
+      const beginningState = this.getFormState();
       $(window).bind('beforeunload', function () {
         var endingState = Drupal.behaviors.checklistapiPromptBeforeLeaving.getFormState();
         if (beginningState !== endingState) {
