@@ -35,13 +35,14 @@ interface ChecklistInterface extends PluginInspectionInterface {
   public function getItems(?string $group = NULL) : array;
 
   /**
-   * Returns the percentage of the items that have been marked complete.
+   * Returns the current progress of the checklist.
    *
-   * @return float
-   *   The percentage of the checklist's items (across all groups) that have
-   *   been marked as complete.
+   * @return int[]
+   *   An array of two integers: the number of items in the checklist that have
+   *   been marked complete, and the total number of items in the checklist (in
+   *   that order).
    */
-  public function getPercentComplete() : float;
+  public function getProgress() : array;
 
   /**
    * Indicates if a particular item in the checklist is marked complete.
