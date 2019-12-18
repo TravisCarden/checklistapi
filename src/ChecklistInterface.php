@@ -3,6 +3,7 @@
 namespace Drupal\checklistapi;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -65,8 +66,13 @@ interface ChecklistInterface extends PluginInspectionInterface {
    *   The item's group.
    * @param string $item
    *   The item's machine name.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) The user account which is completing the item. Defaults to
+   *   the current user.
+   * @param array $data
+   *   (optional) Any additional information to be stored.
    */
-  public function setComplete(string $group, string $item) : void;
+  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) : void;
 
   /**
    * Marks an item as incomplete.
