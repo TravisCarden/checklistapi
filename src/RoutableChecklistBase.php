@@ -18,6 +18,8 @@ abstract class RoutableChecklistBase extends ChecklistBase implements RoutableCh
   public function access($operation, AccountInterface $account = NULL, $as_object = FALSE) {
     $id = $this->getPluginId();
 
+    $account = $account ?: \Drupal::currentUser();
+
     $can_view = AccessResult::allowedIfHasPermissions($account, [
       'view any checklistapi checklist',
       "view $id checklistapi checklist",
@@ -49,7 +51,13 @@ abstract class RoutableChecklistBase extends ChecklistBase implements RoutableCh
    */
   public function getRoute() : ?Route {
     $plugin_definition = $this->getPluginDefinition();
-    return new Route($plugin_definition['path']);
+
+    if ($plugin_definition['path']) {
+      return new Route($plugin_definition['path']);
+    }
+    else {
+      return NULL;
+    }
   }
 
   /**
@@ -58,13 +66,13 @@ abstract class RoutableChecklistBase extends ChecklistBase implements RoutableCh
   public function getMenuLink() : ?array {
     $plugin_definition = $this->getPluginDefinition();
 
-    $link = [
-      'menu_name' => $plugin_definition['menu_name'],
-    ];
+    if ($plugin_definition['menu_name']) {
+      $link['menu_name'] = $plugin_definition['menu_name'];
+    }
     if ($plugin_definition['description'] instanceof TranslatableMarkup) {
       $link['description'] = $plugin_definition['description'];
     }
-    return $link;
+    return $link ?? NULL;
   }
 
   /**
@@ -72,7 +80,7 @@ abstract class RoutableChecklistBase extends ChecklistBase implements RoutableCh
    */
   public function getHelp() : ?TranslatableMarkup {
     $plugin_definition = $this->getPluginDefinition();
-    return $plugin_definition['help'];
+    return $plugin_definition['help'] ?? NULL;
   }
 
 }

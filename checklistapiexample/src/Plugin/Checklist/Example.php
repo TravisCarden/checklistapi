@@ -2,7 +2,7 @@
 
 namespace Drupal\checklistapiexample\Plugin\Checklist;
 
-use Drupal\checklistapi\ChecklistBase;
+use Drupal\checklistapi\RoutableChecklistBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
@@ -14,9 +14,11 @@ use Drupal\Core\Url;
  *   title = @Translation("Checklist API example"),
  *   storage = "checklistapi_storage.state",
  *   path = "/admin/config/development/checklistapi-example",
+ *   description = @Translation("An example implementation of the Checklist API."),
+ *   help = @Translation("<p>This checklist based on <a href='http://buytaert.net/drupal-learning-curve'>Dries Buytaert's Drupal learning curve</a> is an example implementation of the <a href='http://drupal.org/project/checklistapi'>Checklist API</a>.</p>"),
  * )
  */
-final class Example extends ChecklistBase {
+final class Example extends RoutableChecklistBase {
 
   use StringTranslationTrait;
 
