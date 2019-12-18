@@ -13,6 +13,7 @@ use Drupal\Core\Url;
  *   id = "example_checklist",
  *   title = @Translation("Checklist API example"),
  *   storage = "checklistapi_storage.state",
+ *   path = "/admin/config/development/checklistapi-example",
  * )
  */
 final class Example extends ChecklistBase {
