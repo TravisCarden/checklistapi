@@ -5,6 +5,7 @@ namespace Drupal\checklistapi;
 use Drupal\checklistapi\Storage\StorageInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -112,9 +113,14 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
   /**
    * {@inheritdoc}
    */
-  public function setComplete(string $group, string $item) : void {
+  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) : void {
+    $account = $account ?: \Drupal::currentUser();
+    $data += [
+      'uid' => $account->id(),
+    ];
+
     $progress = $this->storage->getSavedProgress();
-    $progress[$group][$item] = TRUE;
+    $progress[$group][$item] = $data;
     $this->storage->setSavedProgress($progress);
   }
 
