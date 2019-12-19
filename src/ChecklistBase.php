@@ -3,6 +3,7 @@
 namespace Drupal\checklistapi;
 
 use Drupal\checklistapi\Storage\StorageInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
@@ -151,12 +152,13 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
    */
   public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) : void {
     $account = $account ?: \Drupal::currentUser();
-    $data += [
-      'uid' => $account->id(),
-    ];
 
     $progress = $this->storage->getSavedProgress();
-    $progress[$group][$item] = $data;
+    $progress[$group][$item] = [
+      'uid' => $account->id(),
+      'time' => $this->time()->getRequestTime(),
+      'data' => $data,
+    ];
     $this->storage->setSavedProgress($progress);
   }
 
@@ -167,6 +169,21 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
     $progress = $this->storage->getSavedProgress();
     unset($progress[$group][$item]);
     $this->storage->setSavedProgress($progress);
+  }
+
+  /**
+   * Returns the time service.
+   *
+   * @return \Drupal\Component\Datetime\TimeInterface
+   *   The time service.
+   */
+  private function time() : TimeInterface {
+    if (isset($this->time) && $this->time instanceof TimeInterface) {
+      return $this->time;
+    }
+    else {
+      return \Drupal::time();
+    }
   }
 
 }
