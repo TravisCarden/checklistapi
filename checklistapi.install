@@ -5,8 +5,8 @@
  * Install, update, and uninstall functions for the Checklist API module.
  */
 
-use Drupal\Core\Render\Element;
 use Drupal\checklistapi\ChecklistapiChecklist;
+use Drupal\Core\Render\Element;
 
 /**
  * Update saved progress configuration to new schema.

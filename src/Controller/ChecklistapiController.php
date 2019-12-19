@@ -3,8 +3,8 @@
 namespace Drupal\checklistapi\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Controller for Checklist API.

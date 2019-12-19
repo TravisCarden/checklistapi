@@ -13,8 +13,6 @@ class ChecklistapiChecklist {
 
   /**
    * The configuration key for saved progress.
-   *
-   * @deprecated since version 8.x-1.9, to be removed in 8.x-2.0.
    */
   const PROGRESS_CONFIG_KEY = 'progress';
 
@@ -99,8 +97,6 @@ class ChecklistapiChecklist {
    * The configuration object for saving progress.
    *
    * @var \Drupal\Core\Config\Config
-   *
-   * @deprecated since version 8.x-1.9, to be removed in 8.x-2.0.
    */
   public $config;
 
