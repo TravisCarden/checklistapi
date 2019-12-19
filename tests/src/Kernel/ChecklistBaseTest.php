@@ -24,11 +24,23 @@ class ChecklistBaseTest extends KernelTestBase {
     'checklistapiexample',
   ];
 
+  private $storage;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->storage = $this->prophesize(StorageInterface::class);
+  }
+
   private function getChecklist() {
-    return Example::create($this->container, [], 'example', [
+    $plugin_definition = [
       'title' => t('Checklist API example'),
       'storage' => 'checklistapi_storage.config',
-    ]);
+    ];
+    $this->storage->setChecklistId('example')->shouldBeCalled();
+    return new Example([], 'example', $plugin_definition, $this->storage->reveal());
   }
 
   public function providerAccess() {
@@ -41,14 +53,14 @@ class ChecklistBaseTest extends KernelTestBase {
    * @dataProvider providerAccess
    */
   public function testAccess() {
-    $this->assertTrue(TRUE);
+    // Not implemented yet...
   }
 
   /**
    * @covers ::getTitle
    */
   public function testGetTitle() {
-    $this->assertEqual('Checklist API example', $this->getChecklist()->getTitle());
+    $this->assertEquals('Checklist API example', $this->getChecklist()->getTitle());
   }
 
   /**
@@ -76,27 +88,20 @@ class ChecklistBaseTest extends KernelTestBase {
    * @covers ::getProgress
    */
   public function testGetProgress() {
-    $storage = $this->prophesize(StorageInterface::class);
-    $storage->setChecklistId('example')->shouldBeCalled();
-    $storage->getSavedProgress()->willReturn([]);
-
-    $checklist = new Example([], 'example', [], $storage->reveal());
-    $this->assertSame([0, 18], $checklist->getProgress());
+    $this->storage->getSavedProgress()->willReturn([]);
+    $this->assertSame([0, 18], $this->getChecklist()->getProgress());
   }
 
   /**
    * @covers ::isComplete
    */
   public function testIsComplete() {
-    $storage = $this->prophesize(StorageInterface::class);
-    $storage->setChecklistId('example')->shouldBeCalled();
-    $storage->getSavedProgress()->willReturn([
+    $this->storage->getSavedProgress()->shouldBeCalled()->willReturn([
       'i_suck' => [
         'node_system' => TRUE,
       ],
     ]);
-
-    $checklist = new Example([], 'example', [], $storage->reveal());
+    $checklist = $this->getChecklist();
     $this->assertTrue($checklist->isComplete('i_suck', 'node_system'));
     $this->assertFalse($checklist->isComplete('i_suck', 'block_system'));
   }
@@ -113,10 +118,8 @@ class ChecklistBaseTest extends KernelTestBase {
 
     $data = ['name' => 'Batman'];
 
-    $storage = $this->prophesize(StorageInterface::class);
-    $storage->setChecklistId('example')->shouldBeCalled();
-    $storage->getSavedProgress()->willReturn([]);
-    $storage->setSavedProgress([
+    $this->storage->getSavedProgress()->willReturn([])->shouldBeCalled();
+    $this->storage->setSavedProgress([
       'i_kick_butt' => [
         'content_types_views' => [
           'uid' => 35,
@@ -126,7 +129,7 @@ class ChecklistBaseTest extends KernelTestBase {
       ],
     ])->shouldBeCalled();
 
-    $checklist = new Example([], 'example', [], $storage->reveal());
+    $checklist = $this->getChecklist();
     $checklist->time = $time->reveal();
     $checklist->setComplete('i_kick_butt', 'content_types_views', $account->reveal(), $data);
   }
@@ -135,9 +138,7 @@ class ChecklistBaseTest extends KernelTestBase {
    * @covers ::setIncomplete
    */
   public function testSetIncomplete() {
-    $storage = $this->prophesize(StorageInterface::class);
-    $storage->setChecklistId('example')->shouldBeCalled();
-    $storage->getSavedProgress()->willReturn([
+    $this->storage->getSavedProgress()->shouldBeCalled()->willReturn([
       'i_kick_butt' => [
         'content_types_views' => [
           'uid' => 35,
@@ -148,12 +149,11 @@ class ChecklistBaseTest extends KernelTestBase {
         ],
       ],
     ]);
-    $storage->setSavedProgress([
+    $this->storage->setSavedProgress([
       'i_kick_butt' => [],
     ])->shouldBeCalled();
 
-    $checklist = new Example([], 'example', [], $storage->reveal());
-    $checklist->setIncomplete('i_kick_butt', 'content_types_views');
+    $this->getChecklist()->setIncomplete('i_kick_butt', 'content_types_views');
   }
 
 }
