@@ -105,7 +105,7 @@ function checklistapi_compact_mode_is_on() {
  */
 function checklistapi_get_checklist_info($id = NULL) {
   $definitions = &drupal_static(__FUNCTION__);
-  if ($definitions !== NULL) {
+  if (!is_array($definitions)) {
     // Get definitions.
     $definitions = \Drupal::moduleHandler()->invokeAll('checklistapi_checklist_info');
     foreach ($definitions as $key => $value) {
