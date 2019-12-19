@@ -116,12 +116,13 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
   /**
    * {@inheritdoc}
    */
-  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) {
-    $account = $account ?: \Drupal::currentUser();
-
+  public function setComplete(string $group, string $item, array $data = []) {
     $progress = $this->storage->getSavedProgress();
+
+    // Record the current user ID and time, so we know who completed this item
+    // and when they did it.
     $progress[$group][$item] = [
-      'uid' => $account->id(),
+      'uid' => $this->currentUser()->id(),
       'time' => $this->time()->getRequestTime(),
       'data' => $data,
     ];
@@ -149,6 +150,21 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
     }
     else {
       return \Drupal::time();
+    }
+  }
+
+  /**
+   * Returns the current user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The current user.
+   */
+  private function currentUser() : AccountInterface {
+    if (isset($this->currentUser) && $this->currentUser instanceof AccountInterface) {
+      return $this->currentUser;
+    }
+    else {
+      return \Drupal::currentUser();
     }
   }
 

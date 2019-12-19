@@ -126,8 +126,9 @@ class ChecklistBaseTest extends KernelTestBase {
     ])->shouldBeCalled();
 
     $checklist = $this->getChecklist();
+    $checklist->currentUser = $account->reveal();
     $checklist->time = $time->reveal();
-    $checklist->setComplete('i_kick_butt', 'content_types_views', $account->reveal(), $data);
+    $checklist->setComplete('i_kick_butt', 'content_types_views', $data);
   }
 
   /**
