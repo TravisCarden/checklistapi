@@ -33,7 +33,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    * @throws \InvalidArgumentException
    *   If the requested group does not exist.
    */
-  public function getItems(?string $group = NULL) : array;
+  public function getItems(string $group = NULL) : array;
 
   /**
    * Returns the current progress of the checklist.
