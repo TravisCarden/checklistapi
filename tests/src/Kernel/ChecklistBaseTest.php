@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\checklistapi\Kernel;
 
+use Drupal\checklistapi\ChecklistInterface;
 use Drupal\checklistapi\Storage\StorageInterface;
 use Drupal\checklistapiexample\Plugin\Checklist\Example;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\checklistapi\ChecklistBase
@@ -16,14 +18,23 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ChecklistBaseTest extends KernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'checklistapi',
     'checklistapiexample',
+    'system',
+    'user',
   ];
 
+  /**
+   * A mocked checklist storage backend.
+   *
+   * @var \Drupal\checklistapi\Storage\StorageInterface|\Prophecy\Prophecy\ObjectProphecy
+   */
   private $storage;
 
   /**
@@ -31,10 +42,16 @@ class ChecklistBaseTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
+    $this->installSchema('system', 'sequences');
+    $this->installConfig('user');
+    $this->installEntitySchema('user');
     $this->storage = $this->prophesize(StorageInterface::class);
   }
 
-  private function getChecklist() {
+  /**
+   * Instantiates the example checklist for testing.
+   */
+  private function getChecklist() : ChecklistInterface {
     $plugin_definition = [
       'title' => t('Checklist API example'),
       'storage' => 'checklistapi_storage.config',
@@ -43,8 +60,13 @@ class ChecklistBaseTest extends KernelTestBase {
     return new Example([], 'example', $plugin_definition, $this->storage->reveal());
   }
 
+  /**
+   * Data provider for ::testAccess().
+   */
   public function providerAccess() {
-    return [];
+    return [
+      'no permissions' => [[], 'view', FALSE],
+    ];
   }
 
   /**
@@ -52,8 +74,10 @@ class ChecklistBaseTest extends KernelTestBase {
    *
    * @dataProvider providerAccess
    */
-  public function testAccess() {
-    // Not implemented yet...
+  public function testAccess(array $permissions, $operation, $expected_access) {
+    // Ensure that the user is not user 1, since that's god mode.
+    $account = $this->createUser($permissions, NULL, FALSE, ['uid' => 35]);
+    $this->assertSame($expected_access, $this->getChecklist()->access($operation, $account));
   }
 
   /**
