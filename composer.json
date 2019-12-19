@@ -4,6 +4,13 @@
     "description": "Provides an API for creating fillable, persistent checklists.",
     "homepage": "http://drupal.org/project/checklistapi",
     "license": "GPL-2.0-or-later",
+    "require": {},
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
     "support": {
         "issues": "https://www.drupal.org/project/issues/checklistapi",
         "source": "https://git.drupalcode.org/project/checklistapi"

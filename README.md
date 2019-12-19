@@ -1,5 +1,7 @@
 # Checklist API
 
+[![Build Status](https://travis-ci.org/TravisCarden/checklistapi.svg?branch=8.x-1.x)](https://travis-ci.org/TravisCarden/checklistapi)
+
 ## Contents of This File
 
 - [Introduction](#introduction)
