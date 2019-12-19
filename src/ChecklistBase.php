@@ -5,8 +5,6 @@ namespace Drupal\checklistapi;
 use Drupal\checklistapi\Storage\StorageInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Access\AccessibleInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
@@ -16,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a base class for checklist plugins.
  */
-abstract class ChecklistBase extends PluginBase implements AccessibleInterface, ChecklistInterface, ContainerFactoryPluginInterface {
+abstract class ChecklistBase extends PluginBase implements ChecklistInterface, ContainerFactoryPluginInterface {
 
   /**
    * The progress storage backend.
@@ -64,40 +62,6 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
    * @see callback_checklistapi_checklist_items()
    */
   abstract protected function items() : array;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access($operation, AccountInterface $account = NULL, $as_object = FALSE) {
-    $id = $this->getPluginId();
-    $account = $account ?: \Drupal::currentUser();
-
-    $can_view = AccessResult::allowedIfHasPermissions($account, [
-      'view any checklistapi checklist',
-      "view $id checklistapi checklist",
-    ], 'OR');
-
-    $can_edit = AccessResult::allowedIfHasPermissions($account, [
-      'edit any checklistapi checklist',
-      "edit $id checklistapi checklist",
-    ], 'OR');
-
-    switch ($operation) {
-      case 'view':
-        $access = $can_view;
-        break;
-
-      case 'edit':
-        $access = $can_edit;
-        break;
-
-      default:
-        $access = $can_view->orIf($can_edit);
-        break;
-    }
-
-    return $as_object ? $access : $access->isAllowed();
-  }
 
   /**
    * {@inheritdoc}

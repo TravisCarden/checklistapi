@@ -9,7 +9,6 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\checklistapi\ChecklistBase
@@ -18,16 +17,12 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  */
 class ChecklistBaseTest extends KernelTestBase {
 
-  use UserCreationTrait;
-
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'checklistapi',
     'checklistapiexample',
-    'system',
-    'user',
   ];
 
   /**
@@ -42,9 +37,6 @@ class ChecklistBaseTest extends KernelTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'sequences');
-    $this->installConfig('user');
-    $this->installEntitySchema('user');
     $this->storage = $this->prophesize(StorageInterface::class);
   }
 
@@ -58,26 +50,6 @@ class ChecklistBaseTest extends KernelTestBase {
     ];
     $this->storage->setChecklistId('example')->shouldBeCalled();
     return new Example([], 'example', $plugin_definition, $this->storage->reveal());
-  }
-
-  /**
-   * Data provider for ::testAccess().
-   */
-  public function providerAccess() {
-    return [
-      'no permissions' => [[], 'view', FALSE],
-    ];
-  }
-
-  /**
-   * @covers ::access
-   *
-   * @dataProvider providerAccess
-   */
-  public function testAccess(array $permissions, $operation, $expected_access) {
-    // Ensure that the user is not user 1, since that's god mode.
-    $account = $this->createUser($permissions, NULL, FALSE, ['uid' => 35]);
-    $this->assertSame($expected_access, $this->getChecklist()->access($operation, $account));
   }
 
   /**
