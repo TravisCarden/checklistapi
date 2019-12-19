@@ -109,7 +109,7 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
   /**
    * {@inheritdoc}
    */
-  public function getItems(?string $group = NULL) : array {
+  public function getItems(string $group = NULL) : array {
     $items = $this->items();
 
     if (isset($group)) {
