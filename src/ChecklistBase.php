@@ -8,6 +8,7 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -130,6 +131,7 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
    */
   public function getProgress() : array {
     $reductor = function (int $total, array $group) {
+      $group = Element::children($group);
       return $total + count($group);
     };
 
@@ -150,7 +152,7 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
   /**
    * {@inheritdoc}
    */
-  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) : void {
+  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) {
     $account = $account ?: \Drupal::currentUser();
 
     $progress = $this->storage->getSavedProgress();
@@ -165,7 +167,7 @@ abstract class ChecklistBase extends PluginBase implements AccessibleInterface, 
   /**
    * {@inheritdoc}
    */
-  public function setIncomplete(string $group, string $item) : void {
+  public function setIncomplete(string $group, string $item) {
     $progress = $this->storage->getSavedProgress();
     unset($progress[$group][$item]);
     $this->storage->setSavedProgress($progress);

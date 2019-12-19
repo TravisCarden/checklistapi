@@ -72,7 +72,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    * @param array $data
    *   (optional) Any additional information to be stored.
    */
-  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []) : void;
+  public function setComplete(string $group, string $item, AccountInterface $account = NULL, array $data = []);
 
   /**
    * Marks an item as incomplete.
@@ -82,6 +82,6 @@ interface ChecklistInterface extends PluginInspectionInterface {
    * @param string $item
    *   The item's machine name.
    */
-  public function setIncomplete(string $group, string $item) : void;
+  public function setIncomplete(string $group, string $item);
 
 }
