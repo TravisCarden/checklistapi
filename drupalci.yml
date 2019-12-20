@@ -6,6 +6,8 @@ build:
       csslint:
       eslint:
       phpcs:
+      phpstan:
+        halt-on-fail: false
     testing:
       run_tests.standard:
         types: 'Simpletest,PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional'

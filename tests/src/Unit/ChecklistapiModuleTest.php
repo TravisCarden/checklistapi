@@ -99,7 +99,9 @@ class ChecklistapiModuleTest extends UnitTestCase {
    * Tests that checklistapi_checklist_access() rejects an invalid mode.
    */
   public function testChecklistapiChecklistAccessInvalidMode() {
-    $this->setExpectedException(\InvalidArgumentException::class, 'No such operation "invalid operation');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('No such operation "invalid operation');
+
     checklistapi_checklist_access(NULL, 'invalid operation');
   }
 

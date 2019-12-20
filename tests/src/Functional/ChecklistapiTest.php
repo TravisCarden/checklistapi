@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\checklistapi\Tests;
+namespace Drupal\Tests\checklistapi\Functional;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Functionally tests Checklist API.
@@ -13,17 +13,22 @@ use Drupal\simpletest\WebTestBase;
  * @todo Add tests for saving and retrieving checklist progress.
  * @todo Add tests for clearing saved progress.
  */
-class ChecklistapiTest extends WebTestBase {
+class ChecklistapiTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'checklistapi',
     'checklistapiexample',
     'help',
     'block',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * A user object with permission to edit any checklist.
@@ -34,6 +39,8 @@ class ChecklistapiTest extends WebTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUp() {
     parent::setUp();
@@ -49,40 +56,48 @@ class ChecklistapiTest extends WebTestBase {
 
   /**
    * Tests checklist access.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testChecklistAccess() {
+    // Assert that access is granted to a user with "edit any checklistapi
+    // checklist" permission.
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(200, 'Granted access to user with "edit any checklistapi checklist" permission.');
+    $this->assertResponse(200);
 
+    // Assert that access is granted to a user with checklist-specific
+    // permission.
     $permissions = ['edit example_checklist checklistapi checklist'];
     $semi_privileged_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($semi_privileged_user);
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(200, 'Granted access to user with checklist-specific permission.');
+    $this->assertResponse(200);
 
+    // Assert that access is denied to a non-privileged user.
     $this->drupalLogout();
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(403, 'Denied access to non-privileged user.');
+    $this->assertResponse(403);
   }
 
   /**
    * Tests checklist composition.
    */
   public function testChecklistComposition() {
+    // Assert that a per-checklist help block is created.
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertRaw('This checklist based on', 'Created per-checklist help block.');
+    $this->assertRaw('This checklist based on');
   }
 
   /**
    * Tests permissions.
    */
   public function testPermissions() {
-    $this->assertTrue($this->checkPermissions([
+    self::assertTrue($this->checkPermissions([
       'view checklistapi checklists report',
       'view any checklistapi checklist',
       'edit any checklistapi checklist',
     ]), 'Created universal permissions.');
-    $this->assertTrue($this->checkPermissions([
+    self::assertTrue($this->checkPermissions([
       'view example_checklist checklistapi checklist',
       'edit example_checklist checklistapi checklist',
     ]), 'Created per-checklist permissions.');
