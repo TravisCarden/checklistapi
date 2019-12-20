@@ -3,7 +3,7 @@
 namespace Drupal\checklistapi\Storage;
 
 /**
- * Provides a base storage implementation for others to extend.
+ * Provides a base storage implementation.
  */
 abstract class StorageBase implements StorageInterface {
 
@@ -23,10 +23,7 @@ abstract class StorageBase implements StorageInterface {
    * @return self
    *   The storage object.
    */
-  public function setChecklistId($id) {
-    if (!is_string($id)) {
-      throw new \InvalidArgumentException('A checklist ID must be a string.');
-    }
+  public function setChecklistId(string $id): self {
     $this->checklistId = $id;
     return $this;
   }
@@ -37,7 +34,7 @@ abstract class StorageBase implements StorageInterface {
    * @return string
    *   Returns the checklist ID.
    */
-  protected function getChecklistId() {
+  protected function getChecklistId(): string {
     if (empty($this->checklistId)) {
       throw new \LogicException('You must set the checklist ID before accessing saved progress.');
     }

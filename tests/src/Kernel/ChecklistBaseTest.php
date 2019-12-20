@@ -17,6 +17,8 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ChecklistBaseTest extends KernelTestBase {
 
+  const CHECKLIST_ID = 'example';
+
   /**
    * {@inheritdoc}
    */
@@ -26,11 +28,25 @@ class ChecklistBaseTest extends KernelTestBase {
   ];
 
   /**
-   * A mocked checklist storage backend.
+   * The checklist storage backend.
    *
    * @var \Drupal\checklistapi\Storage\StorageInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   private $storage;
+
+  /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface|\Prophecy\Prophecy\ObjectProphecy
+   */
+  private $time;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface|\Prophecy\Prophecy\ObjectProphecy
+   */
+  private $user;
 
   /**
    * {@inheritdoc}
@@ -38,32 +54,43 @@ class ChecklistBaseTest extends KernelTestBase {
   protected function setUp() {
     parent::setUp();
     $this->storage = $this->prophesize(StorageInterface::class);
+    $this->storage
+      ->setChecklistId(static::CHECKLIST_ID)
+      ->shouldBeCalled();
+    $this->time = $this->prophesize(TimeInterface::class);
+    $this->user = $this->prophesize(AccountInterface::class);
   }
 
   /**
    * Instantiates the example checklist for testing.
    */
-  private function getChecklist() : ChecklistInterface {
+  private function createChecklist(): ChecklistInterface {
     $plugin_definition = [
       'title' => t('Checklist API example'),
       'storage' => 'checklistapi_storage.config',
     ];
-    $this->storage->setChecklistId('example')->shouldBeCalled();
-    return new Example([], 'example', $plugin_definition, $this->storage->reveal());
+    /** @var \Drupal\checklistapi\Storage\StorageInterface $storage */
+    $storage = $this->storage->reveal();
+    /** @var \Drupal\Component\Datetime\TimeInterface $time */
+    $time = $this->time->reveal();
+    /** @var \Drupal\Core\Session\AccountInterface $user */
+    $user = $this->user->reveal();
+    return new Example([], 'example', $plugin_definition, $storage, $time, $user);
   }
 
   /**
    * @covers ::getTitle
    */
   public function testGetTitle() {
-    $this->assertEquals('Checklist API example', $this->getChecklist()->getTitle());
+    $this->assertEquals('Checklist API example', $this->createChecklist()
+      ->getTitle());
   }
 
   /**
    * @covers ::getItems
    */
   public function testGetItems() {
-    $checklist = $this->getChecklist();
+    $checklist = $this->createChecklist();
 
     $items = $checklist->getItems();
     $this->assertCount(5, Element::children($items['i_suck']));
@@ -85,7 +112,7 @@ class ChecklistBaseTest extends KernelTestBase {
    */
   public function testGetProgress() {
     $this->storage->getSavedProgress()->willReturn([]);
-    $this->assertSame([0, 18], $this->getChecklist()->getProgress());
+    $this->assertSame([0, 18], $this->createChecklist()->getProgress());
   }
 
   /**
@@ -97,7 +124,7 @@ class ChecklistBaseTest extends KernelTestBase {
         'node_system' => TRUE,
       ],
     ]);
-    $checklist = $this->getChecklist();
+    $checklist = $this->createChecklist();
     $this->assertTrue($checklist->isComplete('i_suck', 'node_system'));
     $this->assertFalse($checklist->isComplete('i_suck', 'block_system'));
   }
@@ -106,15 +133,18 @@ class ChecklistBaseTest extends KernelTestBase {
    * @covers ::setComplete
    */
   public function testSetComplete() {
-    $account = $this->prophesize(AccountInterface::class);
-    $account->id()->willReturn(35)->shouldBeCalled();
-
-    $time = $this->prophesize(TimeInterface::class);
-    $time->getRequestTime()->willReturn(2600)->shouldBeCalled();
+    $this->user->id()
+      ->willReturn(35)
+      ->shouldBeCalled();
+    $this->time->getRequestTime()
+      ->willReturn(2600)
+      ->shouldBeCalled();
 
     $data = ['name' => 'Batman'];
 
-    $this->storage->getSavedProgress()->willReturn([])->shouldBeCalled();
+    $this->storage->getSavedProgress()
+      ->willReturn([])
+      ->shouldBeCalled();
     $this->storage->setSavedProgress([
       'i_kick_butt' => [
         'content_types_views' => [
@@ -125,9 +155,7 @@ class ChecklistBaseTest extends KernelTestBase {
       ],
     ])->shouldBeCalled();
 
-    $checklist = $this->getChecklist();
-    $checklist->currentUser = $account->reveal();
-    $checklist->time = $time->reveal();
+    $checklist = $this->createChecklist();
     $checklist->setComplete('i_kick_butt', 'content_types_views', $data);
   }
 
@@ -135,22 +163,26 @@ class ChecklistBaseTest extends KernelTestBase {
    * @covers ::setIncomplete
    */
   public function testSetIncomplete() {
-    $this->storage->getSavedProgress()->shouldBeCalled()->willReturn([
-      'i_kick_butt' => [
-        'content_types_views' => [
-          'uid' => 35,
-          'time' => 2600,
-          'data' => [
-            'name' => 'Batman',
+    $this->storage
+      ->getSavedProgress()
+      ->shouldBeCalled()
+      ->willReturn([
+        'i_kick_butt' => [
+          'content_types_views' => [
+            'uid' => 35,
+            'time' => 2600,
+            'data' => [
+              'name' => 'Batman',
+            ],
           ],
         ],
-      ],
-    ]);
+      ]);
     $this->storage->setSavedProgress([
       'i_kick_butt' => [],
     ])->shouldBeCalled();
 
-    $this->getChecklist()->setIncomplete('i_kick_butt', 'content_types_views');
+    $this->createChecklist()
+      ->setIncomplete('i_kick_butt', 'content_types_views');
   }
 
 }

@@ -59,7 +59,7 @@ class ChecklistapiChecklist {
   public $menuName;
 
   /**
-   * The storage backend for saved progress.
+   * The checklist storage backend.
    *
    * @var \Drupal\checklistapi\Storage\StorageInterface
    */

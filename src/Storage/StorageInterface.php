@@ -3,7 +3,7 @@
 namespace Drupal\checklistapi\Storage;
 
 /**
- * Provides an interface for checklist storage.
+ * Provides an interface for progress storage.
  */
 interface StorageInterface {
 
@@ -13,7 +13,7 @@ interface StorageInterface {
    * @param string $id
    *   The checklist ID.
    */
-  public function setChecklistId($id);
+  public function setChecklistId(string $id);
 
   /**
    * Gets the saved checklist progress.
