@@ -16,7 +16,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The title of the checklist.
    */
-  public function getTitle() : TranslatableMarkup;
+  public function getTitle(): TranslatableMarkup;
 
   /**
    * Returns the items in the checklist, optionally limited to a single group.
@@ -32,7 +32,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    * @throws \InvalidArgumentException
    *   If the requested group does not exist.
    */
-  public function getItems(string $group = NULL) : array;
+  public function getItems(string $group = NULL): array;
 
   /**
    * Returns the current progress of the checklist.
@@ -42,7 +42,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    *   been marked complete, and the total number of items in the checklist (in
    *   that order).
    */
-  public function getProgress() : array;
+  public function getProgress(): array;
 
   /**
    * Indicates if a particular item in the checklist is marked complete.
@@ -56,7 +56,7 @@ interface ChecklistInterface extends PluginInspectionInterface {
    *   TRUE if them item has been marked as complete; FALSE otherwise, or if the
    *   item is not known.
    */
-  public function isComplete(string $group, string $item) : bool;
+  public function isComplete(string $group, string $item): bool;
 
   /**
    * Marks an item as complete.

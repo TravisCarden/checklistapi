@@ -17,14 +17,28 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class ChecklistBase extends PluginBase implements ChecklistInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The progress storage backend.
+   * The checklist storage backend.
    *
    * @var \Drupal\checklistapi\Storage\StorageInterface
    */
   private $storage;
 
   /**
-   * ChecklistBase constructor.
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  private $time;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  private $user;
+
+  /**
+   * Constructs an instance.
    *
    * @param array $configuration
    *   The plugin configuration.
@@ -34,22 +48,36 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
    *   The plugin definition.
    * @param \Drupal\checklistapi\Storage\StorageInterface $storage
    *   The progress storage backend.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StorageInterface $storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, StorageInterface $storage, TimeInterface $time, AccountInterface $user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $storage->setChecklistId($plugin_id);
     $this->storage = $storage;
+    $this->time = $time;
+    $this->user = $user;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    /** @var \Drupal\checklistapi\Storage\StorageInterface $storage */
+    $storage = $container->get($plugin_definition['storage']);
+    /** @var \Drupal\Component\Datetime\TimeInterface $time */
+    $time = $container->get('datetime.time');
+    /** @var \Drupal\Core\Session\AccountInterface $user */
+    $user = $container->get('current_user');
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get($plugin_definition['storage'])
+      $storage,
+      $time,
+      $user
     );
   }
 
@@ -61,12 +89,12 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
    *
    * @see callback_checklistapi_checklist_items()
    */
-  abstract protected function items() : array;
+  abstract protected function items(): array;
 
   /**
    * {@inheritdoc}
    */
-  public function getTitle() : TranslatableMarkup {
+  public function getTitle(): TranslatableMarkup {
     $plugin_definition = $this->getPluginDefinition();
     return $plugin_definition['title'];
   }
@@ -74,41 +102,39 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
   /**
    * {@inheritdoc}
    */
-  public function getItems(string $group = NULL) : array {
+  public function getItems(string $group = NULL): array {
     $items = $this->items();
 
-    if (isset($group)) {
-      if (array_key_exists($group, $items)) {
-        return $items[$group];
-      }
-      else {
-        throw new \InvalidArgumentException("Unknown group: '$group'");
-      }
-    }
-    else {
+    if (!$group) {
       return $items;
     }
+
+    if (!array_key_exists($group, $items)) {
+      throw new \InvalidArgumentException("Unknown group: '$group'");
+    }
+
+    return $items[$group];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getProgress() : array {
-    $reductor = function (int $total, array $group) {
+  public function getProgress(): array {
+    $reducer = static function (int $total, array $group) {
       $group = Element::children($group);
       return $total + count($group);
     };
 
     return [
-      array_reduce($this->storage->getSavedProgress(), $reductor, 0),
-      array_reduce($this->getItems(), $reductor, 0),
+      array_reduce($this->storage->getSavedProgress(), $reducer, 0),
+      array_reduce($this->getItems(), $reducer, 0),
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isComplete(string $group, string $item) : bool {
+  public function isComplete(string $group, string $item): bool {
     $progress = $this->storage->getSavedProgress();
     return isset($progress[$group][$item]);
   }
@@ -119,11 +145,10 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
   public function setComplete(string $group, string $item, array $data = []) {
     $progress = $this->storage->getSavedProgress();
 
-    // Record the current user ID and time, so we know who completed this item
-    // and when they did it.
+    // Record the user who completed the item and when.
     $progress[$group][$item] = [
-      'uid' => $this->currentUser()->id(),
-      'time' => $this->time()->getRequestTime(),
+      'uid' => $this->user->id(),
+      'time' => $this->time->getRequestTime(),
       'data' => $data,
     ];
     $this->storage->setSavedProgress($progress);
@@ -136,36 +161,6 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
     $progress = $this->storage->getSavedProgress();
     unset($progress[$group][$item]);
     $this->storage->setSavedProgress($progress);
-  }
-
-  /**
-   * Returns the time service.
-   *
-   * @return \Drupal\Component\Datetime\TimeInterface
-   *   The time service.
-   */
-  private function time() : TimeInterface {
-    if (isset($this->time) && $this->time instanceof TimeInterface) {
-      return $this->time;
-    }
-    else {
-      return \Drupal::time();
-    }
-  }
-
-  /**
-   * Returns the current user.
-   *
-   * @return \Drupal\Core\Session\AccountInterface
-   *   The current user.
-   */
-  private function currentUser() : AccountInterface {
-    if (isset($this->currentUser) && $this->currentUser instanceof AccountInterface) {
-      return $this->currentUser;
-    }
-    else {
-      return \Drupal::currentUser();
-    }
   }
 
 }
