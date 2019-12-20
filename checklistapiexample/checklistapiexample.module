@@ -5,9 +5,9 @@
  * An example implementation of the Checklist API.
  */
 
+use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\checklistapi\ChecklistapiChecklist;
 
 /**
  * Implements hook_checklistapi_checklist_info().
