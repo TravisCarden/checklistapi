@@ -227,77 +227,77 @@ function checklistapiexample_checklistapi_checklist_items() {
  * .
  */
 function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
-  $definitions['example_checklist']['#help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
-  $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
-  $definitions['example_checklist']['i_kick_butt']['advanced_tasks'] += $definitions['example_checklist']['i_kick_butt']['development'];
-  unset($definitions['example_checklist']['i_kick_butt']['development']);
-  $definitions['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
-  unset($definitions['example_checklist']['i_kick_butt']['chx_or_unconed']);
-  $definitions['example_checklist']['core_contributor'] = [
-    '#title' => t("I'm a core contributor"),
-    'contribute_core_code' => [
-      '#title' => t('Contribute code and patches to Drupal core'),
-      'handbook_page' => [
-        '#text' => t('Core contribution mentoring (core office hours)'),
-        '#url' => Url::fromUri('http://drupal.org/core-office-hours'),
-      ],
-      'issue_queue' => [
-        '#text' => t('Core issue queue'),
-        '#url' => Url::fromUri('http://drupal.org/project/issues/drupal'),
-      ],
-    ],
-    'unit_tests' => [
-      '#title' => t('Write unit tests to get own patch committed.'),
-      'handbook_page' => [
-        '#text' => t('Unit Testing with Simpletest'),
-        '#url' => Url::fromUri('http://drupal.org/node/811254'),
-      ],
-    ],
-    'review_core_patches' => [
-      '#title' => t("Review other people's core patches, understanding coding standards."),
-      'pending_patches' => [
-        '#text' => t('Pending patches'),
-        '#url' => Url::fromUri('http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14'),
-      ],
-      'handbook_page' => [
-        '#text' => t('Coding standards'),
-        '#url' => Url::fromUri('http://drupal.org/coding-standards'),
-      ],
-    ],
-    'security_performance' => [
-      '#title' => t('Security audits, performance tuning.'),
-      'handbook_page_security' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
-      'handbook_page_performance' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
-    ],
-  ];
-  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
-  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
-  $definitions['example_checklist']['core_maintainer'] = [
-    '#title' => t("I'm trustworthy for core maintainership"),
-    'add_sub_system' => [
-      '#title' => t('Rewrite or add a Drupal core sub-system.'),
-    ],
-    'sub_system_maintainer' => [
-      '#title' => t('Sub-system maintainer.'),
-    ],
-    'core_branch_maintainer' => [
-      '#title' => t('Core branch maintainer'),
-    ],
-  ];
-  $definitions['example_checklist']['know_every_bit_of_core'] = [
-    '#title' => t('I know every bit of core'),
-    'im_chx' => [
-      '#title' => t(
-        'I\'m <a href=":url">chx</a>.', [
-          ':url' => 'http://drupal.org/user/9446',
-        ]
-      ),
-    ],
-  ];
-  $definitions['example_checklist']['understand_all_core_patch_implications'] = [
-    '#title' => t('I understand all implications of a core patch'),
-    'im_chuck_norris' => [
-      '#title' => t("I'm Chuck Norris."),
-    ],
-  ];
+  $definitions['example_checklist']['help'] = t('<p>This checklist based on <a href="http://www.unleashedmind.com/files/drupal-learning-curve.png">sun\'s modification</a> of <a href="http://buytaert.net/drupal-learning-curve">Dries Buytaert\'s Drupal learning curve</a> is an example implementation of the <a href="http://drupal.org/project/checklistapi">Checklist API</a>.</p>');
+//  $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['#title'] = t('jQuery, Form API, theme and module development');
+//  $definitions['example_checklist']['i_kick_butt']['advanced_tasks'] += $definitions['example_checklist']['i_kick_butt']['development'];
+//  unset($definitions['example_checklist']['i_kick_butt']['development']);
+//  $definitions['example_checklist']['i_kick_butt']['contribute_code']['#title'] = t('Contributing code, designs and patches back to Drupal contrib');
+//  unset($definitions['example_checklist']['i_kick_butt']['chx_or_unconed']);
+//  $definitions['example_checklist']['core_contributor'] = [
+//    '#title' => t("I'm a core contributor"),
+//    'contribute_core_code' => [
+//      '#title' => t('Contribute code and patches to Drupal core'),
+//      'handbook_page' => [
+//        '#text' => t('Core contribution mentoring (core office hours)'),
+//        '#url' => Url::fromUri('http://drupal.org/core-office-hours'),
+//      ],
+//      'issue_queue' => [
+//        '#text' => t('Core issue queue'),
+//        '#url' => Url::fromUri('http://drupal.org/project/issues/drupal'),
+//      ],
+//    ],
+//    'unit_tests' => [
+//      '#title' => t('Write unit tests to get own patch committed.'),
+//      'handbook_page' => [
+//        '#text' => t('Unit Testing with Simpletest'),
+//        '#url' => Url::fromUri('http://drupal.org/node/811254'),
+//      ],
+//    ],
+//    'review_core_patches' => [
+//      '#title' => t("Review other people's core patches, understanding coding standards."),
+//      'pending_patches' => [
+//        '#text' => t('Pending patches'),
+//        '#url' => Url::fromUri('http://drupal.org/project/issues/search/drupal?status[]=8&status[]=13&status[]=14'),
+//      ],
+//      'handbook_page' => [
+//        '#text' => t('Coding standards'),
+//        '#url' => Url::fromUri('http://drupal.org/coding-standards'),
+//      ],
+//    ],
+//    'security_performance' => [
+//      '#title' => t('Security audits, performance tuning.'),
+//      'handbook_page_security' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security'],
+//      'handbook_page_performance' => $definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance'],
+//    ],
+//  ];
+//  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_security']);
+//  unset($definitions['example_checklist']['i_kick_butt']['advanced_tasks']['handbook_page_performance']);
+//  $definitions['example_checklist']['core_maintainer'] = [
+//    '#title' => t("I'm trustworthy for core maintainership"),
+//    'add_sub_system' => [
+//      '#title' => t('Rewrite or add a Drupal core sub-system.'),
+//    ],
+//    'sub_system_maintainer' => [
+//      '#title' => t('Sub-system maintainer.'),
+//    ],
+//    'core_branch_maintainer' => [
+//      '#title' => t('Core branch maintainer'),
+//    ],
+//  ];
+//  $definitions['example_checklist']['know_every_bit_of_core'] = [
+//    '#title' => t('I know every bit of core'),
+//    'im_chx' => [
+//      '#title' => t(
+//        'I\'m <a href=":url">chx</a>.', [
+//          ':url' => 'http://drupal.org/user/9446',
+//        ]
+//      ),
+//    ],
+//  ];
+//  $definitions['example_checklist']['understand_all_core_patch_implications'] = [
+//    '#title' => t('I understand all implications of a core patch'),
+//    'im_chuck_norris' => [
+//      '#title' => t("I'm Chuck Norris."),
+//    ],
+//  ];
 }
