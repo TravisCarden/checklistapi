@@ -3,4 +3,5 @@ type: module
 description: Provides an API for creating fillable, persistent checklists.
 package: Other
 core: 8.x
+core_version_requirement: '^8 || ^9'
 configure: checklistapi.report

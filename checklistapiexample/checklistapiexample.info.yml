@@ -3,6 +3,7 @@ type: module
 description: Provides an example implementation of the Checklist API.
 package: Example modules
 core: 8.x
+core_version_requirement: '^8 || ^9'
 dependencies:
   - drupal:checklistapi
 configure: checklistapi.checklists.example_checklist
