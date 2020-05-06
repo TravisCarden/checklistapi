@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:ignoreFile
+
 namespace Drupal\Tests\checklistapi\Unit;
 
 use Drupal\Core\Render\Element;
