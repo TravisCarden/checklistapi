@@ -2,6 +2,13 @@
 
 /**
  * @file
+ * Describes hooks and plugins provided by the Checklist API module.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * @file
  * Hooks provided by the Checklist API module.
  */
 
@@ -117,7 +124,7 @@ function callback_checklistapi_checklist_items($argument) {
         '#title' => t('Example item 1'),
         'example_link' => [
           '#text' => t('Example.com'),
-          '#url' => \Drupal\Core\Url::fromUri('http://www.example.com/'),
+          '#url' => Url::fromUri('http://www.example.com/'),
         ],
       ],
       'example_item_2' => [
