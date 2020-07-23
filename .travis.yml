@@ -20,14 +20,14 @@ cache:
 
 branches:
   only:
-    - 8.x-1.x
-    - 8.x-2.x
+    - master
+    - develop
     - wip
 
 env:
   global:
     - ORCA_SUT_NAME=drupal/checklistapi
-    - ORCA_SUT_BRANCH=8.x-1.x
+    - ORCA_SUT_BRANCH=master
     - ORCA_VERSION=^2
     - ORCA_PACKAGES_CONFIG=../checklistapi/tests/packages.yml
 
