@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Describes hooks and plugins provided by the Checklist API module.
+ */
+
 use Drupal\Core\Url;
 
 /**
