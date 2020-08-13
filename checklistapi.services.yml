@@ -9,3 +9,6 @@ services:
   checklistapi_storage.state:
     class: Drupal\checklistapi\Storage\StateStorage
     arguments: ['@state']
+  plugin.manager.checklist:
+    class: Drupal\checklistapi\ChecklistManager
+    parent: default_plugin_manager

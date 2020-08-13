@@ -10,6 +10,7 @@
 
 use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -25,21 +26,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
  * @return bool
  *   Returns TRUE if the current user has access to perform a given operation on
  *   the specified checklist, or FALSE if not.
- *
- * @throws InvalidArgumentException
- *   Throws an exception if an unsupported operation is supplied.
  */
 function checklistapi_checklist_access($id, $operation = 'any') {
-  $all_operations = ['view', 'edit', 'any'];
-  if (!in_array($operation, $all_operations)) {
-    throw new \InvalidArgumentException(sprintf('No such operation "%s"', $operation));
-  }
+  $checklist = Drupal::service('plugin.manager.checklist')
+    ->createInstance($id);
 
-  $current_user = \Drupal::currentUser();
-  $access['view'] = $current_user->hasPermission('view any checklistapi checklist') || $current_user->hasPermission("view {$id} checklistapi checklist");
-  $access['edit'] = $current_user->hasPermission('edit any checklistapi checklist') || $current_user->hasPermission("edit {$id} checklistapi checklist");
-  $access['any'] = $access['view'] || $access['edit'];
-  return $access[$operation];
+  return $checklist instanceof AccessibleInterface ? $checklist->access($operation) : FALSE;
 }
 
 /**
