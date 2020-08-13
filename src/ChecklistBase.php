@@ -5,6 +5,8 @@ namespace Drupal\checklistapi;
 use Drupal\checklistapi\Storage\StorageInterface;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
@@ -14,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a base class for checklist plugins.
  */
-abstract class ChecklistBase extends PluginBase implements ChecklistInterface, ContainerFactoryPluginInterface {
+abstract class ChecklistBase extends PluginBase implements ChecklistInterface, ContainerFactoryPluginInterface, AccessibleInterface {
 
   /**
    * The checklist storage backend.
@@ -161,6 +163,43 @@ abstract class ChecklistBase extends PluginBase implements ChecklistInterface, C
     $progress = $this->storage->getSavedProgress();
     unset($progress[$group][$item]);
     $this->storage->setSavedProgress($progress);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $id = $this->getPluginId();
+
+    $view_access = AccessResult::allowedIfHasPermissions($this->user, [
+      'view any checklistapi checklist',
+      "view {$id} checklistapi checklist",
+    ], 'OR');
+
+    $edit_access = AccessResult::allowedIfHasPermissions($this->user, [
+      'edit any checklistapi checklist',
+      "edit {$id} checklistapi checklist",
+    ], 'OR');
+
+    switch ($operation) {
+      case 'view':
+        $access = $view_access;
+        break;
+
+      case 'edit':
+        $access = $edit_access;
+        break;
+
+      case 'any':
+        $access = $view_access->orIf($edit_access);
+        break;
+
+      default:
+        throw new \InvalidArgumentException(sprintf('No such operation "%s"', $operation));
+    }
+
+    assert($access instanceof AccessResult);
+    return $return_as_object ? $access : $access->isAllowed();
   }
 
 }
