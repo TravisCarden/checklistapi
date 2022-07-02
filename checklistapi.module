@@ -223,9 +223,10 @@ function checklistapi_strtolowercamel($string) {
  * Implements hook_theme().
  */
 function checklistapi_theme() {
+  $path = \Drupal::service('extension.list.module')->getPath('checklistapi');
   return [
     'checklistapi_progress_bar' => [
-      'path' => drupal_get_path('module', 'checklistapi') . '/templates',
+      'path' => $path . '/templates',
       'template' => 'checklistapi-progress-bar',
       'variables' => [
         'message' => '',

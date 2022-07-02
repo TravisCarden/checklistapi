@@ -2,20 +2,25 @@
 
 // phpcs:ignoreFile
 
-namespace Drupal\Tests\checklistapi\Unit;
+namespace Drupal\Tests\checklistapi\Kernel;
 
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\Tests\UnitTestCase;
-
-require_once __DIR__ . '/../../../checklistapi.module';
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the functions in checklistapi.module.
  *
  * @group checklistapi
  */
-class ChecklistapiModuleTest extends UnitTestCase {
+class ChecklistapiModuleTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'checklistapi',
+  ];
 
   /**
    * Tests checklistapi_sort_array().

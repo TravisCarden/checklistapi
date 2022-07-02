@@ -42,7 +42,7 @@ class ChecklistapiTest extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Create a privileged user.
@@ -63,7 +63,7 @@ class ChecklistapiTest extends BrowserTestBase {
     // Assert that access is granted to a user with "edit any checklistapi
     // checklist" permission.
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that access is granted to a user with checklist-specific
     // permission.
@@ -71,12 +71,12 @@ class ChecklistapiTest extends BrowserTestBase {
     $semi_privileged_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($semi_privileged_user);
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Assert that access is denied to a non-privileged user.
     $this->drupalLogout();
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -85,7 +85,7 @@ class ChecklistapiTest extends BrowserTestBase {
   public function testChecklistComposition() {
     // Assert that a per-checklist help block is created.
     $this->drupalGet('admin/config/development/checklistapi-example');
-    $this->assertRaw('This checklist based on');
+    $this->assertSession()->responseContains('This checklist based on');
   }
 
   /**
