@@ -82,7 +82,7 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
       '#percent_complete' => (int) round($checklist->getPercentComplete()),
       '#attached' => [
         'library' => [
-          'classy/progress',
+          'core/drupal.progress',
         ],
       ],
     ];
