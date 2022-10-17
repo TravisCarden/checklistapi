@@ -5,35 +5,15 @@ namespace Drupal\checklistapi\Commands;
 use Consolidation\OutputFormatters\FormatterManager;
 use Consolidation\OutputFormatters\Options\FormatterOptions;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Render\Element;
 use Drupal\user\Entity\User;
 use Drush\Commands\DrushCommands;
 use Drush\Commands\help\ListCommands;
-use Psr\Log\LoggerAwareInterface;
 
 /**
  * Checklist API Drush command fileA Drush commandfile.
  */
-class ChecklistapiCommands extends DrushCommands implements LoggerAwareInterface {
-
-
-  /**
-   * The logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
-   */
-  protected $logger;
-
-  /**
-   * Constructs an instance.
-   *
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_channel
-   *   The logger channel factory.
-   */
-  public function __construct(LoggerChannelFactoryInterface $logger_channel) {
-    $this->logger = $logger_channel->get('drush');
-  }
+class ChecklistapiCommands extends DrushCommands {
 
   /**
    * Get an overview of your installed checklists with progress details.
@@ -45,7 +25,7 @@ class ChecklistapiCommands extends DrushCommands implements LoggerAwareInterface
     $definitions = checklistapi_get_checklist_info();
 
     if (empty($definitions)) {
-      return $this->logger->alert(dt('No checklists available.'));
+      return $this->logger()->alert(dt('No checklists available.'));
     }
 
     // Build table rows.
@@ -102,7 +82,7 @@ class ChecklistapiCommands extends DrushCommands implements LoggerAwareInterface
 
     // Make sure the given checklist exists.
     if (!$checklist) {
-      return $this->logger->error(dt('No such checklist "@id".', [
+      return $this->logger()->error(dt('No such checklist "@id".', [
         '@id' => $checklist_id,
       ]));
     }
