@@ -8,12 +8,18 @@ namespace Drupal\checklistapi;
 class ChecklistapiPermissions {
 
   /**
-   * Constructs a ChecklistapiPermissions object.
+   * Edit permissions description.
+   *
+   * @var string
    */
-  public function __construct() {
-    $this->editPermissionDescription = t('Check and uncheck list items and save changes, or clear saved progress.');
-    $this->viewPermissionDescription = t('Read-only access: View list items and saved progress.');
-  }
+  private string $editPermissionDescription = 'Check and uncheck list items and save changes, or clear saved progress.';
+
+  /**
+   * The view permissions description data.
+   *
+   * @var string
+   */
+  private string $viewPermissionDescription = 'Read-only access: View list items and saved progress.';
 
   /**
    * Returns an array of universal permissions.
@@ -27,11 +33,11 @@ class ChecklistapiPermissions {
     ];
     $perms['view any checklistapi checklist'] = [
       'title' => t('View any checklist'),
-      'description' => $this->viewPermissionDescription,
+      'description' => t('@description', ['@description' => $this->viewPermissionDescription]),
     ];
     $perms['edit any checklistapi checklist'] = [
       'title' => t('Edit any checklist'),
-      'description' => $this->editPermissionDescription,
+      'description' => t('@description', ['@description' => $this->editPermissionDescription]),
     ];
     return $perms;
   }
@@ -56,11 +62,11 @@ class ChecklistapiPermissions {
       $title = $checklist->title;
       $perms["view {$id} checklistapi checklist"] = [
         'title' => t('View the @name checklist', ['@name' => $title]),
-        'description' => $this->viewPermissionDescription,
+        'description' => t('@description', ['@description' => $this->viewPermissionDescription]),
       ];
       $perms["edit {$id} checklistapi checklist"] = [
         'title' => t('Edit the @name checklist', ['@name' => $title]),
-        'description' => $this->editPermissionDescription,
+        'description' => t('@description', ['@description' => $this->editPermissionDescription]),
       ];
     }
 

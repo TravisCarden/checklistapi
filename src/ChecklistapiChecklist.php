@@ -113,11 +113,11 @@ class ChecklistapiChecklist {
       unset($definition[$group_key]);
     }
     foreach ($definition as $property_key => $value) {
-      if ($property_key === '#storage') {
+      if ($property_key === '#storage' || $property_key === '#callback') {
         continue;
       }
       $property_name = checklistapi_strtolowercamel(mb_substr($property_key, 1));
-      $this->$property_name = $value;
+      $this->{$property_name} = $value;
     }
 
     $storage = 'config';
