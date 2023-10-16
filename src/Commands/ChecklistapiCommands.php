@@ -5,15 +5,43 @@ namespace Drupal\checklistapi\Commands;
 use Consolidation\OutputFormatters\FormatterManager;
 use Consolidation\OutputFormatters\Options\FormatterOptions;
 use Consolidation\OutputFormatters\StructuredData\RowsOfFields;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\user\Entity\User;
 use Drush\Commands\DrushCommands;
 use Drush\Commands\help\ListCommands;
 
 /**
- * Checklist API Drush command fileA Drush commandfile.
+ * Checklist API Drush command file.
  */
 class ChecklistapiCommands extends DrushCommands {
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The user storage service.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  private $userStorage;
+
+  /**
+   * Constructs an instance.
+   *
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(DateFormatterInterface $date_formatter, EntityTypeManagerInterface $entity_type_manager) {
+    $this->dateFormatter = $date_formatter;
+    $this->userStorage = $entity_type_manager->getStorage('user');
+  }
 
   /**
    * Get an overview of your installed checklists with progress details.
@@ -125,9 +153,10 @@ class ChecklistapiCommands extends DrushCommands {
         $title = strip_tags($item['#title']);
         if ($saved_item) {
           // Append completion details.
-          $user = User::load($saved_item['#uid']);
+          /** @var \Drupal\user\UserInterface $user */
+          $user = $this->userStorage->load($saved_item['#uid']);
           $title .= ' - ' . dt('Completed @time by @user', [
-            '@time' => \Drupal::service('date.formatter')->format($saved_item['#completed'], 'short'),
+            '@time' => $this->dateFormatter->format($saved_item['#completed'], 'short'),
             '@user' => $user->getDisplayName(),
           ]);
         }

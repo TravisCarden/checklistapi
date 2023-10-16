@@ -8,6 +8,7 @@
  * completion times and users.
  */
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\checklistapi\ChecklistapiChecklist;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
@@ -191,7 +192,7 @@ function checklistapi_sort_array(array $array) {
     $children[$key] = checklistapi_sort_array($children[$key]);
   }
   // Sort by weight.
-  uasort($children, ['Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
+  uasort($children, [SortArray::class, 'sortByWeightProperty']);
   // Remove incremental weight hack.
   foreach ($children as $key => $child) {
     $children[$key]['#weight'] = floor($children[$key]['#weight']);

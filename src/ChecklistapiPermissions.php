@@ -19,14 +19,14 @@ class ChecklistapiPermissions {
    */
   public function universalPermissions() {
     $perms['view checklistapi checklists report'] = [
-      'title' => t('View the Checklists report'),
+      'title' => $this->t('View the Checklists report'),
     ];
     $perms['view any checklistapi checklist'] = [
-      'title' => t('View any checklist'),
+      'title' => $this->t('View any checklist'),
       'description' => $this->t('Read-only access: View list items and saved progress.'),
     ];
     $perms['edit any checklistapi checklist'] = [
-      'title' => t('Edit any checklist'),
+      'title' => $this->t('Edit any checklist'),
       'description' => $this->t('Check and uncheck list items and save changes, or clear saved progress.'),
     ];
     return $perms;
@@ -51,11 +51,11 @@ class ChecklistapiPermissions {
 
       $title = $checklist->title;
       $perms["view {$id} checklistapi checklist"] = [
-        'title' => t('View the @name checklist', ['@name' => $title]),
+        'title' => $this->t('View the @name checklist', ['@name' => $title]),
         'description' => $this->t('Read-only access: View list items and saved progress.'),
       ];
       $perms["edit {$id} checklistapi checklist"] = [
-        'title' => t('Edit the @name checklist', ['@name' => $title]),
+        'title' => $this->t('Edit the @name checklist', ['@name' => $title]),
         'description' => $this->t('Check and uncheck list items and save changes, or clear saved progress.'),
       ];
     }

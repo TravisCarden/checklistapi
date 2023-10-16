@@ -10,13 +10,16 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\user\Entity\User;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a checklist form.
  */
 class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The date formatter service.
@@ -33,16 +36,26 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
   protected $messenger;
 
   /**
+   * The user storage service.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  private $userStorage;
+
+  /**
    * Constructs an instance.
    *
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\user\UserStorageInterface $user_storage
+   *   The user storage service.
    */
-  public function __construct(DateFormatterInterface $date_formatter, MessengerInterface $messenger) {
+  public function __construct(DateFormatterInterface $date_formatter, MessengerInterface $messenger, UserStorageInterface $user_storage) {
     $this->dateFormatter = $date_formatter;
     $this->messenger = $messenger;
+    $this->userStorage = $user_storage;
   }
 
   /**
@@ -53,7 +66,9 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
     $date_formatter = $container->get('date.formatter');
     /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
     $messenger = $container->get('messenger');
-    return new static($date_formatter, $messenger);
+    /** @var \Drupal\user\UserStorageInterface $user_storage */
+    $user_storage = $container->get('entity_type.manager')->getStorage('user');
+    return new static($date_formatter, $messenger, $user_storage);
   }
 
   /**
@@ -73,7 +88,7 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
     // Progress bar.
     $form['progress_bar'] = [
       '#theme' => 'checklistapi_progress_bar',
-      '#message' => ($checklist->hasSavedProgress()) ? t('Last updated @date by @user', [
+      '#message' => ($checklist->hasSavedProgress()) ? $this->t('Last updated @date by @user', [
         '@date' => $checklist->getLastUpdatedDate(),
         '@user' => $checklist->getLastUpdatedUser(),
       ]) : '',
@@ -126,10 +141,11 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
         $title = Xss::filter($item['#title']);
         if ($saved_item) {
           // Append completion details.
-          $user = User::load($saved_item['#uid']);
-          $title .= '<span class="completion-details"> - ' . t('Completed @time by @user', [
+          /** @var \Drupal\user\UserInterface $user */
+          $user = $this->userStorage->load($saved_item['#uid']);
+          $title .= '<span class="completion-details"> - ' . $this->t('Completed @time by @user', [
             '@time' => $this->dateFormatter->format($saved_item['#completed'], 'short'),
-            '@user' => ($user) ? $user->getDisplayName() : t('[missing user]'),
+            '@user' => ($user) ? $user->getDisplayName() : $this->t('[missing user]'),
           ]) . '</span>';
         }
         // Set default value.
@@ -175,7 +191,7 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
       'save' => [
         '#button_type' => 'primary',
         '#type' => 'submit',
-        '#value' => t('Save'),
+        '#value' => $this->t('Save'),
       ],
       'clear' => [
         '#access' => $checklist->hasSavedProgress(),
@@ -183,7 +199,7 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
         '#attributes' => ['class' => ['clear-saved-progress']],
         '#submit' => [[$this, 'clear']],
         '#type' => 'submit',
-        '#value' => t('Clear saved progress'),
+        '#value' => $this->t('Clear saved progress'),
       ],
     ];
 
@@ -195,10 +211,10 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
         '%checklist' => $checklist->title,
         '@num' => $num_autochecked_items,
       ];
-      $message = \Drupal::translation()->formatPlural(
+      $message = $this->formatPlural(
         $num_autochecked_items,
-        t('%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.', $args),
-        t('%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.', $args)
+        $this->t('%checklist found 1 unchecked item that was already completed and checked it for you. Save the form to record the change.', $args),
+        $this->t('%checklist found @num unchecked items that were already completed and checked them for you. Save the form to record the changes.', $args)
       );
       $this->messenger->addStatus($message);
     }

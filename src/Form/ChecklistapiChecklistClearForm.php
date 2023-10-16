@@ -4,11 +4,14 @@ namespace Drupal\checklistapi\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a form to clear saved progress for a given checklist.
  */
 class ChecklistapiChecklistClearForm extends ConfirmFormBase {
+
+  use StringTranslationTrait;
 
   /**
    * The checklist object.
@@ -28,7 +31,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to clear saved progress?');
+    return $this->t('Are you sure you want to clear saved progress?');
   }
 
   /**
@@ -42,7 +45,7 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('All progress details for %checklist will be erased. This action cannot be undone.', [
+    return $this->t('All progress details for %checklist will be erased. This action cannot be undone.', [
       '%checklist' => $this->checklist->title,
     ]);
   }
@@ -51,14 +54,14 @@ class ChecklistapiChecklistClearForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Clear');
+    return $this->t('Clear');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCancelText() {
-    return t('Cancel');
+    return $this->t('Cancel');
   }
 
   /**
