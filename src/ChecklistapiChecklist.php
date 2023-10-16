@@ -177,7 +177,7 @@ class ChecklistapiChecklist {
     }
 
     $user = User::load($this->savedProgress['#changed_by']);
-    return ($user) ? $user->getAccountName() : t('[missing user]');
+    return ($user) ? $user->getDisplayName() : t('[missing user]');
   }
 
   /**

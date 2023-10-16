@@ -128,7 +128,7 @@ class ChecklistapiCommands extends DrushCommands {
           $user = User::load($saved_item['#uid']);
           $title .= ' - ' . dt('Completed @time by @user', [
             '@time' => \Drupal::service('date.formatter')->format($saved_item['#completed'], 'short'),
-            '@user' => $user->getAccountName(),
+            '@user' => $user->getDisplayName(),
           ]);
         }
         // Print the list item.

@@ -129,7 +129,7 @@ class ChecklistapiChecklistForm implements FormInterface, ContainerInjectionInte
           $user = User::load($saved_item['#uid']);
           $title .= '<span class="completion-details"> - ' . t('Completed @time by @user', [
             '@time' => $this->dateFormatter->format($saved_item['#completed'], 'short'),
-            '@user' => ($user) ? $user->getAccountName() : t('[missing user]'),
+            '@user' => ($user) ? $user->getDisplayName() : t('[missing user]'),
           ]) . '</span>';
         }
         // Set default value.
