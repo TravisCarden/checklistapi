@@ -5,7 +5,7 @@
   opacity: 0.66;
   font-style: italic;
 }
-#checklistapi-checklist-form.compact-mode div.description p {
+#checklistapi-checklist-form.compact-mode div.form-item__description p {
   display: none;
 }
 
