@@ -2,24 +2,14 @@
 
 namespace Drupal\checklistapi;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines a class containing permission callbacks.
  */
 class ChecklistapiPermissions {
 
-  /**
-   * Edit permissions description.
-   *
-   * @var string
-   */
-  private string $editPermissionDescription = 'Check and uncheck list items and save changes, or clear saved progress.';
-
-  /**
-   * The view permissions description data.
-   *
-   * @var string
-   */
-  private string $viewPermissionDescription = 'Read-only access: View list items and saved progress.';
+  use StringTranslationTrait;
 
   /**
    * Returns an array of universal permissions.
@@ -33,11 +23,11 @@ class ChecklistapiPermissions {
     ];
     $perms['view any checklistapi checklist'] = [
       'title' => t('View any checklist'),
-      'description' => t('@description', ['@description' => $this->viewPermissionDescription]),
+      'description' => $this->t('Read-only access: View list items and saved progress.'),
     ];
     $perms['edit any checklistapi checklist'] = [
       'title' => t('Edit any checklist'),
-      'description' => t('@description', ['@description' => $this->editPermissionDescription]),
+      'description' => $this->t('Check and uncheck list items and save changes, or clear saved progress.'),
     ];
     return $perms;
   }
@@ -62,11 +52,11 @@ class ChecklistapiPermissions {
       $title = $checklist->title;
       $perms["view {$id} checklistapi checklist"] = [
         'title' => t('View the @name checklist', ['@name' => $title]),
-        'description' => t('@description', ['@description' => $this->viewPermissionDescription]),
+        'description' => $this->t('Read-only access: View list items and saved progress.'),
       ];
       $perms["edit {$id} checklistapi checklist"] = [
         'title' => t('Edit the @name checklist', ['@name' => $title]),
-        'description' => t('@description', ['@description' => $this->editPermissionDescription]),
+        'description' => $this->t('Check and uncheck list items and save changes, or clear saved progress.'),
       ];
     }
 
