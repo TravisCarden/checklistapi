@@ -2,8 +2,8 @@
   margin: .5em 0;
 }
 #checklistapi-checklist-form span.completion-details {
-  font-style: italic;
   opacity: 0.66;
+  font-style: italic;
 }
 #checklistapi-checklist-form.compact-mode div.description p {
   display: none;
@@ -15,8 +15,8 @@
  * @see system.theme.css
  */
 #checklistapi-checklist-form .progress {
-  font-weight: normal;
   margin-bottom: 0.5em;
+  font-weight: normal;
 }
 #checklistapi-checklist-form .progress__bar {
   animation-name: none;
