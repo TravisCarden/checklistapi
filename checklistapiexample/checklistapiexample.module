@@ -40,7 +40,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#description' => t('Prepare for installation, run the installation script, and take the steps that should be done after the installation script has completed.'),
         'handbook_page' => [
           '#text' => t('Installation Guide'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/install'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/getting-started/installing-drupal'),
         ],
       ],
       'node_system' => [
@@ -48,7 +48,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#description' => t('Perform a variety of operations on one or more nodes.'),
         'handbook_page' => [
           '#text' => t('Manage nodes'),
-          '#url' => Url::fromUri('http://drupal.org/node/306808'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/administering-a-drupal-site/managing-content'),
         ],
       ],
       'block_system' => [
@@ -56,7 +56,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#description' => t('Create blocks and adjust their appearance, shape, size and position.'),
         'handbook_page' => [
           '#text' => t('Working with blocks (content in regions)'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/modules/block'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/core-modules-and-themes/core-modules/block-module/managing-blocks'),
         ],
       ],
       'users' => [
@@ -72,7 +72,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#description' => t('Customize Drupal to your tastes by adding modules and themes.'),
         'handbook_page' => [
           '#text' => t('Installing modules and themes'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/install/modules-themes'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/extending-drupal'),
         ],
       ],
     ],
@@ -83,7 +83,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#title' => t('Upgrading, patching, (security) monitoring'),
         'handbook_page_upgrading' => [
           '#text' => t('Upgrading from previous versions'),
-          '#url' => Url::fromUri('http://drupal.org/upgrade'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/updating-drupal'),
         ],
         'handbook_page_patching' => [
           '#text' => t('Applying patches'),
@@ -91,7 +91,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         ],
         'security_advisories' => [
           '#text' => t('Security advisories'),
-          '#url' => Url::fromUri('http://drupal.org/security'),
+          '#url' => Url::fromUri('https://www.drupal.org/security'),
         ],
         'handbook_page_monitoring' => [
           '#text' => t('Monitoring a site'),
@@ -113,7 +113,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#title' => t('Locale and internationalization'),
         'handbook_page' => [
           '#text' => t('Multilingual Guide'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/multilingual'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/administering-a-drupal-site/multilingual-guide'),
         ],
       ],
       'customize_front_page' => [
@@ -127,7 +127,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#title' => t('Theme and template modifications'),
         'handbook_page' => [
           '#text' => t('Theming Guide'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/theme'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/develop/theming-drupal'),
         ],
       ],
     ],
@@ -159,14 +159,14 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#title' => t('Actions and workflows'),
         'handbook_page' => [
           '#text' => t('Actions and Workflows'),
-          '#url' => Url::fromUri('http://drupal.org/node/924538'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/8/modules/workflow/workflow-actions-triggers-and-rules'),
         ],
       ],
       'development' => [
         '#title' => t('Theme and module development'),
         'handbook_page_theming' => [
           '#text' => t('Theming Guide'),
-          '#url' => Url::fromUri('http://drupal.org/documentation/theme'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/develop/theming-drupal'),
         ],
         'handbook_page_development' => [
           '#text' => t('Develop for Drupal'),
@@ -177,11 +177,11 @@ function checklistapiexample_checklistapi_checklist_items() {
         '#title' => t('jQuery, Form API, security audits, performance tuning'),
         'handbook_page_jquery' => [
           '#text' => t('JavaScript and jQuery'),
-          '#url' => Url::fromUri('http://drupal.org/node/171213'),
+          '#url' => Url::fromUri('https://www.drupal.org/node/2269515'),
         ],
         'handbook_page_form_api' => [
           '#text' => t('Form API'),
-          '#url' => Url::fromUri('http://drupal.org/node/37775'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/drupal-apis/form-api'),
         ],
         'handbook_page_security' => [
           '#text' => t('Securing your site'),
@@ -189,7 +189,7 @@ function checklistapiexample_checklistapi_checklist_items() {
         ],
         'handbook_page_performance' => [
           '#text' => t('Managing site performance'),
-          '#url' => Url::fromUri('http://drupal.org/node/627252'),
+          '#url' => Url::fromUri('https://www.drupal.org/docs/administering-a-drupal-site/managing-site-performance-and-scalability'),
         ],
       ],
       'contribute_code' => [
@@ -247,8 +247,8 @@ function checklistapiexample_checklistapi_checklist_info_alter(&$definitions) {
     'unit_tests' => [
       '#title' => t('Write unit tests to get own patch committed.'),
       'handbook_page' => [
-        '#text' => t('Unit Testing with Simpletest'),
-        '#url' => Url::fromUri('http://drupal.org/node/811254'),
+        '#text' => t('Automated testing'),
+        '#url' => Url::fromUri('https://www.drupal.org/docs/develop/automated-testing'),
       ],
     ],
     'review_core_patches' => [
