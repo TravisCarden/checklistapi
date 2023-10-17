@@ -8,8 +8,8 @@
  * completion times and users.
  */
 
-use Drupal\Component\Utility\SortArray;
 use Drupal\checklistapi\ChecklistapiChecklist;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
